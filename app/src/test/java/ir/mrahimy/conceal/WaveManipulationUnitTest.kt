@@ -4,8 +4,6 @@ import ir.mrahimy.conceal.data.absolute
 import ir.mrahimy.conceal.data.mapToUniformDouble
 import org.junit.Test
 
-import org.junit.Assert.*
-
 class WaveManipulationUnitTest {
 
     val data = LongArray(11) {
