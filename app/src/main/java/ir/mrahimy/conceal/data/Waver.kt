@@ -6,7 +6,7 @@ data class Waver(
 )
 
 fun LongArray.mapToUniformDouble(): DoubleArray {
-    val max = max()?.toDouble() ?: return DoubleArray(1)
+    val max = absolute().max()?.toDouble() ?: return DoubleArray(1)
     return map {
         (it.toDouble() / max)
     }.toDoubleArray()
@@ -16,4 +16,10 @@ fun DoubleArray.mapToRgbValue(): IntArray {
     return map {
         (it * 255).toInt()
     }.toIntArray()
+}
+
+fun LongArray.absolute(): LongArray {
+    return map {
+        if (it < 0) it * -1 else it
+    }.toLongArray()
 }
