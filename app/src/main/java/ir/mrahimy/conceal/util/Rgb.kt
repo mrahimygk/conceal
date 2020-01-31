@@ -7,6 +7,7 @@ data class Rgb(
 )
 
 fun Int.toRgb() = Image.getRgb(this)
+fun Rgb.parse() = Image.parseRgb(this)
 
 fun Int.removeLsBits(howMany: Int) = IntegerUtil.removeLsBits(this)
 
