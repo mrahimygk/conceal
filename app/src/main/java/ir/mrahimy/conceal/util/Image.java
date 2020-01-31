@@ -9,4 +9,11 @@ public class Image {
 
         return new Rgb(r, g, b);
     }
+
+    static int parseRgb(Rgb in) {
+        int rgb = in.getR();
+        rgb = (rgb << 8) + in.getG();
+        rgb = (rgb << 8) + in.getB();
+        return rgb;
+    }
 }
