@@ -1,9 +1,12 @@
 package ir.mrahimy.conceal
 
 import android.Manifest
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.set
 import com.github.squti.androidwaverecorder.WaveRecorder
 import ir.mrahimy.conceal.data.WavUtil.fromWaveData
 import ir.mrahimy.conceal.data.mapToRgbValue
@@ -39,6 +42,8 @@ class MainActivity : AppCompatActivity() {
 
         val image = BitmapFactory.decodeFile("/storage/emulated/0/Download/deer.jpg")
 
+        val c = image.config
+        val p = image.getPixel(10, 10)
         val rgbList = image.getRgbArray().remove3Lsb()
 
         val audioSampleRate = waveFile.sampleRate.toString().toSeparatedDigits()
@@ -197,6 +202,26 @@ class MainActivity : AppCompatActivity() {
                 lastIndexOfWaveDataChecked = index
             }
         }
+
+        val bitmap = Bitmap.createBitmap(image.width, image.height, image.config)
+
+        var x = 0
+        var y = 0
+        repeat(rgbList.size) { l ->
+            val rgb = rgbList[l]
+            bitmap[x, y] = Color.rgb(rgb.r,rgb.g,rgb.b)
+            x++
+            if (x >= image.width) {
+                y++
+                x = 0
+            }
+        }
+
+        img?.setImageBitmap(bitmap)
+
+        val date = Date()
+        File(externalCacheDir?.absolutePath + "/img_${date.time}.png")
+            .writeBitmap(bitmap, Bitmap.CompressFormat.PNG, 100)
 
         record?.setOnClickListener {
             startRecording()
