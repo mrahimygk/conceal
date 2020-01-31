@@ -42,8 +42,6 @@ class MainActivity : AppCompatActivity() {
 
         val image = BitmapFactory.decodeFile("/storage/emulated/0/Download/deer.jpg")
 
-        val c = image.config
-        val p = image.getPixel(10, 10)
         val rgbList = image.getRgbArray().remove3Lsb()
 
         val audioSampleRate = waveFile.sampleRate.toString().toSeparatedDigits()
