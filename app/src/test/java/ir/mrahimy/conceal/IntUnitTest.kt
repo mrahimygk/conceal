@@ -2,6 +2,7 @@ package ir.mrahimy.conceal
 
 import ir.mrahimy.conceal.util.IntegerUtil
 import ir.mrahimy.conceal.util.bitwiseOr
+import ir.mrahimy.conceal.util.getLsBits
 import ir.mrahimy.conceal.util.toBinString
 import org.junit.Test
 
@@ -47,9 +48,9 @@ class IntUnitTest {
         assert(binaryString2BitsChunk2 == 2)
 
         val carrierOut1 = carrierIn1.bitwiseOr(binaryString2BitsChunk1)
-        assert(carrierOut1==193)
+        assert(carrierOut1 == 193)
         val carrierOut2 = carrierIn2.bitwiseOr(binaryString2BitsChunk2)
-        assert(carrierOut2==210)
+        assert(carrierOut2 == 210)
 
         val binA = carrierOut1.toBinString()
         val binB = carrierOut2.toBinString()
@@ -73,17 +74,23 @@ class IntUnitTest {
     }
 
     @Test
-    fun `test getting 2 lsb`(){
+    fun `test getting 2 lsb`() {
         val number = 15
         val _2lsb = IntegerUtil.get2LsBits(number)
-        assert(_2lsb==3)
+        assert(_2lsb == 3)
     }
 
     @Test
-    fun `test getting 3 lsb`(){
+    fun `test getting 3 lsb`() {
         val number = 15
         val _3lsb = IntegerUtil.get3LsBits(number)
-        assert(_3lsb==7)
+        assert(_3lsb == 7)
+    }
+
+    @Test
+    fun `test getting lsb`() {
+        assert(7 == 15.getLsBits(3))
+        assert(3 == 15.getLsBits(2))
     }
 
 }
