@@ -50,21 +50,21 @@ class MainActivity : AppCompatActivity() {
 
         var position = 0
 
-        var binaryString2BitsChunk = sampleRateElementCount.substring(0, 2).toInt()
+        var binaryString2BitsChunk = sampleRateElementCount.substring(0, 2).toInt(2)
         rgbList[position].r = rgbList[position].r.bitwiseOr(binaryString2BitsChunk)
         position += 1
 
-        binaryString2BitsChunk = sampleRateElementCount.substring(2, 4).toInt()
+        binaryString2BitsChunk = sampleRateElementCount.substring(2, 4).toInt(2)
         rgbList[position].r = rgbList[position].r.bitwiseOr(binaryString2BitsChunk)
         position += 1
 
         repeat(audioSampleRate.elementCount) {
             val element = it.toBinString(format = "%4s")
-            binaryString2BitsChunk = element.substring(0, 2).toInt()
+            binaryString2BitsChunk = element.substring(0, 2).toInt(2)
             rgbList[position].r = rgbList[position].r.bitwiseOr(binaryString2BitsChunk)
             position += 1
 
-            binaryString2BitsChunk = element.substring(2, 4).toInt()
+            binaryString2BitsChunk = element.substring(2, 4).toInt(2)
             rgbList[position].r = rgbList[position].r.bitwiseOr(binaryString2BitsChunk)
             position += 1
         }
@@ -87,22 +87,22 @@ class MainActivity : AppCompatActivity() {
             } else item
 
             var element = data.toBinString()
-            binaryString2BitsChunk = element.substring(0, 2).toInt()
+            binaryString2BitsChunk = element.substring(0, 2).toInt(2)
             rgbList[position].r = rgbList[position].r.bitwiseOr(binaryString2BitsChunk)
             position += 1
 
             element = data.toBinString()
-            binaryString2BitsChunk = element.substring(2, 4).toInt()
+            binaryString2BitsChunk = element.substring(2, 4).toInt(2)
             rgbList[position].r = rgbList[position].r.bitwiseOr(binaryString2BitsChunk)
             position += 1
 
             element = data.toBinString()
-            binaryString2BitsChunk = element.substring(4, 6).toInt()
+            binaryString2BitsChunk = element.substring(4, 6).toInt(2)
             rgbList[position].r = rgbList[position].r.bitwiseOr(binaryString2BitsChunk)
             position += 1
 
             element = data.toBinString()
-            binaryString2BitsChunk = element.substring(6, 8).toInt()
+            binaryString2BitsChunk = element.substring(6, 8).toInt(2)
             rgbList[position].r = rgbList[position].r.bitwiseOr(binaryString2BitsChunk)
             position += 1
 
@@ -132,22 +132,22 @@ class MainActivity : AppCompatActivity() {
                 } else item
 
                 var element = data.toBinString()
-                binaryString2BitsChunk = element.substring(0, 2).toInt()
+                binaryString2BitsChunk = element.substring(0, 2).toInt(2)
                 rgbList[position].g = rgbList[position].g.bitwiseOr(binaryString2BitsChunk)
                 position += 1
 
                 element = data.toBinString()
-                binaryString2BitsChunk = element.substring(2, 4).toInt()
+                binaryString2BitsChunk = element.substring(2, 4).toInt(2)
                 rgbList[position].g = rgbList[position].g.bitwiseOr(binaryString2BitsChunk)
                 position += 1
 
                 element = data.toBinString()
-                binaryString2BitsChunk = element.substring(4, 6).toInt()
+                binaryString2BitsChunk = element.substring(4, 6).toInt(2)
                 rgbList[position].g = rgbList[position].g.bitwiseOr(binaryString2BitsChunk)
                 position += 1
 
                 element = data.toBinString()
-                binaryString2BitsChunk = element.substring(6, 8).toInt()
+                binaryString2BitsChunk = element.substring(6, 8).toInt(2)
                 rgbList[position].g = rgbList[position].g.bitwiseOr(binaryString2BitsChunk)
                 position += 1
 
@@ -178,22 +178,22 @@ class MainActivity : AppCompatActivity() {
                 } else item
 
                 var element = data.toBinString()
-                binaryString2BitsChunk = element.substring(0, 2).toInt()
+                binaryString2BitsChunk = element.substring(0, 2).toInt(2)
                 rgbList[position].b = rgbList[position].b.bitwiseOr(binaryString2BitsChunk)
                 position += 1
 
                 element = data.toBinString()
-                binaryString2BitsChunk = element.substring(2, 4).toInt()
+                binaryString2BitsChunk = element.substring(2, 4).toInt(2)
                 rgbList[position].b = rgbList[position].b.bitwiseOr(binaryString2BitsChunk)
                 position += 1
 
                 element = data.toBinString()
-                binaryString2BitsChunk = element.substring(4, 6).toInt()
+                binaryString2BitsChunk = element.substring(4, 6).toInt(2)
                 rgbList[position].b = rgbList[position].b.bitwiseOr(binaryString2BitsChunk)
                 position += 1
 
                 element = data.toBinString()
-                binaryString2BitsChunk = element.substring(6, 8).toInt()
+                binaryString2BitsChunk = element.substring(6, 8).toInt(2)
                 rgbList[position].b = rgbList[position].b.bitwiseOr(binaryString2BitsChunk)
                 position += 1
 
