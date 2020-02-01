@@ -19,4 +19,11 @@ class SubstringUnitTest {
         val sub12 = string.substring(2, 4)
         assert(sub12 == "34")
     }
+
+    @Test
+    fun `check inclusive substring by length`() {
+        val string = "01234567"
+        val sub2End = string.drop(6)
+        assert(sub2End == "67")
+    }
 }
