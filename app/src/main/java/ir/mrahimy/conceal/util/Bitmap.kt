@@ -2,7 +2,6 @@ package ir.mrahimy.conceal.util
 
 import android.graphics.Bitmap
 import kotlin.math.absoluteValue
-import kotlin.math.sign
 
 fun Bitmap.getRgb(x: Int, y: Int): Rgb = this.getPixel(x, y).toRgb()
 
