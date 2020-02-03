@@ -126,5 +126,17 @@ class ImageManipulationUnitTest {
         //0 = 0000
         assert(injected[i++].r == 16) // 00 + 16
         assert(injected[i++].r == 96) // 00 + 96
+
+        assert(i == 12)
+    }
+
+    @Test
+    fun `test retrieving sample rate`() {
+        val injected = mutableListOf<Rgb>().apply { addAll(removedLsb.map { it }) }
+        val pos = injected.putSampleRate(sampleRate)
+
+        val res = injected.getSampleRate()
+        assert(res.first == sampleRate)
+        assert(res.second == 12)
     }
 }
