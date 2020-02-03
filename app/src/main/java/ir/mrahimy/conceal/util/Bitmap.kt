@@ -26,7 +26,7 @@ fun List<Rgb>.remove3Lsb(): List<Rgb> = map {
  * @returns the position of last injected bit. maybe used to start inserting audio data
  * (starting with that position itself)
  */
-fun List<Rgb>.putSampleRate(sampleRate: Int) : Int {
+fun List<Rgb>.putSampleRate(sampleRate: Int): Int {
     val audioSampleRate = sampleRate.toString().toSeparatedDigits()
     val sampleRateElementCount = audioSampleRate.elementCount.toBinString(format = "%4s")
 
@@ -46,7 +46,7 @@ fun List<Rgb>.putSampleRate(sampleRate: Int) : Int {
     this[position].r = data
     position += 1
 
-    repeat(audioSampleRate.elementCount) {
+    audioSampleRate.digits.forEach {
         val element = it.toBinString(format = "%4s")
         binaryString2BitsChunk = element.substring(0, 2).toInt(2)
         this[position].r = this[position].r.bitwiseOr(binaryString2BitsChunk)
