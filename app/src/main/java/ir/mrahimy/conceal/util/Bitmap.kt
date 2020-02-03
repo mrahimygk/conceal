@@ -106,3 +106,17 @@ fun List<Rgb>.putSignedInteger(startingPosition: Int, value: Int): Int {
 
     return position
 }
+
+/**
+ * @param startingPosition maybe the position of the last inserted index for or previous insertion
+ * @param array the integer array to be put inside 3lsb of this list
+ * @returns the position of last injected bit. used to start inserting another audio data
+ * (starting with that position itself)
+ */
+fun List<Rgb>.putAllSignedIntegers(startingPosition: Int, array: IntArray): Int {
+    var position = startingPosition
+    array.forEach {
+        position = putSignedInteger(position, it)
+    }
+    return position
+}
