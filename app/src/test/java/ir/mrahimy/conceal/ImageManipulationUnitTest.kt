@@ -1,30 +1,55 @@
 package ir.mrahimy.conceal
 
 import ir.mrahimy.conceal.util.*
+import org.junit.Before
 import org.junit.Test
 
 class ImageManipulationUnitTest {
 
     private val sampleRate = 44100
-    private val rgbList = mutableListOf<Rgb>().apply {
-        add(Rgb(192, 117, 115))
-        add(Rgb(180, 215, 216))
-        add(Rgb(181, 25, 26))
-        add(Rgb(81, 250, 16))
-        add(Rgb(50, 200, 19))
-        add(Rgb(150, 200, 190))
-        add(Rgb(90, 51, 17))
-        add(Rgb(17, 90, 51))
-        add(Rgb(170, 190, 151))
-    }
+    private val rgbList = mutableListOf<Rgb>()
+    private val removedLsb = mutableListOf<Rgb>()
 
-    private val removedLsb = rgbList.remove3Lsb()
-    private val injectedSampleRate = removedLsb.putSampleRate(sampleRate)
+    @Before
+    fun initRgbList() {
+        rgbList.clear()
+        rgbList.apply {
+            add(Rgb(192, 117, 115))
+            add(Rgb(180, 215, 216))
+            add(Rgb(181, 25, 26))
+            add(Rgb(81, 250, 16))
+            add(Rgb(50, 200, 19))
+            add(Rgb(150, 200, 190))
+            add(Rgb(90, 51, 17))
+            add(Rgb(190, 251, 217))
+            add(Rgb(170, 190, 151))
+            add(Rgb(240, 151, 117))
+            add(Rgb(17, 90, 51))
+            add(Rgb(100, 90, 101))
+        }
+
+        removedLsb.clear()
+        removedLsb.addAll(rgbList.remove3Lsb())
+    }
 
     private fun `test removing 3 lsb of index`(index: Int, vararg intArray: Int) {
         assert(removedLsb[index].r == intArray[0]) //0
         assert(removedLsb[index].g == intArray[1])
         assert(removedLsb[index].b == intArray[2])
+    }
+
+    private fun `test injected sample rate of index`(index: Int, vararg intArray: Int) {
+        assert(removedLsb[index].r == intArray[0]) //0
+        assert(removedLsb[index].g == intArray[1])
+        assert(removedLsb[index].b == intArray[2])
+    }
+
+    @Test
+    fun `test injected sample rate position`() {
+        val returnedPosition = removedLsb.map { it }.putSampleRate(sampleRate)
+        val audioSampleRate = sampleRate.toString().toSeparatedDigits()
+        assert(returnedPosition == (audioSampleRate.elementCount + 1) * 2)
+        println("end")
     }
 
     @Test
@@ -63,7 +88,7 @@ class ImageManipulationUnitTest {
         assert(binaryString2BitsChunk == 1)
 
         data = removedLsb[position].r.bitwiseOr(binaryString2BitsChunk)
-        assert(data ==177)
+        assert(data == 177)
         removedLsb[position].r = data
         position += 1
 
@@ -80,7 +105,7 @@ class ImageManipulationUnitTest {
     }
 
     @Test
-    fun `test injected sample rate`(){
+    fun `test injected sample rate`() {
 
     }
 }
