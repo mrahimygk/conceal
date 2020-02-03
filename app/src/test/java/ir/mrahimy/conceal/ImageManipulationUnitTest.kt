@@ -133,8 +133,5 @@ class ImageManipulationUnitTest {
         //0 = 0000
         assert(injected[i++].r == 16) // 00 + 16
         assert(injected[i++].r == 96) // 00 + 96
-
-
-
     }
 }
