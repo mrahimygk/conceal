@@ -92,7 +92,7 @@ class ImageManipulationUnitTest {
         removedLsb[position].r = data
         position += 1
 
-        repeat(audioSampleRate.elementCount) {
+        audioSampleRate.digits.forEach {
             val element = it.toBinString(format = "%4s")
             binaryString2BitsChunk = element.substring(0, 2).toInt(2)
             removedLsb[position].r = removedLsb[position].r.bitwiseOr(binaryString2BitsChunk)
@@ -106,6 +106,35 @@ class ImageManipulationUnitTest {
 
     @Test
     fun `test injected sample rate`() {
+        val injected = mutableListOf<Rgb>().apply { addAll(removedLsb.map { it }) }
+        val pos = injected.putSampleRate(sampleRate)
+
+        var i = 0
+        // 5 = 0101
+        assert(injected[i++].r == 193) //01 + 192
+        assert(injected[i++].r == 177) // 01 + 176
+
+        //4 = 0100
+        assert(injected[i++].r == 177) // 01 + 176
+        assert(injected[i++].r == 80) // 00 + 80
+
+        //4 = 0100
+        assert(injected[i++].r == 49) // 01 + 48
+        assert(injected[i++].r == 144) // 00 + 144
+
+        //1 = 0001
+        assert(injected[i++].r == 88) // 00 + 88
+        assert(injected[i++].r == 185) // 01 + 184
+
+        //0 = 0000
+        assert(injected[i++].r == 168) // 00 + 168
+        assert(injected[i++].r == 240) // 00 + 240
+
+        //0 = 0000
+        assert(injected[i++].r == 16) // 00 + 16
+        assert(injected[i++].r == 96) // 00 + 96
+
+
 
     }
 }
