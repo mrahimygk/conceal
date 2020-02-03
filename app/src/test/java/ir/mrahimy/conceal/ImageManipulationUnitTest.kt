@@ -38,18 +38,11 @@ class ImageManipulationUnitTest {
         assert(removedLsb[index].b == intArray[2])
     }
 
-    private fun `test injected sample rate of index`(index: Int, vararg intArray: Int) {
-        assert(removedLsb[index].r == intArray[0]) //0
-        assert(removedLsb[index].g == intArray[1])
-        assert(removedLsb[index].b == intArray[2])
-    }
-
     @Test
     fun `test injected sample rate position`() {
         val returnedPosition = removedLsb.map { it }.putSampleRate(sampleRate)
         val audioSampleRate = sampleRate.toString().toSeparatedDigits()
         assert(returnedPosition == (audioSampleRate.elementCount + 1) * 2)
-        println("end")
     }
 
     @Test
