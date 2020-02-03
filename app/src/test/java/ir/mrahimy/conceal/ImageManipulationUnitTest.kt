@@ -168,7 +168,7 @@ class ImageManipulationUnitTest {
 
     @Test
     fun `test putting signed integer`() {
-        val position = rgbList.putSignedInteger(0, 251)
+        val position = rgbList.putSignedInteger(0, 251, Layer.R)
         assert(position == 4)
     }
 

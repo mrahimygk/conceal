@@ -88,11 +88,14 @@ fun List<Rgb>.getSampleRate(): Pair<Int, Int> {
  * @returns the position of last injected bit. used to start inserting another audio data
  * (starting with that position itself)
  */
-fun List<Rgb>.putSignedInteger(startingPosition: Int, value: Int): Int {
+fun List<Rgb>.putSignedInteger(startingPosition: Int, value: Int, layer: Layer): Int {
     var position = startingPosition
     val data = if (value < 0) {
-        val negativeHandled = this[position].r.bitwiseOr(4)
-        this[position].r = negativeHandled
+        when (layer) {
+            Layer.R -> this[position].r = this[position].r.bitwiseOr(4)
+            Layer.G -> this[position].g = this[position].g.bitwiseOr(4)
+            Layer.B -> this[position].b = this[position].b.bitwiseOr(4)
+        }
         value.absoluteValue
     } else value
 
@@ -100,7 +103,12 @@ fun List<Rgb>.putSignedInteger(startingPosition: Int, value: Int): Int {
 
     repeat(4) {
         val binaryString2BitsChunk = element.substring(it * 2, it * 2 + 2).toInt(2)
-        this[position].r = this[position].r.bitwiseOr(binaryString2BitsChunk)
+        when (layer) {
+            Layer.R -> this[position].r = this[position].r.bitwiseOr(binaryString2BitsChunk)
+            Layer.G -> this[position].g = this[position].r.bitwiseOr(binaryString2BitsChunk)
+            Layer.B -> this[position].b = this[position].r.bitwiseOr(binaryString2BitsChunk)
+
+        }
         position += 1
     }
 
@@ -113,10 +121,28 @@ fun List<Rgb>.putSignedInteger(startingPosition: Int, value: Int): Int {
  * @returns the position of last injected bit. used to start inserting another audio data
  * (starting with that position itself)
  */
-fun List<Rgb>.putAllSignedIntegers(startingPosition: Int, array: IntArray): Int {
+fun List<Rgb>.putAllSignedIntegers(
+    startingPosition: Int,
+    array: IntArray,
+    imageW: Int,
+    imageH: Int
+): Int {
     var position = startingPosition
+    var shouldChangeTheLayer = false
+    var lastIndexOfWaveDataChecked = 0
+    var dataExceedsTheContainer = false
+
     array.forEach {
+        if (position + 3 > (imageW - 1) * (imageH - 1)) {
+            shouldChangeTheLayer = true
+            /** breaks this for each*/
+            return@forEach
+        }
         position = putSignedInteger(position, it)
     }
     return position
+}
+
+enum class Layer {
+    R, G, B
 }
