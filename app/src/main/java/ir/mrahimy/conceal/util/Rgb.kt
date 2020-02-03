@@ -25,7 +25,7 @@ fun Int.getLsBits(howMany: Int) = when (howMany) {
  */
 fun Int.combineBits(other: Int): Int {
     val binA = this.toBinString()
-    val binB = this.toBinString()
+    val binB = other.toBinString()
     val lsbA = binA.drop(6)
     val lsbB = binB.drop(6)
     val whole = lsbA + lsbB
