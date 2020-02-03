@@ -44,30 +44,7 @@ class MainActivity : AppCompatActivity() {
 
         val rgbList = image.getRgbArray().remove3Lsb()
 
-        val audioSampleRate = waveFile.sampleRate.toString().toSeparatedDigits()
-
-        val sampleRateElementCount = audioSampleRate.elementCount.toBinString(format = "%4s")
-
-        var position = 0
-
-        var binaryString2BitsChunk = sampleRateElementCount.substring(0, 2).toInt(2)
-        rgbList[position].r = rgbList[position].r.bitwiseOr(binaryString2BitsChunk)
-        position += 1
-
-        binaryString2BitsChunk = sampleRateElementCount.substring(2, 4).toInt(2)
-        rgbList[position].r = rgbList[position].r.bitwiseOr(binaryString2BitsChunk)
-        position += 1
-
-        repeat(audioSampleRate.elementCount) {
-            val element = it.toBinString(format = "%4s")
-            binaryString2BitsChunk = element.substring(0, 2).toInt(2)
-            rgbList[position].r = rgbList[position].r.bitwiseOr(binaryString2BitsChunk)
-            position += 1
-
-            binaryString2BitsChunk = element.substring(2, 4).toInt(2)
-            rgbList[position].r = rgbList[position].r.bitwiseOr(binaryString2BitsChunk)
-            position += 1
-        }
+        var position = rgbList.putSampleRate(waveFile.sampleRate.toInt())
 
         var shouldChangeTheLayer = false
         var lastIndexOfWaveDataChecked = 0
@@ -87,7 +64,7 @@ class MainActivity : AppCompatActivity() {
             } else item
 
             var element = data.toBinString()
-            binaryString2BitsChunk = element.substring(0, 2).toInt(2)
+            var binaryString2BitsChunk = element.substring(0, 2).toInt(2)
             rgbList[position].r = rgbList[position].r.bitwiseOr(binaryString2BitsChunk)
             position += 1
 
@@ -132,7 +109,7 @@ class MainActivity : AppCompatActivity() {
                 } else item
 
                 var element = data.toBinString()
-                binaryString2BitsChunk = element.substring(0, 2).toInt(2)
+                var binaryString2BitsChunk = element.substring(0, 2).toInt(2)
                 rgbList[position].g = rgbList[position].g.bitwiseOr(binaryString2BitsChunk)
                 position += 1
 
@@ -178,7 +155,7 @@ class MainActivity : AppCompatActivity() {
                 } else item
 
                 var element = data.toBinString()
-                binaryString2BitsChunk = element.substring(0, 2).toInt(2)
+                var binaryString2BitsChunk = element.substring(0, 2).toInt(2)
                 rgbList[position].b = rgbList[position].b.bitwiseOr(binaryString2BitsChunk)
                 position += 1
 
@@ -207,7 +184,7 @@ class MainActivity : AppCompatActivity() {
         var y = 0
         repeat(rgbList.size) { l ->
             val rgb = rgbList[l]
-            bitmap[x, y] = Color.rgb(rgb.r,rgb.g,rgb.b)
+            bitmap[x, y] = Color.rgb(rgb.r, rgb.g, rgb.b)
             x++
             if (x >= image.width) {
                 y++
