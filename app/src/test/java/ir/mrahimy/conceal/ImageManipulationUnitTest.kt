@@ -26,6 +26,32 @@ class ImageManipulationUnitTest {
             add(Rgb(240, 151, 117))
             add(Rgb(17, 90, 51))
             add(Rgb(100, 90, 101))
+            add(Rgb(192, 117, 115))
+            add(Rgb(180, 215, 216))
+            add(Rgb(181, 25, 26))
+            add(Rgb(81, 250, 16))
+            add(Rgb(50, 200, 19))
+            add(Rgb(150, 200, 190))
+            add(Rgb(50, 200, 19))
+            add(Rgb(150, 200, 190))
+            add(Rgb(90, 51, 17))
+            add(Rgb(190, 251, 217))
+            add(Rgb(170, 190, 151))
+            add(Rgb(240, 151, 117))
+            add(Rgb(17, 90, 51))
+            add(Rgb(100, 90, 101))
+            add(Rgb(192, 117, 115))
+            add(Rgb(180, 215, 216))
+            add(Rgb(181, 25, 26))
+            add(Rgb(81, 250, 16))
+            add(Rgb(50, 200, 19))
+            add(Rgb(150, 200, 190))
+            add(Rgb(90, 51, 17))
+            add(Rgb(190, 251, 217))
+            add(Rgb(170, 190, 151))
+            add(Rgb(240, 151, 117))
+            add(Rgb(17, 90, 51))
+            add(Rgb(100, 90, 101))
         }
 
         removedLsb.clear()
@@ -144,5 +170,12 @@ class ImageManipulationUnitTest {
     fun `test putting signed integer`() {
         val position = rgbList.putSignedInteger(0, 251)
         assert(position == 4)
+    }
+
+    @Test
+    fun `test putting signed integer array`() {
+        val array = intArrayOf(250, 151, -200, -60, 25, 14, 1, 36)
+        val position = rgbList.putAllSignedIntegers(0, array)
+        assert(position == 32)
     }
 }
