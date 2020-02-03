@@ -139,4 +139,10 @@ class ImageManipulationUnitTest {
         assert(res.first == sampleRate)
         assert(res.second == 12)
     }
+
+    @Test
+    fun `test putting signed integer`() {
+        val position = rgbList.putSignedInteger(0, 251)
+        assert(position == 4)
+    }
 }
