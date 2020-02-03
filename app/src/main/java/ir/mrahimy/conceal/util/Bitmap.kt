@@ -1,6 +1,8 @@
 package ir.mrahimy.conceal.util
 
 import android.graphics.Bitmap
+import kotlin.math.absoluteValue
+import kotlin.math.sign
 
 fun Bitmap.getRgb(x: Int, y: Int): Rgb = this.getPixel(x, y).toRgb()
 
@@ -80,4 +82,28 @@ fun List<Rgb>.getSampleRate(): Pair<Int, Int> {
     }
 
     return Pair(digitList.joinToString("").toInt(), position)
+}
+
+/**
+ * @param startingPosition maybe the position of the last inserted index for sampleRate
+ * @returns the position of last injected bit. used to start inserting another audio data
+ * (starting with that position itself)
+ */
+fun List<Rgb>.putSignedInteger(startingPosition: Int, value: Int): Int {
+    var position = startingPosition
+    val data = if (value < 0) {
+        val negativeHandled = this[position].r.bitwiseOr(4)
+        this[position].r = negativeHandled
+        value.absoluteValue
+    } else value
+
+    val element = data.toBinString()
+
+    repeat(4) {
+        val binaryString2BitsChunk = element.substring(it * 2, it * 2 + 2).toInt(2)
+        this[position].r = this[position].r.bitwiseOr(binaryString2BitsChunk)
+        position += 1
+    }
+
+    return position
 }
