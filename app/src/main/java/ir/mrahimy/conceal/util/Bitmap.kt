@@ -146,3 +146,9 @@ fun List<Rgb>.putAllSignedIntegers(
 enum class Layer {
     R, G, B
 }
+
+data class LoopHelper(
+    val lastIndexOfIntArray: Int,
+    val lastPositionOfRgbList: Int,
+    val shouldChangeTheLayer: Boolean
+)
