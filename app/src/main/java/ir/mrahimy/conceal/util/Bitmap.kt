@@ -118,6 +118,7 @@ fun List<Rgb>.putSignedInteger(startingPosition: Int, value: Int, layer: Layer):
 /**
  * @param startingPosition maybe the position of the last inserted index for or previous insertion
  * @param array the integer array to be put inside 3lsb of this list
+ * @param imageH and imageW are the boundaries of our image: we cannot exceed them
  * @returns the position of last injected bit. used to start inserting another audio data
  * (starting with that position itself)
  */
