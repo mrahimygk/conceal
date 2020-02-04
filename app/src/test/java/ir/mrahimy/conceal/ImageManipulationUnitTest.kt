@@ -10,6 +10,9 @@ class ImageManipulationUnitTest {
     private val rgbList = mutableListOf<Rgb>()
     private val removedLsb = mutableListOf<Rgb>()
 
+    private val image_width = 8
+    private val image_height = 5
+
     @Before
     fun initRgbList() {
         rgbList.clear()
