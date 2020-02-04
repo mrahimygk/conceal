@@ -179,8 +179,18 @@ class ImageManipulationUnitTest {
 
     @Test
     fun `test putting signed integer array`() {
-        val array = intArrayOf(250, 151, -200, -60, 25, 14, 1, 36)
-        val position = rgbList.putAllSignedIntegers(0, array)
-        assert(position == 32)
+        val array = intArrayOf(
+            250, 151, -200, -60, 25, 14, 1, 36, 19, 255,
+            250, 151, -200, -60, 25, 14, 1, 36, 19, 255,
+            30, 39, 255
+        )
+        val full = array.size
+        val threshold = (image_height) * (image_width)
+        assert(threshold == 40)
+        val position = rgbList.putAllSignedIntegers(0, array, image_width, image_height)
+        println(position)
+        println(threshold)
+        println(position % threshold)
+        assert(position == (position % threshold))
     }
 }
