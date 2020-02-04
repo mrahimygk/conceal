@@ -128,20 +128,16 @@ fun List<Rgb>.putAllSignedIntegers(
     imageW: Int,
     imageH: Int
 ): Int {
-    var position = startingPosition
-    var shouldChangeTheLayer = false
-    var lastIndexOfWaveDataChecked = 0
-    var dataExceedsTheContainer = false
 
-    array.forEach {
-        if (position + 3 > (imageW - 1) * (imageH - 1)) {
-            shouldChangeTheLayer = true
-            /** breaks this for each*/
-            return@forEach
-        }
-        position = putSignedInteger(position, it)
-    }
-    return position
+    var res = putAllSignedIntegersInLoop(array, imageW, imageH, startingPosition, 0, Layer.R)
+
+    if (res.shouldChangeTheLayer)
+        res = putAllSignedIntegersInLoop(array, imageW, imageH, 0, res.lastIndexOfIntArray, Layer.G)
+
+    if (res.shouldChangeTheLayer)
+        res = putAllSignedIntegersInLoop(array, imageW, imageH, 0, res.lastIndexOfIntArray, Layer.B)
+
+    return res.lastPositionOfRgbList
 }
 
 /**
