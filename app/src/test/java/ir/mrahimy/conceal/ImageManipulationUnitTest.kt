@@ -30,10 +30,12 @@ class ImageManipulationUnitTest {
             add(Rgb(17, 90, 51))
             add(Rgb(100, 90, 101))
             add(Rgb(192, 117, 115))
+            add(Rgb(192, 117, 115))
             add(Rgb(180, 215, 216))
             add(Rgb(181, 25, 26))
             add(Rgb(81, 250, 16))
             add(Rgb(50, 200, 19))
+            add(Rgb(170, 190, 151))
             add(Rgb(150, 200, 190))
             add(Rgb(50, 200, 19))
             add(Rgb(150, 200, 190))
@@ -55,7 +57,7 @@ class ImageManipulationUnitTest {
             add(Rgb(240, 151, 117))
             add(Rgb(17, 90, 51))
             add(Rgb(100, 90, 101))
-        }
+        }//40
 
         removedLsb.clear()
         removedLsb.addAll(rgbList.remove3Lsb())
