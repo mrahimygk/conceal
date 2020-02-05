@@ -32,9 +32,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val waveFile = fromWaveData(
-            Wave.WavFile.openWavFile(
-                File("/storage/emulated/0/Download/8k16bitpcm.wav")
-            )
+            Wave.WavFile.openWavFile(File("/storage/emulated/0/Download/8k16bitpcm.wav"))
         )
 
         val audioDataAsRgbList = waveFile.data.mapToUniformDouble().mapToRgbValue()
