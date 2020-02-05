@@ -31,7 +31,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        askPermissions()
         val waveFile = fromWaveData(
             Wave.WavFile.openWavFile(
                 File("/storage/emulated/0/Download/8k16bitpcm.wav")
@@ -203,13 +202,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @NeedsPermission(Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    private fun askPermissions() {
-
-    }
-
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO)
-    private fun startRecording() {
+    fun startRecording() {
         val date = Date()
 
         if (isRecording) {
@@ -223,5 +217,14 @@ class MainActivity : AppCompatActivity() {
         waveRecorder = WaveRecorder(filePath)
         waveRecorder.startRecording()
         isRecording = true
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        onRequestPermissionsResult(requestCode, grantResults)
     }
 }
