@@ -1,6 +1,8 @@
 package ir.mrahimy.conceal.util
 
 import android.graphics.Bitmap
+import android.graphics.Color
+import androidx.core.graphics.set
 import kotlin.math.absoluteValue
 
 fun Bitmap.getRgb(x: Int, y: Int): Rgb = this.getPixel(x, y).toRgb()
@@ -173,6 +175,28 @@ private fun List<Rgb>.putAllSignedIntegersInLoop(
     }
 
     return LoopHelper(lastIndexOfWaveDataChecked, position, false)
+}
+
+/**
+ * @param image is the reference bitmap to build the resulting bitmap upon.
+ */
+fun List<Rgb>.toBitmap(image: Bitmap): Bitmap {
+
+    val bitmap = Bitmap.createBitmap(image.width, image.height, image.config)
+
+    var x = 0
+    var y = 0
+    repeat(size) { l ->
+        val rgb = get(l)
+        bitmap[x, y] = Color.rgb(rgb.r, rgb.g, rgb.b)
+        x++
+        if (x >= image.width) {
+            y++
+            x = 0
+        }
+    }
+
+    return bitmap
 }
 
 /**
