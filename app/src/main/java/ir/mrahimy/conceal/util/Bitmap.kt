@@ -148,7 +148,7 @@ fun List<Rgb>.putAllSignedIntegers(
  * @returns the position of last injected bit. used to start inserting another audio data
  * (starting with that position itself)
  */
-fun List<Rgb>.putAllSignedIntegersInLoop(
+private fun List<Rgb>.putAllSignedIntegersInLoop(
     array: IntArray,
     imageW: Int,
     imageH: Int,
