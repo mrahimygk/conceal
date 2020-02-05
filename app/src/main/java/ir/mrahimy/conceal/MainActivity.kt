@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
         val rgbList = image.getRgbArray().remove3Lsb()
 
-        var position = rgbList.putSampleRate(waveFile.sampleRate.toInt())
+        val position = rgbList.putSampleRate(waveFile.sampleRate.toInt())
 
         rgbList.putAllSignedIntegers(position, audioDataAsRgbList, image.width, image.height)
 
