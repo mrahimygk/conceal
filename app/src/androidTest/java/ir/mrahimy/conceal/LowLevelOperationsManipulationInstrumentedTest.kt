@@ -5,9 +5,9 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import androidx.core.graphics.set
 import androidx.test.platform.app.InstrumentationRegistry
-import ir.mrahimy.conceal.util.Rgb
+import ir.mrahimy.conceal.data.Rgb
 import ir.mrahimy.conceal.util.remove3Lsb
-import ir.mrahimy.conceal.util.toRgb
+import ir.mrahimy.conceal.util.ktx.toRgb
 import ir.mrahimy.conceal.util.writeBitmap
 import org.junit.Before
 import org.junit.Test
@@ -15,7 +15,7 @@ import java.io.File
 import java.util.*
 
 
-class ImageManipulationInstrumentedTest {
+class LowLevelOperationsManipulationInstrumentedTest {
     private val rgbList = mutableListOf<Rgb>()
     private val removedLsb = mutableListOf<Rgb>()
 
