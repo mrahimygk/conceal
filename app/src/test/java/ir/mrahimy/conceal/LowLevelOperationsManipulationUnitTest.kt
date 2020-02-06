@@ -1,10 +1,14 @@
 package ir.mrahimy.conceal
 
+import ir.mrahimy.conceal.data.Rgb
+import ir.mrahimy.conceal.data.toSeparatedDigits
 import ir.mrahimy.conceal.util.*
+import ir.mrahimy.conceal.util.ktx.bitwiseOr
+import ir.mrahimy.conceal.util.ktx.toBinString
 import org.junit.Before
 import org.junit.Test
 
-class ImageManipulationUnitTest {
+class LowLevelOperationsManipulationUnitTest {
 
     private val sampleRate = 44100
     private val rgbList = mutableListOf<Rgb>()
