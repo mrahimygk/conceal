@@ -41,6 +41,9 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:$recyclerViewVersion"
     implementation "androidx.fragment:fragment-ktx:$fragmentKtxVersion"
 
+    //UI
+    implementation "com.github.ybq:Android-SpinKit:$spinKitVersion"
+
     //Test
     testImplementation 'junit:junit:4.12'
     testImplementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
