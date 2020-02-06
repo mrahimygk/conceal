@@ -1,6 +1,6 @@
-package ir.mrahimy.conceal.util;
+package ir.mrahimy.conceal.util.lowlevel;
 
-public class IntegerUtil {
+public class LowLevelIntOperations {
     public static int removeLsBits(int in) {
         return in & 248;
     }
