@@ -7,6 +7,7 @@ public class LowLevelRgbOperations {
     /**
      * A pixel from a Bitmap.getPixel(x,y) is an integer which contains all RGB values inside.
      * This is a method to get the rgb values from this integer
+     *
      * @param pixel a signed integer to get rgb values
      * @return a data class with separated RGB values
      */
@@ -20,6 +21,7 @@ public class LowLevelRgbOperations {
 
     /**
      * puts RGB values inside a signed integer
+     *
      * @param in the separated RGB values to be put inside the integer.
      * @return a signed integer
      */
