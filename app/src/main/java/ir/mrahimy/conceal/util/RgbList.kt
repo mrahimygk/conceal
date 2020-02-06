@@ -163,6 +163,7 @@ private fun List<Rgb>.putAllSignedIntegersInLoop(
         }
         position = putSignedInteger(position, it, layer)
         lastIndexOfWaveDataChecked = index
+        //TODO: this lastIndexOfWaveDataChecked should be posted for percentage reference
     }
 
     return LoopHelper(lastIndexOfWaveDataChecked, position, false)
