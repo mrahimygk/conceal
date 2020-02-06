@@ -19,3 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keep class ir.mrahimy.conceal.data.** { *;}
+-keep interface ir.mrahimy.conceal.data.** { *;}
+-keepnames interface ir.mrahimy.conceal.data.** { *;}
