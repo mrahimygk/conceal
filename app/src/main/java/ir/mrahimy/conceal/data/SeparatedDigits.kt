@@ -1,4 +1,4 @@
-package ir.mrahimy.conceal.util
+package ir.mrahimy.conceal.data
 
 data class SeparatedDigits(
     val elementCount: Int,
