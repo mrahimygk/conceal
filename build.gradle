@@ -11,7 +11,7 @@ buildscript {
         okHttpVersion = '3.12.0'
         recyclerViewVersion = '1.1.0'
         testRunnerVersion = '1.1.1'
-
+        spinKitVersion = '1.4.0'
     }
 
     repositories {
