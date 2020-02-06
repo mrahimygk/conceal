@@ -1,9 +1,9 @@
 package ir.mrahimy.conceal
 
-import ir.mrahimy.conceal.util.IntegerUtil
-import ir.mrahimy.conceal.util.bitwiseOr
-import ir.mrahimy.conceal.util.getLsBits
-import ir.mrahimy.conceal.util.toBinString
+import ir.mrahimy.conceal.util.lowlevel.LowLevelIntOperations
+import ir.mrahimy.conceal.util.ktx.bitwiseOr
+import ir.mrahimy.conceal.util.ktx.getLsBits
+import ir.mrahimy.conceal.util.ktx.toBinString
 import org.junit.Test
 
 class IntUnitTest {
@@ -76,14 +76,14 @@ class IntUnitTest {
     @Test
     fun `test getting 2 lsb`() {
         val number = 15
-        val _2lsb = IntegerUtil.get2LsBits(number)
+        val _2lsb = LowLevelIntOperations.get2LsBits(number)
         assert(_2lsb == 3)
     }
 
     @Test
     fun `test getting 3 lsb`() {
         val number = 15
-        val _3lsb = IntegerUtil.get3LsBits(number)
+        val _3lsb = LowLevelIntOperations.get3LsBits(number)
         assert(_3lsb == 7)
     }
 
