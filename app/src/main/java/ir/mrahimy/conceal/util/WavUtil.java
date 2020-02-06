@@ -1,8 +1,8 @@
-package ir.mrahimy.conceal.data;
+package ir.mrahimy.conceal.util;
 
 import java.io.IOException;
 
-import ir.mrahimy.conceal.util.Wave;
+import ir.mrahimy.conceal.data.Waver;
 
 public class WavUtil {
     public static Waver fromWaveData(Wave.WavFile file) {
