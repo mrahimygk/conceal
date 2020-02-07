@@ -106,6 +106,14 @@ class MainActivityViewModel(
         return@combine outputBitmap
     }
 
+    private val _isInputImageLoading = MutableLiveData<Boolean>(false)
+    val isInputImageLoading: LiveData<Boolean>
+        get() = _isInputImageLoading
+
+    private val _isInputWaveLoading = MutableLiveData<Boolean>(false)
+    val isInputWaveLoading: LiveData<Boolean>
+        get() = _isInputWaveLoading
+
     private fun putWaveFileIntoImage(
         image: Bitmap,
         waveFile: Waver
@@ -183,22 +191,24 @@ class MainActivityViewModel(
 
     fun selectImageFile(data: Intent?) {
         viewModelScope.launch {
-            //TODO: set loading input image to true
+            _isInputImageLoading.postValue(true)
             delay(20)
             data?.data?.let {
                 delay(20)
                 val file = it.getPath(getApplication().applicationContext)
                 delay(20)
                 _inputImage.postValue(BitmapFactory.decodeFile(file))
+                _isInputImageLoading.postValue(false)
             }
         }
     }
 
     fun selectAudioFile(data: Intent?) {
         viewModelScope.launch {
-            //TODO: set loading wave to true
+            _isInputWaveLoading.postValue(true)
             delay(20)
             data?.data?.getPath(getApplication().applicationContext)?.let {
+                _isInputWaveLoading.postValue(false)
                 _waveFileLabel.postValue(it)
                 delay(20)
                 _inputWave.postValue(File(it))
