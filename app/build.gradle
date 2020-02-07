@@ -43,6 +43,7 @@ dependencies {
 
     //UI
     implementation "com.github.ybq:Android-SpinKit:$spinKitVersion"
+    implementation "com.github.douglasjunior:android-simple-tooltip:$simpleTooltipVersion"
 
     //Test
     testImplementation 'junit:junit:4.12'
