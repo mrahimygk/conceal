@@ -2,11 +2,11 @@ package ir.mrahimy.conceal.base
 
 import android.content.Intent
 import android.os.Bundle
-import android.provider.MediaStore
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import ir.mrahimy.conceal.app.ConcealApplication
+import ir.mrahimy.conceal.enums.ChooserType
 
 abstract class BaseActivity<VM : BaseViewModel, DB : ViewDataBinding> : AppCompatActivity() {
 
@@ -36,15 +36,15 @@ abstract class BaseActivity<VM : BaseViewModel, DB : ViewDataBinding> : AppCompa
         configResumeEvents()
     }
 
-    protected fun createPickerIntent(type: String, title: String): Intent? {
+    protected fun createPickerIntent(type: ChooserType, title: String): Intent? {
         val getIntent = Intent(Intent.ACTION_GET_CONTENT)
-        getIntent.type = type
+        getIntent.type = type.typeString
 
         val pickIntent = Intent(
             Intent.ACTION_PICK,
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            type.externalContentUri
         )
-        pickIntent.type = type
+        pickIntent.type = type.typeString
 
         val chooserIntent = Intent.createChooser(getIntent, title)
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(pickIntent))
