@@ -1,6 +1,7 @@
 package ir.mrahimy.conceal.ui.home
 
 import android.app.Application
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.lifecycle.LiveData
@@ -13,6 +14,7 @@ import ir.mrahimy.conceal.data.capsules.SaveBitmapInfoCapsule
 import ir.mrahimy.conceal.data.mapToRgbValue
 import ir.mrahimy.conceal.data.mapToUniformDouble
 import ir.mrahimy.conceal.util.*
+import ir.mrahimy.conceal.util.ktx.getPath
 import ir.mrahimy.conceal.util.ktx.getRgbArray
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -132,5 +134,17 @@ class MainActivityViewModel(
 
     fun chooseAudio() {
         _onChooseAudio.postValue(StatelessEvent())
+    }
+
+    fun selectImageFile(data: Intent?) {
+        data?.data?.let {
+            _inputImage.postValue(BitmapFactory.decodeFile(it.getPath(getApplication().applicationContext)))
+        }
+    }
+
+    fun selectAudioFile(data: Intent?) {
+        data?.data?.getPath(getApplication().applicationContext)?.let {
+            _inputWave.postValue(File(it))
+        }
     }
 }
