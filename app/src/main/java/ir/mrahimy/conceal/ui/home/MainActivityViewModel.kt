@@ -42,6 +42,14 @@ class MainActivityViewModel(
     val percent: LiveData<String>
         get() = _percent
 
+    /**
+     * on active recording:  android.R.drawable.presence_audio_online
+     * on inactive recording:  android.R.drawable.presence_audio_busy
+     */
+    private val _recordingIcon = MutableLiveData<Int>(android.R.drawable.presence_audio_busy)
+    val recordingIcon: LiveData<Int>
+        get() = _recordingIcon
+
     val isOutputHintVisible =
         combine(_percent, _inputImage, _inputWave) { percent, inputImage, inputWave ->
             return@combine inputImage == null
