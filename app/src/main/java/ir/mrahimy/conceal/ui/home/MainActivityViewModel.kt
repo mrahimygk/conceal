@@ -97,7 +97,6 @@ class MainActivityViewModel(
                 BitmapFactory.decodeFile("/storage/emulated/0/Download/deer.jpg")
             )
         }
-
     }
 
     fun startRecording() {
@@ -123,7 +122,15 @@ class MainActivityViewModel(
     val onChooseImage: LiveData<StatelessEvent>
         get() = _onChooseImage
 
-    fun chooseImage(){
+    fun chooseImage() {
         _onChooseImage.postValue(StatelessEvent())
+    }
+
+    private val _onChooseAudio = MutableLiveData<StatelessEvent>()
+    val onChooseAudio: LiveData<StatelessEvent>
+        get() = _onChooseAudio
+
+    fun chooseAudio() {
+        _onChooseAudio.postValue(StatelessEvent())
     }
 }
