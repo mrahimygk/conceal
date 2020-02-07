@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Conceal</string>
     <string name="choose_input_image">تصویر خروجی</string>
+    <string name="choose_wave_file_label">ابتدا فایل صوتی باز کنید یا صدایی ضبط کنید</string>
     <string name="click_to_choose_input_image">انتخاب تصویر ورودی</string>
     <string name="select_image_title">Select Image</string>
     <string name="select_audio_title">Select Audio</string>
