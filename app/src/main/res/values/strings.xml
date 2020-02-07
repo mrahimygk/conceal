@@ -5,6 +5,6 @@
     <string name="select_image_title">Select Image</string>
     <string name="select_audio_title">Select Audio</string>
     <string name="hold_to_start_recording_tooltip">برای ضبط صدا نگه دارید</string>
-    <string name="click_to_open_file">برای باز کردن فایل کلیک کنید</string>
+    <string name="click_to_open_file">باز کردن فایل از گوشی</string>
     <string name="main_title">صدا رو داخل تصویر مخفی کن</string>
 </resources>
