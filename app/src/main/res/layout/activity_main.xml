@@ -39,16 +39,16 @@
             android:id="@+id/output_label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
             android:layout_marginBottom="32dp"
             android:gravity="center_horizontal"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
             android:text="@{vm.outputImageLabel}"
-            tools:text="@string/choose_wave_file_label"
             app:isGone="@{!vm.isOutputHintVisible}"
             app:layout_constraintBottom_toBottomOf="@id/output_img"
             app:layout_constraintEnd_toEndOf="@id/output_img"
-            app:layout_constraintStart_toStartOf="@id/output_img" />
+            app:layout_constraintStart_toStartOf="@id/output_img"
+            tools:text="@string/choose_wave_file_label" />
 
         <ImageView
             android:id="@+id/output_placeholder"
@@ -152,7 +152,7 @@
             android:layout_marginStart="16dp"
             android:gravity="center_vertical"
             android:onClick="@{()->vm.chooseAudio()}"
-            android:text="@string/click_to_open_file"
+            android:text="@{vm.waveFileLabel}"
             app:layout_constraintBottom_toBottomOf="@id/wav_file_icon"
             app:layout_constraintEnd_toStartOf="@id/wav_file_icon"
             app:layout_constraintStart_toStartOf="parent"
