@@ -2,6 +2,7 @@ package ir.mrahimy.conceal.app
 
 import android.app.Activity
 import android.app.Application
+import com.yariksoffice.lingver.Lingver
 import ir.mrahimy.conceal.di.adapterModule
 import ir.mrahimy.conceal.di.modelModule
 import ir.mrahimy.conceal.di.viewModelModule
@@ -15,6 +16,8 @@ class ConcealApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        Lingver.init(this, "fa")
 
         startKoin {
             androidContext(this@ConcealApplication)
