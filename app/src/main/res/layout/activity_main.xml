@@ -37,10 +37,14 @@
 
         <TextView
             android:id="@+id/output_label"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
             android:layout_marginBottom="32dp"
-            android:text="@string/choose_input_image"
+            android:gravity="center_horizontal"
+            android:text="@{vm.outputImageLabel}"
+            tools:text="@string/choose_wave_file_label"
             app:isGone="@{!vm.isOutputHintVisible}"
             app:layout_constraintBottom_toBottomOf="@id/output_img"
             app:layout_constraintEnd_toEndOf="@id/output_img"
