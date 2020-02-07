@@ -12,19 +12,18 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:background="@color/grey"
         android:layout_height="match_parent"
         tools:context=".ui.home.MainActivity">
 
-        <!--        <Button-->
-        <!--            android:id="@+id/record"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="0dp"-->
-        <!--            android:onClick="@{()->vm.startRecording()}"-->
-        <!--            android:background="@color/colorAccent"-->
-        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--            app:layout_constraintDimensionRatio="1:1"-->
-        <!--            app:layout_constraintLeft_toLeftOf="parent"-->
-        <!--            app:layout_constraintRight_toRightOf="parent" />-->
+        <TextView
+            android:id="@+id/txt_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:gravity="center_horizontal"
+            android:text="@string/main_title"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ir.mrahimy.conceal.cv.CameraCorner
             android:layout_width="0dp"
@@ -54,9 +53,9 @@
             android:scaleType="fitCenter"
             app:bitmap="@{vm.outputBitmap}"
             app:layout_constraintDimensionRatio="w,1:1"
-            app:layout_constraintEnd_toStartOf="@id/input_img"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/input_img"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txt_title"
             tools:src="@mipmap/ic_launcher" />
 
         <ir.mrahimy.conceal.cv.CameraCorner
@@ -87,9 +86,9 @@
             android:scaleType="fitCenter"
             app:bitmap="@{vm.inputImage}"
             app:layout_constraintDimensionRatio="w,1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/output_img"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/output_img"
+            app:layout_constraintTop_toBottomOf="@id/txt_title"
             tools:src="@mipmap/ic_launcher" />
 
         <View
@@ -107,5 +106,56 @@
             android:text="@{vm.percent}"
             app:layout_constraintTop_toBottomOf="@id/output_img" />
 
+        <ImageView
+            android:id="@+id/wav_file_icon"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:onClick="@{()->vm.chooseAudio()}"
+            android:src="@drawable/wav"
+            app:layout_constraintDimensionRatio="w,1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/output_img" />
+
+        <TextView
+            android:id="@+id/wav_file_text"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:gravity="center_vertical"
+            android:onClick="@{()->vm.chooseAudio()}"
+            android:text="@string/click_to_open_file"
+            app:layout_constraintBottom_toBottomOf="@id/wav_file_icon"
+            app:layout_constraintEnd_toStartOf="@id/wav_file_icon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/wav_file_icon" />
+
+        <ImageView
+            android:id="@+id/btn_record"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_marginBottom="16dp"
+            android:onClick="@{()->vm.startRecording()}"
+            android:padding="8dp"
+            app:drawableCompat="@{vm.recordingIcon}"
+            app:isTooltipAnimated="@{true}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="h,1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:tooltip="@{vm.showRecordTooltip}"
+            app:transparentOverlay="@{false}"
+            tools:src="@android:drawable/presence_audio_busy" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recordings_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:data="@{vm.recordings}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/btn_record"
+            app:layout_constraintTop_toBottomOf="@id/wav_file_icon"
+            tools:listitem="@layout/item_recording" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
