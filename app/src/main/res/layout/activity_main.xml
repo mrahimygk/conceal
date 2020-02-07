@@ -12,8 +12,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:background="@color/grey"
         android:layout_height="match_parent"
+        android:background="@color/grey"
         tools:context=".ui.home.MainActivity">
 
         <TextView
@@ -22,6 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:gravity="center_horizontal"
+            android:padding="8dp"
             android:text="@string/main_title"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,11 +36,24 @@
             app:layout_constraintTop_toTopOf="@id/output_img" />
 
         <TextView
+            android:id="@+id/output_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
             android:text="@string/choose_input_image"
             app:isGone="@{!vm.isOutputHintVisible}"
             app:layout_constraintBottom_toBottomOf="@id/output_img"
+            app:layout_constraintEnd_toEndOf="@id/output_img"
+            app:layout_constraintStart_toStartOf="@id/output_img" />
+
+        <ImageView
+            android:id="@+id/output_placeholder"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/image"
+            app:isGone="@{!vm.isOutputHintVisible}"
+            app:layout_constraintBottom_toTopOf="@id/output_label"
             app:layout_constraintEnd_toEndOf="@id/output_img"
             app:layout_constraintStart_toStartOf="@id/output_img"
             app:layout_constraintTop_toTopOf="@id/output_img" />
@@ -53,10 +67,11 @@
             android:scaleType="fitCenter"
             app:bitmap="@{vm.outputBitmap}"
             app:layout_constraintDimensionRatio="w,1:1"
-            app:layout_constraintStart_toEndOf="@id/input_img"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/input_img"
             app:layout_constraintTop_toBottomOf="@id/txt_title"
-            tools:src="@mipmap/ic_launcher" />
+            tools:src="@mipmap/ic_launcher"
+            tools:visibility="invisible" />
 
         <ir.mrahimy.conceal.cv.CameraCorner
             android:layout_width="0dp"
@@ -68,11 +83,24 @@
             app:layout_constraintTop_toTopOf="@id/input_img" />
 
         <TextView
+            android:id="@+id/input_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
             android:text="@string/click_to_choose_input_image"
             app:isGone="@{!vm.isInputHintVisible}"
             app:layout_constraintBottom_toBottomOf="@id/input_img"
+            app:layout_constraintEnd_toEndOf="@id/input_img"
+            app:layout_constraintStart_toStartOf="@id/input_img" />
+
+        <ImageView
+            android:id="@+id/input_placeholder"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/image"
+            app:isGone="@{!vm.isInputHintVisible}"
+            app:layout_constraintBottom_toTopOf="@id/input_label"
             app:layout_constraintEnd_toEndOf="@id/input_img"
             app:layout_constraintStart_toStartOf="@id/input_img"
             app:layout_constraintTop_toTopOf="@id/input_img" />
@@ -86,10 +114,11 @@
             android:scaleType="fitCenter"
             app:bitmap="@{vm.inputImage}"
             app:layout_constraintDimensionRatio="w,1:1"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/output_img"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/txt_title"
-            tools:src="@mipmap/ic_launcher" />
+            tools:src="@mipmap/ic_launcher"
+            tools:visibility="invisible" />
 
         <View
             android:layout_width="0dp"
@@ -99,12 +128,6 @@
             app:layout_constraintEnd_toEndOf="@id/input_img"
             app:layout_constraintStart_toStartOf="@id/input_img"
             app:layout_constraintTop_toTopOf="@id/input_img" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@{vm.percent}"
-            app:layout_constraintTop_toBottomOf="@id/output_img" />
 
         <ImageView
             android:id="@+id/wav_file_icon"
