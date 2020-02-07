@@ -58,7 +58,8 @@ class MainActivityViewModel(
     val outputImageLabel: LiveData<Int>
         get() = _outputImageLabel
 
-    private val _waveFileLabel = MutableLiveData<String>(getApplication().getString(R.string.click_to_open_file))
+    private val _waveFileLabel =
+        MutableLiveData<String>(getApplication().getString(R.string.click_to_open_file))
     val waveFileLabel: LiveData<String>
         get() = _waveFileLabel
 
@@ -181,15 +182,27 @@ class MainActivityViewModel(
     }
 
     fun selectImageFile(data: Intent?) {
-        data?.data?.let {
-            _inputImage.postValue(BitmapFactory.decodeFile(it.getPath(getApplication().applicationContext)))
+        viewModelScope.launch {
+            //TODO: set loading input image to true
+            delay(20)
+            data?.data?.let {
+                delay(20)
+                val file = it.getPath(getApplication().applicationContext)
+                delay(20)
+                _inputImage.postValue(BitmapFactory.decodeFile(file))
+            }
         }
     }
 
     fun selectAudioFile(data: Intent?) {
-        data?.data?.getPath(getApplication().applicationContext)?.let {
-            _waveFileLabel.postValue(it)
-            _inputWave.postValue(File(it))
+        viewModelScope.launch {
+            //TODO: set loading wave to true
+            delay(20)
+            data?.data?.getPath(getApplication().applicationContext)?.let {
+                _waveFileLabel.postValue(it)
+                delay(20)
+                _inputWave.postValue(File(it))
+            }
         }
     }
 }
