@@ -3,14 +3,16 @@ package ir.mrahimy.conceal.ui.home
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
-import android.util.Log
 import com.github.squti.androidwaverecorder.WaveRecorder
 import ir.mrahimy.conceal.R
 import ir.mrahimy.conceal.base.BaseActivity
 import ir.mrahimy.conceal.databinding.ActivityMainBinding
+import ir.mrahimy.conceal.enums.ChooserType
 import ir.mrahimy.conceal.util.EventObsrver
 import ir.mrahimy.conceal.util.WavUtil.fromWaveData
 import ir.mrahimy.conceal.util.Wave
+import kotlinx.android.synthetic.main.activity_main.*
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
@@ -18,16 +20,21 @@ import java.io.File
 import java.util.*
 
 
+const val PICK_IMAGE = 1000
+const val PICK_AUDIO = 2000
+
 @RuntimePermissions
 class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() {
 
-    var isRecording = false
-    val PICK_IMAGE = 1
+    private var isRecording = false
+
     private lateinit var waveRecorder: WaveRecorder
     private lateinit var filePath: String
 
     override val layoutRes = R.layout.activity_main
     override val viewModel: MainActivityViewModel by viewModel()
+
+    private val adapter: RecordingsAdapter by inject()
 
     override fun bindObservables() {
         viewModel.onStartRecording.observe(this, EventObsrver {
@@ -35,19 +42,19 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() 
         })
 
         viewModel.onChooseImage.observe(this, EventObsrver {
-            val getIntent = Intent(Intent.ACTION_GET_CONTENT)
-            getIntent.type = "image/*"
-
-            val pickIntent = Intent(
-                Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            chooseMediaWithPermissionCheck(
+                ChooserType.Image,
+                getString(R.string.select_image_title),
+                PICK_IMAGE
             )
-            pickIntent.type = "image/*"
+        })
 
-            val chooserIntent = Intent.createChooser(getIntent, "Select Image")
-            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(pickIntent))
-
-            startActivityForResult(chooserIntent, PICK_IMAGE)
+        viewModel.onChooseAudio.observe(this, EventObsrver {
+            chooseMediaWithPermissionCheck(
+                ChooserType.Audio,
+                getString(R.string.select_audio_title),
+                PICK_AUDIO
+            )
         })
     }
 
@@ -60,12 +67,14 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() 
     }
 
     @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-    fun openWave() {
-
+    fun chooseMedia(type: ChooserType, title: String, requestCode: Int) {
+        val chooserIntent =
+            createPickerIntent(type, title)
+        startActivityForResult(chooserIntent, requestCode)
     }
 
     override fun configCreationEvents() {
-        openWaveWithPermissionCheck()
+        recordings_list?.adapter = adapter
     }
 
     override fun configResumeEvents() = Unit
@@ -102,7 +111,12 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() 
         when (requestCode) {
             PICK_IMAGE -> {
                 if (resultCode == Activity.RESULT_CANCELED) return
-                Log.d("onActivityResult", data?.data.toString())
+                viewModel.selectImageFile(data)
+            }
+
+            PICK_AUDIO -> {
+                if (resultCode == Activity.RESULT_CANCELED) return
+                viewModel.selectAudioFile(data)
             }
         }
     }
