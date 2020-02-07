@@ -87,4 +87,7 @@ dependencies {
     //Audio
     implementation 'com.github.squti:Android-Wave-Recorder:1.3.0'
 
+    //Localization
+    implementation "com.github.YarikSOffice:lingver:$lingverVersion"
+
 }
