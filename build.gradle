@@ -5,6 +5,7 @@ buildscript {
         coroutineVersion = '1.3.0-M1'
         dispatcherVersion = '4.6.0'
         fragmentKtxVersion = '1.2.0-alpha03'
+        googleMaterialVersion = '1.1.0-alpha10'
         koinVersion = '2.0.0-GA'
         kotlinVersion = '1.3.50'
         lifecycleVersion = '2.2.0'
