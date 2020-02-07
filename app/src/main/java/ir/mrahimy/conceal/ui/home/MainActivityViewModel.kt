@@ -58,6 +58,10 @@ class MainActivityViewModel(
     val outputImageLabel: LiveData<Int>
         get() = _outputImageLabel
 
+    private val _waveFileLabel = MutableLiveData<String>(getApplication().getString(R.string.click_to_open_file))
+    val waveFileLabel: LiveData<String>
+        get() = _waveFileLabel
+
     /**
      * on active recording:  android.R.drawable.presence_audio_online
      * on inactive recording:  android.R.drawable.presence_audio_busy
@@ -184,6 +188,7 @@ class MainActivityViewModel(
 
     fun selectAudioFile(data: Intent?) {
         data?.data?.getPath(getApplication().applicationContext)?.let {
+            _waveFileLabel.postValue(it)
             _inputWave.postValue(File(it))
         }
     }
