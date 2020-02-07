@@ -8,7 +8,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
+import ir.mrahimy.conceal.R
 import ir.mrahimy.conceal.base.BaseAndroidViewModel
+import ir.mrahimy.conceal.data.Recording
 import ir.mrahimy.conceal.data.Waver
 import ir.mrahimy.conceal.data.capsules.SaveBitmapInfoCapsule
 import ir.mrahimy.conceal.data.mapToRgbValue
@@ -23,14 +25,18 @@ import java.util.*
 
 class MainActivityViewModel(
     application: Application,
-    private val model: MainActivityModel
+    model: MainActivityModel
 ) : BaseAndroidViewModel(application, model) {
+
+    private val _recordings = MutableLiveData<List<Recording>>()
+    val recordings: LiveData<List<Recording>>
+        get() = _recordings
 
     private val _onStartRecording = MutableLiveData<StatelessEvent>()
     val onStartRecording: LiveData<StatelessEvent>
         get() = _onStartRecording
 
-    private val _inputImage = MutableLiveData<Bitmap>()
+    private val _inputImage = MutableLiveData<Bitmap>(null)
     val inputImage: LiveData<Bitmap>
         get() = _inputImage
 
@@ -44,6 +50,14 @@ class MainActivityViewModel(
     val percent: LiveData<String>
         get() = _percent
 
+    private val _showRecordTooltip = MutableLiveData<Boolean>(false)
+    val showRecordTooltip: LiveData<Boolean>
+        get() = _showRecordTooltip
+
+    private val _outputImageLabel = MutableLiveData<Int>(R.string.choose_input_image)
+    val outputImageLabel: LiveData<Int>
+        get() = _outputImageLabel
+
     /**
      * on active recording:  android.R.drawable.presence_audio_online
      * on inactive recording:  android.R.drawable.presence_audio_busy
@@ -54,7 +68,17 @@ class MainActivityViewModel(
 
     val isOutputHintVisible =
         combine(_percent, _inputImage, _inputWave) { percent, inputImage, inputWave ->
-            return@combine inputImage == null
+            if (inputImage == null) {
+                _outputImageLabel.postValue(R.string.choose_input_image)
+                return@combine true
+            }
+
+            if (inputWave == null) {
+                _outputImageLabel.postValue(R.string.choose_wave_file_label)
+                return@combine true
+            }
+
+            return@combine false
         }
 
     private val _waveInfo = _inputWave.map {
@@ -90,18 +114,34 @@ class MainActivityViewModel(
     }
 
     init {
-
-        _inputWave.postValue(File("/storage/emulated/0/Download/8k16bitpcm.wav"))
-
         viewModelScope.launch {
-            delay(1000)
-            _inputImage.postValue(
-                BitmapFactory.decodeFile("/storage/emulated/0/Download/deer.jpg")
-            )
+            delay(2000)
+            _showRecordTooltip.postValue(true)
         }
+
+//        viewModelScope.launch {
+//            repeat(10) {
+//                delay(90)
+//                addRecording(it)
+//            }
+//        }
+    }
+
+    private fun addRecording(it: Int) = viewModelScope.launch {
+        val recList = _recordings.value?.toMutableList() ?: mutableListOf()
+        recList.add(
+            Recording(
+                it,
+                "/storage/",
+                null,
+                Date()
+            )
+        )
+        _recordings.postValue(recList)
     }
 
     fun startRecording() {
+        _showRecordTooltip.postValue(false)
         _onStartRecording.postValue(StatelessEvent())
     }
 
