@@ -124,6 +124,15 @@
             tools:src="@mipmap/ic_launcher"
             tools:visibility="invisible" />
 
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:isVisible="@{vm.isInputImageLoading}"
+            app:layout_constraintBottom_toBottomOf="@id/input_img"
+            app:layout_constraintEnd_toEndOf="@id/input_img"
+            app:layout_constraintStart_toStartOf="@id/input_img"
+            app:layout_constraintTop_toTopOf="@id/input_img" />
+
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -153,6 +162,15 @@
             android:gravity="center_vertical"
             android:onClick="@{()->vm.chooseAudio()}"
             android:text="@{vm.waveFileLabel}"
+            app:layout_constraintBottom_toBottomOf="@id/wav_file_icon"
+            app:layout_constraintEnd_toStartOf="@id/wav_file_icon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/wav_file_icon" />
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:isVisible="@{vm.isInputWaveLoading}"
             app:layout_constraintBottom_toBottomOf="@id/wav_file_icon"
             app:layout_constraintEnd_toStartOf="@id/wav_file_icon"
             app:layout_constraintStart_toStartOf="parent"
