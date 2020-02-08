@@ -2,6 +2,7 @@
 
 buildscript {
     ext {
+        audiovisualizationVersion = '1.0.1'
         coroutineVersion = '1.3.0-M1'
         dispatcherVersion = '4.6.0'
         fragmentKtxVersion = '1.2.0-alpha03'
@@ -9,7 +10,7 @@ buildscript {
         koinVersion = '2.0.0-GA'
         kotlinVersion = '1.3.50'
         lifecycleVersion = '2.2.0'
-        lingverVersion= '1.2.1'
+        lingverVersion = '1.2.1'
         okHttpVersion = '3.12.0'
         recyclerViewVersion = '1.1.0'
         testRunnerVersion = '1.1.1'
