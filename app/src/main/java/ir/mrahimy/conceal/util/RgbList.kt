@@ -3,10 +3,17 @@ package ir.mrahimy.conceal.util
 import android.graphics.Bitmap
 import android.graphics.Color
 import androidx.core.graphics.set
+import androidx.lifecycle.LiveDataScope
+import androidx.lifecycle.liveData
 import ir.mrahimy.conceal.data.Rgb
+import ir.mrahimy.conceal.data.capsules.ConcealPercentage
 import ir.mrahimy.conceal.data.toSeparatedDigits
 import ir.mrahimy.conceal.util.ktx.*
+import kotlinx.coroutines.delay
 import kotlin.math.absoluteValue
+import kotlin.random.Random
+
+const val PERCENT_CHECK_MOD = 50
 
 fun List<Rgb>.remove3Lsb(): List<Rgb> = map {
     val r = it.r.removeLsBits(3)
@@ -118,56 +125,201 @@ fun List<Rgb>.putSignedInteger(startingPosition: Int, value: Int, layer: Layer):
 fun List<Rgb>.putAllSignedIntegers(
     startingPosition: Int,
     array: IntArray,
-    imageW: Int,
-    imageH: Int
-): Int {
+    image: Bitmap
+) = liveData {
 
-    var res = putAllSignedIntegersInLoop(array, imageW, imageH, startingPosition, 0, Layer.R)
+    val data = ConcealPercentage(
+        1,
+        0f,
+        toBitmap(image),
+        startingPosition,
+        0,
+        false
+    )
+    delay(150)
+    emit(data)
+    var res = putAllSignedIntegersInLoop(
+        array,
+        image,
+        startingPosition,
+        0,
+        Layer.R,
+        this,
+        data
+    )
 
     if (res.shouldChangeTheLayer)
-        res = putAllSignedIntegersInLoop(array, imageW, imageH, 0, res.lastIndexOfIntArray, Layer.G)
+        res = putAllSignedIntegersInLoop(
+            array,
+            image,
+            0,
+            res.lastIndexOfIntArray,
+            Layer.G,
+            this,
+            data
+        )
 
     if (res.shouldChangeTheLayer)
-        res = putAllSignedIntegersInLoop(array, imageW, imageH, 0, res.lastIndexOfIntArray, Layer.B)
+        res = putAllSignedIntegersInLoop(
+            array,
+            image,
+            0,
+            res.lastIndexOfIntArray,
+            Layer.B,
+            this,
+            data
+        )
 
-    return res.lastPositionOfRgbList
+    delay(150)
+    emit(
+        ConcealPercentage(
+            1,
+            100.0f,
+            this@putAllSignedIntegers.toBitmap(image),
+            res.lastPositionOfRgbList,
+            res.lastIndexOfIntArray,
+            true
+        )
+    )
 }
 
 /**
  * @param startingPosition maybe the position of the last inserted index for or previous insertion
  * @param array the integer array to be put inside 3lsb of this list
- * @param imageH and imageW are the boundaries of our image: we cannot exceed them
+ * @param image holds the reference of boundaries of our image: we cannot exceed them
  * @param layer
  * @returns the position of last injected bit. used to start inserting another audio data
  * (starting with that position itself)
  */
-private fun List<Rgb>.putAllSignedIntegersInLoop(
+private suspend fun List<Rgb>.putAllSignedIntegersInLoop(
     array: IntArray,
-    imageW: Int,
-    imageH: Int,
+    image: Bitmap,
     startingPosition: Int,
     lastCheckedIndex: Int,
-    layer: Layer
+    layer: Layer,
+    liveData: LiveDataScope<ConcealPercentage>,
+    data: ConcealPercentage
 ): LoopHelper {
     var lastIndexOfWaveDataChecked = lastCheckedIndex
     var position = startingPosition
+    var percent = array.findPercent(lastIndexOfWaveDataChecked)
+    delay(50)
+    liveData.emit(
+        ConcealPercentage(
+            1,
+            percent,
+            this.toBitmap(image),
+            position,
+            lastIndexOfWaveDataChecked,
+            false
+        )
+    )
     array.forEachIndexed { index, it ->
         if (index < lastIndexOfWaveDataChecked) {
             /** continues this forEach to the next element */
             return@forEachIndexed
         }
 
-        if (position + 3 > (imageW) * (imageH)) {
+        if (position + 3 > (image.width) * (image.height)) {
             /** breaks this for each */
             return LoopHelper(lastIndexOfWaveDataChecked, position, true)
         }
         position = putSignedInteger(position, it, layer)
         lastIndexOfWaveDataChecked = index
-        //TODO: this lastIndexOfWaveDataChecked should be posted for percentage reference
+        if (lastIndexOfWaveDataChecked % PERCENT_CHECK_MOD == 0) {
+            percent = array.findPercent(lastIndexOfWaveDataChecked)
+            delay(1)
+            liveData.emit(
+                ConcealPercentage(
+                    1,
+                    percent,
+                    this.toBitmap(image),
+                    position,
+                    lastIndexOfWaveDataChecked,
+                    false
+                )
+            )
+
+            /**
+             * 10 percent chance to reset a RGB layer to zero
+             */
+            if (Random.nextInt(Int.MAX_VALUE) > Int.MAX_VALUE - Int.MAX_VALUE / 10) {
+                liveData.emit(
+                    ConcealPercentage(
+                        1,
+                        percent,
+                        this.zeroLayerMutable(Layer.values().random()).toBitmap(image),
+                        position,
+                        lastIndexOfWaveDataChecked,
+                        false
+                    )
+                )
+            }
+
+            /**
+             * 10 percent chance to reset a layer's random pixel to black
+             */
+            if (Random.nextInt(Int.MAX_VALUE) > Int.MAX_VALUE - Int.MAX_VALUE / 10) {
+                liveData.emit(
+                    ConcealPercentage(
+                        1,
+                        percent,
+                        this.zeroRandomMutable(0).toBitmap(image),
+                        position,
+                        lastIndexOfWaveDataChecked,
+                        false
+                    )
+                )
+            }
+
+            /**
+             * 10 percent chance to reset a layer's random pixel to white
+             */
+            if (Random.nextInt(Int.MAX_VALUE) > Int.MAX_VALUE - Int.MAX_VALUE / 10) {
+                liveData.emit(
+                    ConcealPercentage(
+                        1,
+                        percent,
+                        this.zeroRandomMutable(255).toBitmap(image),
+                        position,
+                        lastIndexOfWaveDataChecked,
+                        false
+                    )
+                )
+            }
+        }
     }
 
     return LoopHelper(lastIndexOfWaveDataChecked, position, false)
 }
+
+private fun List<Rgb>.zeroLayerMutable(rgbLayer: Layer): List<Rgb> {
+    return when (rgbLayer) {
+        Layer.R -> this.map { it.copy(r = 0) }.toMutableList()
+        Layer.G -> this.map { it.copy(g = 0) }.toMutableList()
+        Layer.B -> this.map { it.copy(b = 0) }.toMutableList()
+
+    }
+}
+
+private fun List<Rgb>.zeroRandomMutable(i: Int): List<Rgb> {
+    val random = Random.nextInt(Int.MAX_VALUE)
+    return this.map {
+        when {
+            random < Int.MAX_VALUE / 100 -> it.copy(r = i)
+            random < Int.MAX_VALUE / 90 -> it.copy(g = i)
+            random < Int.MAX_VALUE / 80 -> it.copy(b = i)
+            random < Int.MAX_VALUE / 70 -> it.copy(r = i, g = i)
+            random < Int.MAX_VALUE / 60 -> it.copy(g = i, b = i)
+            random < Int.MAX_VALUE / 50 -> it.copy(r = i, b = i)
+            else -> it.copy()
+        }
+    }.toMutableList()
+}
+
+private fun IntArray.findPercent(
+    lastIndexOfWaveDataChecked: Int
+) = (lastIndexOfWaveDataChecked.toFloat() / size.toFloat()) * 100.0f
 
 /**
  * @param image is the reference bitmap to build the resulting bitmap upon.
