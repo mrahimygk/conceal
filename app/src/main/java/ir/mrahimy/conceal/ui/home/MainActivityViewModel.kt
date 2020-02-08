@@ -108,6 +108,8 @@ class MainActivityViewModel(
     val concealPercentage: LiveData<ConcealPercentage>
         get() = _concealPercentage
 
+    val percentInt = _concealPercentage.map { it.percent.toInt() }
+
     val isPercentageVisible =
         combine(isOutputHintVisible, _concealPercentage) { outputHint, percentageData ->
             return@combine outputHint==false && percentageData?.done == false
