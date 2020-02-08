@@ -8,4 +8,5 @@
     <string name="hold_to_start_recording_tooltip">برای ضبط صدا نگه دارید</string>
     <string name="click_to_open_file">باز کردن فایل از گوشی</string>
     <string name="main_title">صدا رو داخل تصویر مخفی کن</string>
+    <string name="percentage_persian_placeholder">%1$3.6f درصد</string>
 </resources>
