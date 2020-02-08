@@ -4,6 +4,8 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import androidx.lifecycle.Observer
+import com.cleveroad.audiovisualization.AudioVisualization
+import com.cleveroad.audiovisualization.DbmHandler
 import com.github.squti.androidwaverecorder.WaveRecorder
 import ir.mrahimy.conceal.R
 import ir.mrahimy.conceal.base.BaseActivity
@@ -37,6 +39,8 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() 
     override val viewModel: MainActivityViewModel by viewModel()
 
     private val adapter: RecordingsAdapter by inject()
+
+    private var audioVisualization: AudioVisualization? = null
 
     override fun bindObservables() {
         viewModel.onStartRecording.observe(this, EventObsrver {
@@ -86,7 +90,26 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() 
 
     override fun configCreationEvents() {
         recordings_list?.adapter = adapter
+
+        audioVisualization = visualizer_view
+        val vizualizerHandler = DbmHandler.Factory.newVisualizerHandler(this, 0)
+        audioVisualization?.linkTo(vizualizerHandler)
     }
+
+    public override fun onResume() {
+        super.onResume()
+        audioVisualization?.onResume()
+    }
+
+    public override fun onPause() {
+        audioVisualization?.onPause()
+        super.onPause()
+    }
+//
+//    override fun onDestroyView() {
+//        audioVisualization?.release()
+//        super.onDestroyView()
+//    }
 
     override fun configResumeEvents() = Unit
 
