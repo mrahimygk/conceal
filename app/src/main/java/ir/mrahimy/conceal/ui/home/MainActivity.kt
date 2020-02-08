@@ -3,6 +3,7 @@ package ir.mrahimy.conceal.ui.home
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import androidx.lifecycle.Observer
 import com.github.squti.androidwaverecorder.WaveRecorder
 import ir.mrahimy.conceal.R
 import ir.mrahimy.conceal.base.BaseActivity
@@ -11,6 +12,7 @@ import ir.mrahimy.conceal.enums.ChooserType
 import ir.mrahimy.conceal.util.EventObsrver
 import ir.mrahimy.conceal.util.WavUtil.fromWaveData
 import ir.mrahimy.conceal.util.Wave
+import ir.mrahimy.conceal.util.putAllSignedIntegers
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -55,6 +57,15 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() 
                 getString(R.string.select_audio_title),
                 PICK_AUDIO
             )
+        })
+
+        viewModel.onStartRgbListPutAll.observe(this, EventObsrver { input ->
+            input.apply {
+                rgbList.putAllSignedIntegers(position, audioDataAsRgbList, refImage)
+                    .observe(this@MainActivity, Observer {
+                        viewModel.updatePercentage(it)
+                    })
+            }
         })
     }
 
