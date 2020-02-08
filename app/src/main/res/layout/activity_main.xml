@@ -69,7 +69,7 @@
             android:layout_margin="12dp"
             android:onClick="@{()->vm.showSlide(1)}"
             android:scaleType="fitCenter"
-            app:bitmap="@{vm.outputBitmap}"
+            app:bitmap="@{vm.concealPercentage.data}"
             app:layout_constraintDimensionRatio="w,1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/input_img"
@@ -203,5 +203,23 @@
             app:layout_constraintBottom_toTopOf="@id/btn_record"
             app:layout_constraintTop_toBottomOf="@id/wav_file_icon"
             tools:listitem="@layout/item_recording" />
+
+        <TextView
+            android:id="@+id/percentage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{``+vm.concealPercentage.percent}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/wav_file_icon"
+            tools:text="100" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="@{``+vm.handle}" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
