@@ -45,6 +45,7 @@ dependencies {
     implementation "com.github.ybq:Android-SpinKit:$spinKitVersion"
     implementation "com.github.douglasjunior:android-simple-tooltip:$simpleTooltipVersion"
     implementation "com.google.android.material:material:$googleMaterialVersion"
+    implementation "com.cleveroad:audiovisualization:$audiovisualizationVersion"
 
     //Test
     testImplementation 'junit:junit:4.12'
