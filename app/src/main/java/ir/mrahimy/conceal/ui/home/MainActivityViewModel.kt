@@ -108,6 +108,16 @@ class MainActivityViewModel(
     val concealPercentage: LiveData<ConcealPercentage>
         get() = _concealPercentage
 
+    val isPercentageVisible =
+        combine(isOutputHintVisible, _concealPercentage) { outputHint, percentageData ->
+            return@combine outputHint==false && percentageData?.done == false
+        }
+
+    val isDoneMarkVisible =
+        combine(isOutputHintVisible, _concealPercentage) { outputHint, percentageData ->
+            return@combine outputHint==false && percentageData?.done == true
+        }
+
     private val _onStartRgbListPutAll = MutableLiveData<Event<ConcealInputData>>()
     val onStartRgbListPutAll: LiveData<Event<ConcealInputData>>
         get() = _onStartRgbListPutAll
