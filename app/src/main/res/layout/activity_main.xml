@@ -16,6 +16,22 @@
         android:background="@color/grey"
         tools:context=".ui.home.MainActivity">
 
+        <com.cleveroad.audiovisualization.GLAudioVisualizationView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/visualizer_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:av_bubblesSize="24dp"
+            app:av_bubblesRandomizeSizes="true"
+            app:av_wavesHeight="64dp"
+            app:av_wavesFooterHeight="48dp"
+            app:av_wavesCount="7"
+            app:av_layersCount="2"
+            app:av_backgroundColor="@color/av_color_bg"
+            app:av_bubblesPerLayer="16"
+            />
+
         <TextView
             android:id="@+id/txt_title"
             android:layout_width="match_parent"
@@ -23,7 +39,30 @@
             android:layout_margin="8dp"
             android:gravity="center_horizontal"
             android:padding="8dp"
-            android:text="@string/main_title"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txt_input_image_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/input_image"
+            app:layout_constraintBottom_toTopOf="@id/input_img"
+            app:layout_constraintEnd_toEndOf="@id/input_img"
+            app:layout_constraintStart_toStartOf="@id/input_img"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txt_output_image_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:gravity="center_horizontal"
+            android:padding="8dp"
+            android:text="@string/output_image"
+            app:layout_constraintBottom_toTopOf="@id/output_img"
+            app:layout_constraintEnd_toEndOf="@id/output_img"
+            app:layout_constraintStart_toStartOf="@id/output_img"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ir.mrahimy.conceal.cv.CameraCorner
@@ -91,7 +130,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
-            android:text="@string/click_to_choose_input_image"
+            android:text="@string/choose"
             app:isGone="@{!vm.isInputHintVisible}"
             app:layout_constraintBottom_toBottomOf="@id/input_img"
             app:layout_constraintEnd_toEndOf="@id/input_img"
@@ -154,6 +193,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/output_img" />
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/arrow_up_float"
+            app:layout_constraintBottom_toBottomOf="@id/input_img"
+            app:layout_constraintEnd_toStartOf="@id/output_img"
+            app:layout_constraintStart_toEndOf="@id/input_img"
+            app:layout_constraintTop_toTopOf="@id/input_img" />
+
         <TextView
             android:id="@+id/wav_file_text"
             android:layout_width="0dp"
@@ -206,20 +254,49 @@
 
         <TextView
             android:id="@+id/percentage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{``+vm.concealPercentage.percent}"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/wav_file_icon"
-            tools:text="100" />
+            android:layout_width="0dp"
+            android:layout_height="24dp"
+            android:background="#7111"
+            android:gravity="center"
+            android:layoutDirection="ltr"
+            android:text="@{@string/percentage_persian_placeholder(vm.concealPercentage.percent)}"
+            android:textColor="#fff"
+            app:isVisible="@{vm.isPercentageVisible}"
+            app:layout_constraintBottom_toBottomOf="@id/output_img"
+            app:layout_constraintEnd_toEndOf="@id/output_img"
+            app:layout_constraintStart_toStartOf="@id/output_img"
+            tools:text="100 %" />
+
+        <ImageView
+            android:id="@+id/percentage_done"
+            android:layout_width="0dp"
+            android:layout_height="24dp"
+            android:gravity="center_horizontal"
+            android:layoutDirection="ltr"
+            android:src="@drawable/ic_checkmark_green"
+            app:isVisible="@{vm.isDoneMarkVisible}"
+            app:layout_constraintBottom_toBottomOf="@id/output_img"
+            app:layout_constraintDimensionRatio="h,1:1"
+            app:layout_constraintEnd_toEndOf="@id/output_img"
+            app:layout_constraintStart_toStartOf="@id/output_img"
+            tools:text="100 %" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@{``+vm.handle}"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:text="@{``+vm.handle}" />
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!--        <ProgressBar-->
+        <!--            android:id="@+id/determinateBar"-->
+        <!--            style="@android:style/Widget.ProgressBar.Horizontal"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:progress="@{vm.percentInt}"-->
+        <!--            app:layout_constraintBottom_toBottomOf="@id/output_img"-->
+        <!--            app:layout_constraintEnd_toEndOf="@id/output_img"-->
+        <!--            app:layout_constraintStart_toStartOf="@id/output_img" />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
