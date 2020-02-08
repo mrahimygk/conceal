@@ -12,6 +12,8 @@ import ir.mrahimy.conceal.R
 import ir.mrahimy.conceal.base.BaseAndroidViewModel
 import ir.mrahimy.conceal.data.Recording
 import ir.mrahimy.conceal.data.Waver
+import ir.mrahimy.conceal.data.capsules.ConcealInputData
+import ir.mrahimy.conceal.data.capsules.ConcealPercentage
 import ir.mrahimy.conceal.data.capsules.SaveBitmapInfoCapsule
 import ir.mrahimy.conceal.data.mapToRgbValue
 import ir.mrahimy.conceal.data.mapToUniformDouble
@@ -43,12 +45,6 @@ class MainActivityViewModel(
     val isInputHintVisible = _inputImage.map { it == null }
 
     private val _inputWave = MutableLiveData<File>()
-    val inputWave: LiveData<File>
-        get() = _inputWave
-
-    private val _percent = MutableLiveData<String>()
-    val percent: LiveData<String>
-        get() = _percent
 
     private val _showRecordTooltip = MutableLiveData<Boolean>(false)
     val showRecordTooltip: LiveData<Boolean>
@@ -72,7 +68,7 @@ class MainActivityViewModel(
         get() = _recordingIcon
 
     val isOutputHintVisible =
-        combine(_percent, _inputImage, _inputWave) { percent, inputImage, inputWave ->
+        combine(_inputImage, _inputWave) { inputImage, inputWave ->
             if (inputImage == null) {
                 _outputImageLabel.postValue(R.string.choose_input_image)
                 return@combine true
@@ -93,17 +89,11 @@ class MainActivityViewModel(
         )
     }
 
-    val outputBitmap = combine(_inputImage, _waveInfo) { _image, _waveFile ->
+    val handle = combine(_inputImage, _waveInfo) { _image, _waveFile ->
         val image = _image ?: return@combine null
         val waveFile = _waveFile ?: return@combine null
-        val outputBitmap = putWaveFileIntoImage(image, waveFile)
-
-        getApplication().applicationContext.externalCacheDir?.absolutePath?.let {
-            val info = SaveBitmapInfoCapsule("img", Date(), outputBitmap, Bitmap.CompressFormat.PNG)
-            saveBitmap(it, info)
-        }
-
-        return@combine outputBitmap
+        putWaveFileIntoImage(image, waveFile)
+        return@combine 1
     }
 
     private val _isInputImageLoading = MutableLiveData<Boolean>(false)
@@ -114,16 +104,25 @@ class MainActivityViewModel(
     val isInputWaveLoading: LiveData<Boolean>
         get() = _isInputWaveLoading
 
+    private val _concealPercentage = MutableLiveData<ConcealPercentage>()
+    val concealPercentage: LiveData<ConcealPercentage>
+        get() = _concealPercentage
+
+    private val _onStartRgbListPutAll = MutableLiveData<Event<ConcealInputData>>()
+    val onStartRgbListPutAll: LiveData<Event<ConcealInputData>>
+        get() = _onStartRgbListPutAll
+
     private fun putWaveFileIntoImage(
         image: Bitmap,
         waveFile: Waver
-    ): Bitmap {
+    ) {
         val rgbList = image.getRgbArray().remove3Lsb()
         val audioDataAsRgbList = waveFile.data.mapToUniformDouble().mapToRgbValue()
         val position = rgbList.putSampleRate(waveFile.sampleRate.toInt())
 
-        rgbList.putAllSignedIntegers(position, audioDataAsRgbList, image.width, image.height)
-        return rgbList.toBitmap(image)
+        _onStartRgbListPutAll.postValue(
+            Event(ConcealInputData(rgbList, position, audioDataAsRgbList, image))
+        )
     }
 
     init {
@@ -158,6 +157,23 @@ class MainActivityViewModel(
         _onStartRecording.postValue(StatelessEvent())
     }
 
+    fun updatePercentage(concealPercentage: ConcealPercentage) {
+        _concealPercentage.postValue(concealPercentage)
+        if (concealPercentage.done) {
+            concealPercentage.data?.let { outputBitmap ->
+                getApplication().applicationContext.externalCacheDir?.absolutePath?.let {
+                    val info = SaveBitmapInfoCapsule(
+                        "img",
+                        Date(),
+                        outputBitmap,
+                        Bitmap.CompressFormat.PNG
+                    )
+                    saveBitmap(it, info)
+                }
+            }
+        }
+    }
+
     private fun saveBitmap(path: String, fileInfo: SaveBitmapInfoCapsule) {
         File(
             path +
@@ -168,8 +184,8 @@ class MainActivityViewModel(
 
     fun showSlide(position: Int) {
         val input = _inputImage.value ?: return
-        val output = outputBitmap.value ?: return
-        val bitmapArray = arrayOf(input, output)
+//        val output = outputBitmap.value ?: return
+//        val bitmapArray = arrayOf(input, output)
         //TODO: navigate to slide show activity with bitmapArray & index position
     }
 
