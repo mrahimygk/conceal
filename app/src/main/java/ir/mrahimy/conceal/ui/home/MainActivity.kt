@@ -105,11 +105,11 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() 
         audioVisualization?.onPause()
         super.onPause()
     }
-//
-//    override fun onDestroyView() {
-//        audioVisualization?.release()
-//        super.onDestroyView()
-//    }
+
+    override fun onDestroy() {
+        audioVisualization?.release()
+        super.onDestroy()
+    }
 
     override fun configResumeEvents() = Unit
 
