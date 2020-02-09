@@ -3,6 +3,7 @@ package ir.mrahimy.conceal.ui.home
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.Observer
 import com.cleveroad.audiovisualization.AudioVisualization
 import com.cleveroad.audiovisualization.DbmHandler
@@ -127,6 +128,9 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() 
         filePath = externalCacheDir?.absolutePath + "/rec_${date.time}.wav"
         waveRecorder = WaveRecorder(filePath)
         waveRecorder.startRecording()
+        waveRecorder.onAmplitudeListener = {
+            Log.d("onAmplitudeListener", it.toString())
+        }
         isRecording = true
     }
 
