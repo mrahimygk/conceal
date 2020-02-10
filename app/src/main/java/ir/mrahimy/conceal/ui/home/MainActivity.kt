@@ -3,38 +3,26 @@ package ir.mrahimy.conceal.ui.home
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
-import android.util.Log
 import androidx.lifecycle.Observer
 import com.cleveroad.audiovisualization.AudioVisualization
 import com.cleveroad.audiovisualization.DbmHandler
-import com.github.squti.androidwaverecorder.WaveRecorder
 import ir.mrahimy.conceal.R
 import ir.mrahimy.conceal.base.BaseActivity
 import ir.mrahimy.conceal.databinding.ActivityMainBinding
 import ir.mrahimy.conceal.enums.ChooserType
 import ir.mrahimy.conceal.util.EventObsrver
-import ir.mrahimy.conceal.util.WavUtil.fromWaveData
-import ir.mrahimy.conceal.util.Wave
 import ir.mrahimy.conceal.util.putAllSignedIntegers
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
-import java.io.File
-import java.util.*
-
 
 const val PICK_IMAGE = 1000
 const val PICK_AUDIO = 2000
 
 @RuntimePermissions
 class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() {
-
-    private var isRecording = false
-
-    private lateinit var waveRecorder: WaveRecorder
-    private lateinit var filePath: String
 
     override val layoutRes = R.layout.activity_main
     override val viewModel: MainActivityViewModel by viewModel()
@@ -116,22 +104,7 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() 
 
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO)
     fun startRecording() {
-        val date = Date()
-
-        if (isRecording) {
-            waveRecorder.stopRecording()
-            isRecording = false
-            val waveFile = fromWaveData(Wave.WavFile.openWavFile(File(filePath)))
-            return
-        }
-
-        filePath = externalCacheDir?.absolutePath + "/rec_${date.time}.wav"
-        waveRecorder = WaveRecorder(filePath)
-        waveRecorder.startRecording()
-        waveRecorder.onAmplitudeListener = {
-            Log.d("onAmplitudeListener", it.toString())
-        }
-        isRecording = true
+        viewModel.startRecordingWave()
     }
 
     override fun onRequestPermissionsResult(
