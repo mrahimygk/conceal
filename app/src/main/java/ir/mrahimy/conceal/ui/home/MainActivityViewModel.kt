@@ -22,6 +22,7 @@ import ir.mrahimy.conceal.data.mapToUniformDouble
 import ir.mrahimy.conceal.util.*
 import ir.mrahimy.conceal.util.ktx.getPath
 import ir.mrahimy.conceal.util.ktx.getRgbArray
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
@@ -77,6 +78,10 @@ class MainActivityViewModel(
     val recordingIcon: LiveData<Int>
         get() = _recordingIcon
 
+    private val _snackMessage = MutableLiveData<Event<Int>>()
+    val snackMessage: LiveData<Event<Int>>
+        get() = _snackMessage
+
     val isOutputHintVisible =
         combine(_inputImage, _inputWave) { inputImage, inputWave ->
             if (inputImage == null) {
@@ -123,7 +128,7 @@ class MainActivityViewModel(
     val isPercentageVisible =
         combine(isOutputHintVisible, _concealPercentage) { outputHint, percentageData ->
             return@combine outputHint == false && percentageData?.done == false
-        }
+        } as MutableLiveData
 
     val isDoneMarkVisible =
         combine(isOutputHintVisible, _concealPercentage) { outputHint, percentageData ->
@@ -134,6 +139,16 @@ class MainActivityViewModel(
     val onStartRgbListPutAll: LiveData<Event<ConcealInputData>>
         get() = _onStartRgbListPutAll
 
+    private lateinit var concealJob : Job
+    fun cancelConcealJob(){
+        concealJob.cancel()
+        _concealPercentage.postValue(_concealPercentage.value?.copy(percent = 0f, data = null, done = false))
+        viewModelScope.launch {
+            delay(50)
+            isPercentageVisible.postValue(false)
+        }
+    }
+
     private fun putWaveFileIntoImage(
         image: Bitmap,
         waveFile: Waver
@@ -142,8 +157,9 @@ class MainActivityViewModel(
         val audioDataAsRgbList = waveFile.data.mapToUniformDouble().mapToRgbValue()
         val position = rgbList.putSampleRate(waveFile.sampleRate.toInt())
 
+        concealJob = Job()
         _onStartRgbListPutAll.postValue(
-            Event(ConcealInputData(rgbList, position, audioDataAsRgbList, image))
+            Event(ConcealInputData(rgbList, position, audioDataAsRgbList, image, concealJob))
         )
     }
 
@@ -190,6 +206,11 @@ class MainActivityViewModel(
             _isRecording.postValue(false)
             val filePath = _recordingFilePath.value ?: return
             selectAudioFile(filePath)
+            return
+        }
+
+        if (_concealPercentage.value?.done == false) {
+            _snackMessage.postValue(Event(R.string.please_cancel_first))
             return
         }
 
