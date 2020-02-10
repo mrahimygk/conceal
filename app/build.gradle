@@ -47,7 +47,6 @@ dependencies {
     implementation "com.google.android.material:material:$googleMaterialVersion"
     implementation "com.cleveroad:audiovisualization:$audiovisualizationVersion"
     implementation "com.gauravk.audiovisualizer:audiovisualizer:$audiovisualizerVersion"
-//    implementation 'com.github.steelkiwi:AndroidRecording:master'
 
     //Test
     testImplementation 'junit:junit:4.12'
