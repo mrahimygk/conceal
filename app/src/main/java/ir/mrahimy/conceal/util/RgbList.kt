@@ -15,7 +15,7 @@ import kotlinx.coroutines.delay
 import kotlin.math.absoluteValue
 import kotlin.random.Random
 
-const val PERCENT_CHECK_MOD = 50
+const val PERCENT_CHECK_MOD = 77
 
 fun List<Rgb>.remove3Lsb(): List<Rgb> = map {
     val r = it.r.removeLsBits(3)
