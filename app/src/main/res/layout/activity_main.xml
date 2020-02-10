@@ -285,6 +285,18 @@
             app:layout_constraintRight_toRightOf="@id/output_img"
             tools:text="100" />
 
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_width="42dp"
+            android:layout_height="24dp"
+            android:gravity="center"
+            android:onClick="@{()->vm.cancelConcealJob()}"
+            android:text="@string/cancel"
+            android:textColor="#f00"
+            app:isVisible="@{vm.isPercentageVisible}"
+            app:layout_constraintBottom_toBottomOf="@id/output_img"
+            app:layout_constraintLeft_toLeftOf="@id/output_img" />
+
         <ProgressBar
             android:id="@+id/determinateBar"
             android:layout_width="wrap_content"
