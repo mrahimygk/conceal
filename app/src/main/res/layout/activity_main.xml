@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -17,20 +18,17 @@
         tools:context=".ui.home.MainActivity">
 
         <com.cleveroad.audiovisualization.GLAudioVisualizationView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/visualizer_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:av_bubblesSize="24dp"
-            app:av_bubblesRandomizeSizes="true"
-            app:av_wavesHeight="64dp"
-            app:av_wavesFooterHeight="48dp"
-            app:av_wavesCount="7"
-            app:av_layersCount="2"
             app:av_backgroundColor="@color/av_color_bg"
             app:av_bubblesPerLayer="16"
-            />
+            app:av_bubblesRandomizeSizes="true"
+            app:av_bubblesSize="24dp"
+            app:av_layersCount="2"
+            app:av_wavesCount="7"
+            app:av_wavesFooterHeight="48dp"
+            app:av_wavesHeight="64dp" />
 
         <TextView
             android:id="@+id/txt_title"
@@ -224,11 +222,34 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/wav_file_icon" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recordings_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            app:data="@{vm.recordings}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/wav_file_icon"
+            tools:listitem="@layout/item_recording" />
+
+        <com.gauravk.audiovisualizer.visualizer.CircleLineVisualizer
+            android:id="@+id/recording_visualizer"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintLeft_toLeftOf="@id/btn_record"
+            app:layout_constraintRight_toRightOf="@id/btn_record"
+            app:layout_constraintTop_toTopOf="@id/btn_record"
+            custom:avColor="@color/av_dark_blue"
+            custom:avDensity="0.8"
+            custom:avSpeed="normal"
+            custom:layout_constraintBottom_toBottomOf="@id/btn_record" />
+
         <ImageView
             android:id="@+id/btn_record"
             android:layout_width="0dp"
             android:layout_height="64dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="64dp"
             android:onClick="@{()->vm.startRecording()}"
             android:padding="8dp"
             app:drawableCompat="@{vm.recordingIcon}"
@@ -241,31 +262,39 @@
             app:transparentOverlay="@{false}"
             tools:src="@android:drawable/presence_audio_busy" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recordings_list"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="8dp"
-            app:data="@{vm.recordings}"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toTopOf="@id/btn_record"
-            app:layout_constraintTop_toBottomOf="@id/wav_file_icon"
-            tools:listitem="@layout/item_recording" />
-
-        <TextView
-            android:id="@+id/percentage"
+        <View
             android:layout_width="0dp"
             android:layout_height="24dp"
             android:background="#7111"
+            app:isVisible="@{vm.isPercentageVisible}"
+            app:layout_constraintBottom_toBottomOf="@id/output_img"
+            app:layout_constraintEnd_toEndOf="@id/output_img"
+            app:layout_constraintStart_toStartOf="@id/output_img" />
+
+        <TextView
+            android:id="@+id/percentage"
+            android:layout_width="42dp"
+            android:layout_height="24dp"
             android:gravity="center"
             android:layoutDirection="ltr"
             android:text="@{@string/percentage_persian_placeholder(vm.concealPercentage.percent)}"
             android:textColor="#fff"
             app:isVisible="@{vm.isPercentageVisible}"
             app:layout_constraintBottom_toBottomOf="@id/output_img"
-            app:layout_constraintEnd_toEndOf="@id/output_img"
-            app:layout_constraintStart_toStartOf="@id/output_img"
-            tools:text="100 %" />
+            app:layout_constraintLeft_toLeftOf="@id/output_img"
+            app:layout_constraintRight_toRightOf="@id/output_img"
+            tools:text="100" />
+
+        <ProgressBar
+            android:id="@+id/determinateBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:progress="@{vm.percentInt}"
+            app:isVisible="@{vm.isPercentageVisible}"
+            app:layout_constraintBottom_toBottomOf="@id/output_img"
+            app:layout_constraintLeft_toLeftOf="@id/output_img"
+            app:layout_constraintRight_toRightOf="@id/output_img"
+            app:layout_constraintTop_toTopOf="@id/output_img" />
 
         <ImageView
             android:id="@+id/percentage_done"
