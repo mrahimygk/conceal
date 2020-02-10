@@ -13,4 +13,6 @@
     <string name="input_image">تصویر ورودی</string>
     <string name="output_image">تصویر نهایی</string>
     <string name="choose">انتخاب کنید</string>
+    <string name="please_cancel_first">عمل پردازشی در حال انجام است، ابتدا از لغو شدن آن  مطمئن شوید.</string>
+    <string name="cancel">لغو</string>
 </resources>
