@@ -6,6 +6,7 @@ import android.content.Intent
 import androidx.lifecycle.Observer
 import com.cleveroad.audiovisualization.AudioVisualization
 import com.cleveroad.audiovisualization.DbmHandler
+import com.google.android.material.snackbar.Snackbar
 import ir.mrahimy.conceal.R
 import ir.mrahimy.conceal.base.BaseActivity
 import ir.mrahimy.conceal.databinding.ActivityMainBinding
@@ -54,11 +55,15 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() 
 
         viewModel.onStartRgbListPutAll.observe(this, EventObsrver { input ->
             input.apply {
-                rgbList.putAllSignedIntegers(position, audioDataAsRgbList, refImage)
+                rgbList.putAllSignedIntegers(position, audioDataAsRgbList, refImage, job)
                     .observe(this@MainActivity, Observer {
                         viewModel.updatePercentage(it)
                     })
             }
+        })
+
+        viewModel.snackMessage.observe(this, EventObsrver{
+            Snackbar.make(recordings_list, it, Snackbar.LENGTH_LONG).show()
         })
     }
 
