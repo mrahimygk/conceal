@@ -4,10 +4,12 @@ import android.app.Application
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
+import com.github.squti.androidwaverecorder.WaveRecorder
 import ir.mrahimy.conceal.R
 import ir.mrahimy.conceal.base.BaseAndroidViewModel
 import ir.mrahimy.conceal.data.Recording
@@ -29,6 +31,14 @@ class MainActivityViewModel(
     application: Application,
     model: MainActivityModel
 ) : BaseAndroidViewModel(application, model) {
+
+    private lateinit var waveRecorder: WaveRecorder
+
+    private val _recordingFilePath = MutableLiveData<String>()
+
+    private val _isRecording = MutableLiveData<Boolean>(false)
+    val isRecording: LiveData<Boolean>
+        get() = _isRecording
 
     private val _recordings = MutableLiveData<List<Recording>>()
     val recordings: LiveData<List<Recording>>
@@ -112,12 +122,12 @@ class MainActivityViewModel(
 
     val isPercentageVisible =
         combine(isOutputHintVisible, _concealPercentage) { outputHint, percentageData ->
-            return@combine outputHint==false && percentageData?.done == false
+            return@combine outputHint == false && percentageData?.done == false
         }
 
     val isDoneMarkVisible =
         combine(isOutputHintVisible, _concealPercentage) { outputHint, percentageData ->
-            return@combine outputHint==false && percentageData?.done == true
+            return@combine outputHint == false && percentageData?.done == true
         }
 
     private val _onStartRgbListPutAll = MutableLiveData<Event<ConcealInputData>>()
@@ -164,9 +174,35 @@ class MainActivityViewModel(
         _recordings.postValue(recList)
     }
 
+    /**
+     * calls an event to get permission and then the view calls [startRecordingWave]
+     */
     fun startRecording() {
         _showRecordTooltip.postValue(false)
         _onStartRecording.postValue(StatelessEvent())
+    }
+
+    fun startRecordingWave() {
+        val date = Date()
+        val isRecording = _isRecording.value ?: false
+        if (isRecording) {
+            waveRecorder.stopRecording()
+            _isRecording.postValue(false)
+            val filePath = _recordingFilePath.value ?: return
+            selectAudioFile(filePath)
+            return
+        }
+
+        val filePath =
+            getApplication().applicationContext.externalCacheDir?.absolutePath +
+                    "/rec_${date.time}.wav"
+        _recordingFilePath.postValue(filePath)
+        waveRecorder = WaveRecorder(filePath)
+        waveRecorder.startRecording()
+        waveRecorder.onAmplitudeListener = {
+            Log.d("onAmplitudeListener", it.toString())
+        }
+        _isRecording.postValue(true)
     }
 
     fun updatePercentage(concealPercentage: ConcealPercentage) {
@@ -235,7 +271,15 @@ class MainActivityViewModel(
         viewModelScope.launch {
             _isInputWaveLoading.postValue(true)
             delay(20)
-            data?.data?.getPath(getApplication().applicationContext)?.let {
+            selectAudioFile(data?.data?.getPath(getApplication().applicationContext))
+        }
+    }
+
+    private fun selectAudioFile(path: String?) {
+        viewModelScope.launch {
+            _isInputWaveLoading.postValue(true)
+            delay(20)
+            path?.let {
                 _isInputWaveLoading.postValue(false)
                 _waveFileLabel.postValue(it)
                 delay(20)
