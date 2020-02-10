@@ -9,6 +9,8 @@ import ir.mrahimy.conceal.data.Rgb
 import ir.mrahimy.conceal.data.capsules.ConcealPercentage
 import ir.mrahimy.conceal.data.toSeparatedDigits
 import ir.mrahimy.conceal.util.ktx.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlin.math.absoluteValue
 import kotlin.random.Random
@@ -125,8 +127,9 @@ fun List<Rgb>.putSignedInteger(startingPosition: Int, value: Int, layer: Layer):
 fun List<Rgb>.putAllSignedIntegers(
     startingPosition: Int,
     array: IntArray,
-    image: Bitmap
-) = liveData {
+    image: Bitmap,
+    job: Job
+) = liveData(job + Dispatchers.IO) {
 
     val data = ConcealPercentage(
         1,
