@@ -64,7 +64,7 @@ fun List<Rgb>.putSampleRate(sampleRate: Int): Int {
 }
 
 /**
- * @return a pair on integers:
+ * @return a pair of integers:
  *      first : the number which has been retrieved
  *      second : the position of ongoing index in the array
  */
@@ -344,6 +344,70 @@ fun List<Rgb>.toBitmap(image: Bitmap): Bitmap {
     }
 
     return bitmap
+}
+
+/**
+ * @return an integer: the number which has been retrieved
+ */
+fun List<Rgb>.getSignedInteger(startingPosition: Int, layer: Layer): Int {
+    var position = startingPosition
+
+    return when (layer) {
+        Layer.R -> {
+            /**
+             * >= 4 means the binary is one of 100, 101, 110, 111
+             */
+            val sign = if (get(position).r.getLsBits(3) >= 4) -1 else 1
+            val lsb1 = get(position++).r.getLsBits(2)
+            val lsb2 = get(position++).r.getLsBits(2)
+            val lsb3 = get(position++).r.getLsBits(2)
+            val lsb4 = get(position).r.getLsBits(2)
+            lsb1.combineBits(lsb2, lsb3, lsb4) * sign
+        }
+        Layer.G -> {
+            val sign = if (get(position).g.getLsBits(3) >= 4) -1 else 1
+            val lsb1 = get(position++).g.getLsBits(2)
+            val lsb2 = get(position++).g.getLsBits(2)
+            val lsb3 = get(position++).g.getLsBits(2)
+            val lsb4 = get(position).g.getLsBits(2)
+            lsb1.combineBits(lsb2, lsb3, lsb4) * sign
+        }
+        Layer.B -> {
+            val sign = if (get(position).b.getLsBits(3) >= 4) -1 else 1
+            val lsb1 = get(position++).b.getLsBits(2)
+            val lsb2 = get(position++).b.getLsBits(2)
+            val lsb3 = get(position++).b.getLsBits(2)
+            val lsb4 = get(position).b.getLsBits(2)
+            lsb1.combineBits(lsb2, lsb3, lsb4) * sign
+        }
+    }
+}
+
+/**
+ * @return a list of integers which has been retrieved
+ */
+fun List<Rgb>.getAllSignedIntegers(startingPosition: Int): List<Int> {
+    val list = mutableListOf<Int>()
+
+    var position = startingPosition
+    while (position < size - 3) {
+        list.add(getSignedInteger(position, Layer.R))
+        position += 4
+    }
+
+    position = 0
+    while (position < size - 3) {
+        list.add(getSignedInteger(position, Layer.G))
+        position += 4
+    }
+
+    position = 0
+    while (position < size - 3) {
+        list.add(getSignedInteger(position, Layer.B))
+        position += 4
+    }
+
+    return list
 }
 
 /**
