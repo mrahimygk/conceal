@@ -196,9 +196,9 @@
             app:tooltip="@{vm.inputWaveSelectionTooltip}" />
 
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/arrow_up_float"
+            android:src="@drawable/arrow"
             app:layout_constraintBottom_toBottomOf="@id/input_img"
             app:layout_constraintEnd_toStartOf="@id/output_img"
             app:layout_constraintStart_toEndOf="@id/input_img"
@@ -238,19 +238,6 @@
             app:layout_constraintTop_toBottomOf="@id/wav_file_icon"
             tools:listitem="@layout/item_recording" />
 
-        <com.gauravk.audiovisualizer.visualizer.CircleLineVisualizer
-            android:id="@+id/recording_visualizer"
-            android:layout_width="128dp"
-            android:layout_height="128dp"
-            app:layout_constraintLeft_toLeftOf="@id/btn_record"
-            app:layout_constraintRight_toRightOf="@id/btn_record"
-            app:layout_constraintTop_toTopOf="@id/btn_record"
-            custom:avColor="@color/av_dark_blue"
-            custom:avDensity="0.25"
-            android:visibility="gone"
-            custom:avSpeed="normal"
-            custom:layout_constraintBottom_toBottomOf="@id/btn_record" />
-
         <ir.mrahimy.conceal.cv.VisualizerView
             android:id="@+id/recording_visualizer_view"
             android:layout_width="wrap_content"
@@ -268,7 +255,7 @@
             android:layout_marginBottom="64dp"
             android:onClick="@{()->vm.startRecording()}"
             android:padding="8dp"
-            app:drawableCompat="@{vm.recordingIcon}"
+            android:src="@drawable/mic"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="h,1:1"
             app:layout_constraintEnd_toEndOf="parent"
