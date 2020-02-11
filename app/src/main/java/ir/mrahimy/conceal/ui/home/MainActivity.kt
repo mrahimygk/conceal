@@ -92,6 +92,17 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() 
         audioVisualization = visualizer_view
         val vizualizerHandler = DbmHandler.Factory.newVisualizerHandler(this, 0)
         audioVisualization?.linkTo(vizualizerHandler)
+
+//        val pink = resources.openRawResource(R.raw.pink).toByteArray()
+//        val music = ByteArray(inStream.available())
+//
+//        val pink = resources.openRawResource(R.raw.pink)
+//        val bis = BufferedInputStream(pink, 8000)
+//        val dis = DataInputStream(bis)
+//        val bytes = StreamUtils.getByteArray(pink, dis)
+//        dis.close()
+//        recording_visualizer.setRawAudioBytes(bytes)
+//        recording_visualizer.invalidate()
     }
 
     public override fun onResume() {
