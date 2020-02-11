@@ -116,12 +116,15 @@ public class VisualizerView extends View {
         for (int i = 0; i < 360; i = i + 360 / mPoints) {
             canvas.save();
             canvas.rotate(-i, getWidth() / 2, getHeight() / 2);
-            float cx = (float) (getWidth() / 2 + mRadius) + mSrcY[i * mPoints / 360];
+            float value = mSrcY[i * mPoints / 360];
+            float cx = (float) (getWidth() / 2 + mRadius) + value;
             float cy = (float) (getHeight() / 2);
             Path path = new Path();
             path.moveTo(cx, cy + mPointRadius);
             path.lineTo(cx, cy - mPointRadius);
             path.lineTo(cx + lineLen, cy);
+            if (value > 100) mGPaint.setColor(Color.RED);
+            else mGPaint.setColor(Color.GREEN);
             canvas.drawPath(path, mGPaint);
             canvas.restore();
         }
