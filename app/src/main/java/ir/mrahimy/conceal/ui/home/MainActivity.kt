@@ -62,7 +62,7 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() 
             }
         })
 
-        viewModel.snackMessage.observe(this, EventObsrver{
+        viewModel.snackMessage.observe(this, EventObsrver {
             Snackbar.make(recordings_list, it, Snackbar.LENGTH_LONG).show()
         })
     }
