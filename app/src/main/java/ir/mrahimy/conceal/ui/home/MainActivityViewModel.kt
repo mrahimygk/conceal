@@ -20,7 +20,7 @@ import ir.mrahimy.conceal.data.capsules.SaveBitmapInfoCapsule
 import ir.mrahimy.conceal.data.mapToRgbValue
 import ir.mrahimy.conceal.data.mapToUniformDouble
 import ir.mrahimy.conceal.util.*
-import ir.mrahimy.conceal.util.ktx.getPath
+import ir.mrahimy.conceal.util.ktx.getPathJava
 import ir.mrahimy.conceal.util.ktx.getRgbArray
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -292,7 +292,7 @@ class MainActivityViewModel(
             delay(20)
             data?.data?.let {
                 delay(20)
-                val file = it.getPath(getApplication().applicationContext)
+                val file = it.getPathJava(getApplication().applicationContext)
                 delay(20)
                 _inputImage.postValue(BitmapFactory.decodeFile(file))
                 _isInputImageLoading.postValue(false)
@@ -311,7 +311,7 @@ class MainActivityViewModel(
         viewModelScope.launch {
             _isInputWaveLoading.postValue(true)
             delay(20)
-            selectAudioFile(data?.data?.getPath(getApplication().applicationContext))
+            selectAudioFile(data?.data?.getPathJava(getApplication().applicationContext))
         }
     }
 
