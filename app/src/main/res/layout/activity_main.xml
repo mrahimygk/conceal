@@ -253,24 +253,13 @@
 
         <ir.mrahimy.conceal.cv.VisualizerView
             android:id="@+id/recording_visualizer_view"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:isVisible="@{vm.isRecording}"
             app:layout_constraintBottom_toBottomOf="@id/btn_record"
             app:layout_constraintLeft_toLeftOf="@id/btn_record"
             app:layout_constraintRight_toRightOf="@id/btn_record"
             app:layout_constraintTop_toTopOf="@id/btn_record" />
-
-        <ProgressBar
-            android:id="@+id/recording_progress"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            app:isVisible="@{vm.isRecording}"
-            app:layout_constraintBottom_toBottomOf="@id/btn_record"
-            app:layout_constraintLeft_toLeftOf="@id/btn_record"
-            app:layout_constraintRight_toRightOf="@id/btn_record"
-            app:layout_constraintTop_toTopOf="@id/btn_record" />
-
 
         <ImageView
             android:id="@+id/btn_record"
