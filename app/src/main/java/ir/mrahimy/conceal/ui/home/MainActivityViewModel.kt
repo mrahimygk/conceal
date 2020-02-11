@@ -57,9 +57,17 @@ class MainActivityViewModel(
 
     private val _inputWave = MutableLiveData<File>()
 
-    private val _showRecordTooltip = MutableLiveData<Boolean>(false)
-    val showRecordTooltip: LiveData<Boolean>
-        get() = _showRecordTooltip
+    private val _recordTooltip = MutableLiveData<Int>(null)
+    val recordTooltip: LiveData<Int>
+        get() = _recordTooltip
+
+    private val _inputImageSelectionTooltip = MutableLiveData<Int>(null)
+    val inputImageSelectionTooltip: LiveData<Int>
+        get() = _inputImageSelectionTooltip
+
+    private val _inputWaveSelectionTooltip = MutableLiveData<Int>(null)
+    val inputWaveSelectionTooltip: LiveData<Int>
+        get() = _inputWaveSelectionTooltip
 
     private val _outputImageLabel = MutableLiveData<Int>(R.string.choose_input_image)
     val outputImageLabel: LiveData<Int>
@@ -139,10 +147,12 @@ class MainActivityViewModel(
     val onStartRgbListPutAll: LiveData<Event<ConcealInputData>>
         get() = _onStartRgbListPutAll
 
-    private lateinit var concealJob : Job
-    fun cancelConcealJob(){
+    private lateinit var concealJob: Job
+    fun cancelConcealJob() {
         concealJob.cancel()
-        _concealPercentage.postValue(_concealPercentage.value?.copy(percent = 0f, data = null, done = false))
+        _concealPercentage.postValue(
+            _concealPercentage.value?.copy(percent = 0f, data = null, done = false)
+        )
         viewModelScope.launch {
             delay(50)
             isPercentageVisible.postValue(false)
@@ -165,8 +175,8 @@ class MainActivityViewModel(
 
     init {
         viewModelScope.launch {
-            delay(2000)
-            _showRecordTooltip.postValue(true)
+            delay(1000)
+            _inputImageSelectionTooltip.postValue(R.string.select_image_tooltip)
         }
 
 //        viewModelScope.launch {
@@ -194,7 +204,7 @@ class MainActivityViewModel(
      * calls an event to get permission and then the view calls [startRecordingWave]
      */
     fun startRecording() {
-        _showRecordTooltip.postValue(false)
+        _recordTooltip.postValue(null)
         _onStartRecording.postValue(StatelessEvent())
     }
 
@@ -284,6 +294,10 @@ class MainActivityViewModel(
                 delay(20)
                 _inputImage.postValue(BitmapFactory.decodeFile(file))
                 _isInputImageLoading.postValue(false)
+            }
+
+            if (_inputWave.value == null) {
+                _inputWaveSelectionTooltip.postValue(R.string.select_audio_file_tooltip)
             }
         }
     }
