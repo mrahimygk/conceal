@@ -298,6 +298,9 @@ class MainActivityViewModel(
 
             if (_inputWave.value == null) {
                 _inputWaveSelectionTooltip.postValue(R.string.select_audio_file_tooltip)
+                if (_isRecording.value ==false){
+                    _recordTooltip.postValue(R.string.hold_to_start_recording_tooltip)
+                }
             }
         }
     }
