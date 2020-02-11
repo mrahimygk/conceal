@@ -23,3 +23,7 @@ fun LongArray.absolute(): LongArray {
         if (it < 0) it * -1 else it
     }.toLongArray()
 }
+
+fun LongArray.toByteArray(): ByteArray {
+    return map { it.toByte() }.toByteArray()
+}
