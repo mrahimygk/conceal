@@ -19,13 +19,16 @@ fun Int.getLsBits(howMany: Int) = when (howMany) {
 /**
  * This method does not respect the sign of concealed number
  */
-fun Int.combineBits(other: Int): Int {
+fun Int.combineBits(vararg others: Int): Int {
     val binA = this.toBinString()
-    val binB = other.toBinString()
     val lsbA = binA.drop(6)
-    val lsbB = binB.drop(6)
-    val whole = lsbA + lsbB
-    return whole.toInt(2)
+    val builder = StringBuilder().apply { append(lsbA) }
+    others.forEach {
+        val binB = it.toBinString()
+        val lsbB = binB.drop(6)
+        builder.append(lsbB)
+    }
+    return builder.toString().toInt(2)
 }
 
 fun Int.bitwiseAnd(other: Int) = LowLevelIntOperations.and(this, other)
