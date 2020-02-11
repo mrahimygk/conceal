@@ -24,24 +24,18 @@ fun View.setIsGone(boolean: Boolean?) {
     }
 }
 
-@BindingAdapter(
-    "tooltip", "tooltipText",
-    "isTooltipAnimated", "transparentOverlay", requireAll = false
-)
-fun View.setTooltip(
-    hasTooltip: Boolean?, @StringRes tooltipText: Int?,
-    isAnimated: Boolean?, transparentOverlay: Boolean?
-) {
-    val tooltip = SimpleTooltip.Builder(this.context)
+@BindingAdapter("tooltip")
+fun View.setTooltip(@StringRes tooltip: Int?) {
+    val tooltipView = SimpleTooltip.Builder(this.context)
         .anchorView(this)
-        .text(context.getString(tooltipText ?: R.string.hold_to_start_recording_tooltip))
+        .text(context.getString(tooltip ?: R.string.click_to_open_file))
         .gravity(Gravity.TOP)
-        .animated(isAnimated ?: false)
-        .transparentOverlay(transparentOverlay ?: true)
+        .animated(true)
+        .transparentOverlay(false)
+        .padding(32f)
         .build()
 
-    hasTooltip?.let {
-        if (it) tooltip.show()
-        else tooltip.dismiss()
-    }
+    if (tooltip != null) tooltipView.show()
+    else tooltipView.dismiss()
+
 }
