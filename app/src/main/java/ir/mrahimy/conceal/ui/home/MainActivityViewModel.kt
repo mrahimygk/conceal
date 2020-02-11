@@ -35,6 +35,10 @@ class MainActivityViewModel(
 
     private lateinit var waveRecorder: WaveRecorder
 
+    private val _onAddingMaxAmplitude = MutableLiveData<Event<Int>>()
+    val onAddingMaxAmplitude: LiveData<Event<Int>>
+        get() = _onAddingMaxAmplitude
+
     private val _recordingFilePath = MutableLiveData<String>()
 
     private val _isRecording = MutableLiveData<Boolean>(false)
@@ -234,6 +238,7 @@ class MainActivityViewModel(
         waveRecorder.startRecording()
         waveRecorder.onAmplitudeListener = {
             Log.d("onAmplitudeListener", it.toString())
+            if (it != 0) _onAddingMaxAmplitude.postValue(Event(it))
         }
         _isRecording.postValue(true)
     }
