@@ -209,6 +209,14 @@ class MainActivityViewModel(
      */
     fun startRecording() {
         _recordTooltip.postValue(null)
+
+        _concealPercentage.value?.apply {
+            if (!done && percent > 0f) {
+                _snackMessage.postValue(Event(R.string.please_cancel_first))
+                return
+            }
+        }
+
         _onStartRecording.postValue(StatelessEvent())
     }
 
@@ -221,13 +229,6 @@ class MainActivityViewModel(
             val filePath = _recordingFilePath.value ?: return
             selectAudioFile(filePath)
             return
-        }
-
-        _concealPercentage.value?.apply {
-            if (!done && percent > 0f) {
-                _snackMessage.postValue(Event(R.string.please_cancel_first))
-                return
-            }
         }
 
         val filePath =
@@ -280,6 +281,12 @@ class MainActivityViewModel(
         get() = _onChooseImage
 
     fun chooseImage() {
+        _concealPercentage.value?.apply {
+            if (!done && percent > 0f) {
+                _snackMessage.postValue(Event(R.string.please_cancel_first))
+                return
+            }
+        }
         _onChooseImage.postValue(StatelessEvent())
     }
 
@@ -288,6 +295,12 @@ class MainActivityViewModel(
         get() = _onChooseAudio
 
     fun chooseAudio() {
+        _concealPercentage.value?.apply {
+            if (!done && percent > 0f) {
+                _snackMessage.postValue(Event(R.string.please_cancel_first))
+                return
+            }
+        }
         _onChooseAudio.postValue(StatelessEvent())
     }
 
