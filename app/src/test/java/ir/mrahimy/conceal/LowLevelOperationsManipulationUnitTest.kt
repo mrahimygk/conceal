@@ -180,21 +180,135 @@ class LowLevelOperationsManipulationUnitTest {
         val position = rgbList.putSignedInteger(0, 251, Layer.R)
         assert(position == 4)
     }
+//
+//    @Test
+//    fun `test putting signed integer array`() {
+//        val array = intArrayOf(
+//            250, 151, -200, -60, 25, 14, 1, 36, 19, 255,
+//            250, 151, -200, -60, 25, 14, 1, 36, 19, 255,
+//            30, 39, 255
+//        )
+//        val full = array.size
+//        val threshold = (image_height) * (image_width)
+//        assert(threshold == 40)
+//        val position = rgbList.putAllSignedIntegers(0, array, image_width, image_height)
+//        println(position)
+//        println(threshold)
+//        println(position % threshold)
+//        assert(position == (position % threshold))
+//    }
 
     @Test
-    fun `test putting signed integer array`() {
-        val array = intArrayOf(
-            250, 151, -200, -60, 25, 14, 1, 36, 19, 255,
-            250, 151, -200, -60, 25, 14, 1, 36, 19, 255,
-            30, 39, 255
+    fun `test getting back positive integer inside rgbList layer red`() {
+        val rgbList = listOf(
+            Rgb(192, 117, 115),
+            Rgb(180, 215, 216),
+            Rgb(181, 25, 26),
+            Rgb(81, 250, 16),
+            Rgb(50, 200, 19),
+            Rgb(150, 200, 190),
+            Rgb(90, 51, 17),
+            Rgb(190, 251, 217),
+            Rgb(170, 190, 151),
+            Rgb(240, 151, 117),
+            Rgb(17, 90, 51)
         )
-        val full = array.size
-        val threshold = (image_height) * (image_width)
-        assert(threshold == 40)
-        val position = rgbList.putAllSignedIntegers(0, array, image_width, image_height)
-        println(position)
-        println(threshold)
-        println(position % threshold)
-        assert(position == (position % threshold))
+        val int = rgbList.getSignedInteger(0, Layer.R)
+        assert(int == 5)
+    }
+
+    @Test
+    fun `test getting back negative integer inside rgbList layer red`() {
+        val rgbList = listOf(
+            Rgb(196, 117, 115),
+            Rgb(180, 215, 216),
+            Rgb(181, 25, 26),
+            Rgb(81, 250, 16),
+            Rgb(50, 200, 19),
+            Rgb(150, 200, 190),
+            Rgb(90, 51, 17),
+            Rgb(190, 251, 217),
+            Rgb(170, 190, 151),
+            Rgb(240, 151, 117),
+            Rgb(17, 90, 51)
+        )
+        val int = rgbList.getSignedInteger(0, Layer.R)
+        assert(int == -5)
+    }
+
+    @Test
+    fun `test getting back negative integer inside rgbList layer green`() {
+        val rgbList = listOf(
+            Rgb(196, 117, 115),
+            Rgb(180, 215, 216),
+            Rgb(181, 25, 26),
+            Rgb(81, 250, 16),
+            Rgb(50, 200, 19),
+            Rgb(150, 200, 190),
+            Rgb(90, 51, 17),
+            Rgb(190, 251, 217),
+            Rgb(170, 190, 151),
+            Rgb(240, 151, 117),
+            Rgb(17, 90, 51)
+        )
+        val int = rgbList.getSignedInteger(0, Layer.G)
+        assert(int == -118)
+    }
+
+    @Test
+    fun `test getting back integer inside rgbList layer green middle`() {
+        val rgbList = listOf(
+            Rgb(196, 117, 115),
+            Rgb(180, 215, 216),
+            Rgb(181, 25, 26),
+            Rgb(81, 250, 16),
+            Rgb(50, 200, 19),
+            Rgb(150, 200, 190),
+            Rgb(90, 51, 17),
+            Rgb(190, 251, 217),
+            Rgb(170, 190, 151),
+            Rgb(240, 151, 117),
+            Rgb(17, 90, 51)
+        )
+        val int = rgbList.getSignedInteger(6, Layer.G)
+        assert(int == 251)
+    }
+
+    @Test
+    fun `test getting back all signed integers inside rgbList`() {
+        val rgbList = listOf(
+            Rgb(196, 117, 115),
+            Rgb(180, 215, 216),
+            Rgb(181, 25, 26),
+            Rgb(81, 250, 16),
+            Rgb(50, 200, 19),
+            Rgb(150, 200, 190),
+            Rgb(90, 51, 17),
+            Rgb(190, 251, 217),
+            Rgb(170, 190, 151),
+            Rgb(240, 151, 117),
+            Rgb(17, 90, 51)
+        )
+
+        val list = rgbList.getAllSignedIntegers(6)
+        assert(list.containsAll(listOf(168, -118, 15, 200, 229)))
+    }
+
+    @Test
+    fun `test putting signed in and getting it back`() {
+        val input = -251
+        removedLsb.putSignedInteger(0, input, Layer.R)
+        removedLsb.putSignedInteger(4, input / 2, Layer.R)
+        removedLsb.putSignedInteger(8, -input / 2, Layer.R)
+        assert(removedLsb.subList(0, 4).map { it.r }.containsAll(listOf(199, 179, 178, 83)))
+
+        var parsed = removedLsb.getSignedInteger(0, Layer.R)
+        assert(parsed == input)
+
+        parsed = removedLsb.getSignedInteger(4, Layer.R)
+        assert(parsed == -125)
+
+        parsed = removedLsb.getSignedInteger(8, Layer.R)
+        assert(parsed == 125)
     }
 }
