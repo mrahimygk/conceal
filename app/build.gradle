@@ -40,6 +40,7 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.2.0'
     implementation "androidx.recyclerview:recyclerview:$recyclerViewVersion"
     implementation "androidx.fragment:fragment-ktx:$fragmentKtxVersion"
+    kapt "com.android.databinding:compiler:$gradlePluginVersion"
 
     //UI
     implementation "com.github.ybq:Android-SpinKit:$spinKitVersion"
