@@ -6,6 +6,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.DocumentsContract
 import android.provider.MediaStore
+import ir.mrahimy.conceal.util.ktx.FileUtils.getRealPath
 
 
 fun Uri.getPath(context: Context): String? {
@@ -117,3 +118,5 @@ fun isMediaDocument(uri: Uri): Boolean {
 fun isGooglePhotosUri(uri: Uri): Boolean {
     return "com.google.android.apps.photos.content" == uri.authority
 }
+
+fun Uri.getPathJava(context: Context): String = getRealPath(context, this)
