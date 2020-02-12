@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -21,13 +20,14 @@ public class VisualizerView extends View {
     private Paint linePaint;
     private int width;
     private int height;
-    private int mPoints = 60;
+    private int mPoints = 66;
     private int mRadius;
     private int mPointRadius;
     protected Paint mPaint;
     private Paint mGPaint;
     private float[] mSrcY;
     private Random random = new Random();
+    int[] thresholds = new int[mPoints];
 
     public VisualizerView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -47,6 +47,9 @@ public class VisualizerView extends View {
         mGPaint.setAntiAlias(true);
 
         mSrcY = new float[mPoints];
+        for (int i = 0; i < mPoints; i++) {
+            thresholds[i] = random.nextInt(66) + 1;
+        }
     }
 
     @Override
@@ -55,7 +58,7 @@ public class VisualizerView extends View {
         height = h;
         amplitudes = new float[this.width * 2]; // xy for each point across the width
         vectors = new float[this.width * 4]; // xxyy for each line across the width
-        mRadius = Math.min(w, h) / 6;
+        mRadius = Math.min(w, h) / 8;
         mPointRadius = Math.abs((int) (2 * mRadius * Math.sin(Math.PI / mPoints / 3)));
     }
 
@@ -79,7 +82,7 @@ public class VisualizerView extends View {
         float amp = amplitude / 10f;
         mSrcY = new float[mPoints];
         for (int i = 1; i <= mPoints; i++) {
-            mSrcY[i - 1] = amp / (random.nextInt(i) + 1);
+            mSrcY[i - 1] = amp / (random.nextInt(thresholds[i - 1]) + 1);
         }
         Log.d("TAG", "" + mSrcY[0]);
     }
@@ -92,40 +95,20 @@ public class VisualizerView extends View {
             canvas.drawCircle(cx, cy, mPointRadius, mPaint);
         }
 
-        drawLines(canvas);
         for (int i = 0; i < 360; i = i + 360 / mPoints) {
-            if (mSrcY[i * mPoints / 360] == 0) continue;
+            float value = mSrcY[i * mPoints / 360];
+            if (value == 0) continue;
+            if (value > 222) value = 222;
             canvas.save();
+            canvas.rotate(-90, getWidth() / 2, getHeight() / 2);
             canvas.rotate(-i, getWidth() / 2, getHeight() / 2);
             float cx = (float) (getWidth() / 2 + mRadius);
             float cy = (float) (getHeight() / 2);
-            canvas.drawRect(cx, cy - mPointRadius, cx + mSrcY[i * mPoints / 360],
-                    cy + mPointRadius, mPaint);
-            canvas.drawCircle(cx + mSrcY[i * mPoints / 360], cy, mPointRadius, mPaint);
-            canvas.restore();
-        }
-    }
-
-    /**
-     * Draw a translucent ray
-     *
-     * @param canvas target canvas
-     */
-    private void drawLines(Canvas canvas) {
-        int lineLen = 14 * mPointRadius;//default len,
-        for (int i = 0; i < 360; i = i + 360 / mPoints) {
-            canvas.save();
-            canvas.rotate(-i, getWidth() / 2, getHeight() / 2);
-            float value = mSrcY[i * mPoints / 360];
-            float cx = (float) (getWidth() / 2 + mRadius) + value;
-            float cy = (float) (getHeight() / 2);
-            Path path = new Path();
-            path.moveTo(cx, cy + mPointRadius);
-            path.lineTo(cx, cy - mPointRadius);
-            path.lineTo(cx + lineLen, cy);
             if (value > 100) mGPaint.setColor(Color.RED);
             else mGPaint.setColor(Color.GREEN);
-            canvas.drawPath(path, mGPaint);
+            canvas.drawCircle(cx + value, cy, mPointRadius, mGPaint);
+            canvas.drawRect(cx, cy - mPointRadius, cx + value,
+                    cy + mPointRadius, mPaint);
             canvas.restore();
         }
     }
