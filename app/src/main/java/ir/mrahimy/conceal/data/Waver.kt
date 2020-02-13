@@ -2,7 +2,10 @@ package ir.mrahimy.conceal.data
 
 data class Waver(
     val data: LongArray,
-    val sampleRate: Long
+    val sampleRate: Long,
+    val channelCount: Int,
+    val frameCount: Long,
+    val validBits: Int
 )
 
 fun LongArray.mapToUniformDouble(): DoubleArray {
