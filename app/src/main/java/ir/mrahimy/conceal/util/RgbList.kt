@@ -242,6 +242,7 @@ private suspend fun List<Rgb>.putAllSignedIntegersInLoop(
                     1,
                     percent,
                     this.toBitmap(image),
+//                    resBitmap,
                     position,
                     lastIndexOfWaveDataChecked,
                     false
@@ -257,6 +258,7 @@ private suspend fun List<Rgb>.putAllSignedIntegersInLoop(
                         1,
                         percent,
                         this.zeroLayerMutable(Layer.values().random()).toBitmap(image),
+//                        resBitmap,
                         position,
                         lastIndexOfWaveDataChecked,
                         false
@@ -273,6 +275,7 @@ private suspend fun List<Rgb>.putAllSignedIntegersInLoop(
                         1,
                         percent,
                         this.zeroRandomMutable(0).toBitmap(image),
+//                        resBitmap,
                         position,
                         lastIndexOfWaveDataChecked,
                         false
@@ -289,6 +292,7 @@ private suspend fun List<Rgb>.putAllSignedIntegersInLoop(
                         1,
                         percent,
                         this.zeroRandomMutable(255).toBitmap(image),
+//                        resBitmap,
                         position,
                         lastIndexOfWaveDataChecked,
                         false
@@ -305,6 +309,7 @@ private suspend fun List<Rgb>.putAllSignedIntegersInLoop(
                         1,
                         percent,
                         sortByLayerValue(Layer.values().random()).toBitmap(image),
+//                        resBitmap,
                         position,
                         lastIndexOfWaveDataChecked,
                         false
