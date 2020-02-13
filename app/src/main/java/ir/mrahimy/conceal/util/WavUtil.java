@@ -26,6 +26,10 @@ public class WavUtil {
             e.printStackTrace();
         }
 
-        return new Waver(buffer, file.getSampleRate());
+        return new Waver(buffer,
+                file.getSampleRate(),
+                file.getNumChannels(),
+                file.getNumFrames(),
+                file.getValidBits());
     }
 }
