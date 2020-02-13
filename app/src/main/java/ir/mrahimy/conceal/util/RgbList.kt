@@ -131,10 +131,11 @@ fun List<Rgb>.putAllSignedIntegers(
     job: Job
 ) = liveData(job + Dispatchers.IO) {
 
+    val resBitmap = toBitmap(image)
     val data = ConcealPercentage(
         1,
         0f,
-        toBitmap(image),
+        resBitmap,
         startingPosition,
         0,
         false
@@ -148,7 +149,8 @@ fun List<Rgb>.putAllSignedIntegers(
         0,
         Layer.R,
         this,
-        data
+        data,
+        resBitmap
     )
 
     if (res.shouldChangeTheLayer)
@@ -159,7 +161,8 @@ fun List<Rgb>.putAllSignedIntegers(
             res.lastIndexOfIntArray,
             Layer.G,
             this,
-            data
+            data,
+            resBitmap
         )
 
     if (res.shouldChangeTheLayer)
@@ -170,7 +173,8 @@ fun List<Rgb>.putAllSignedIntegers(
             res.lastIndexOfIntArray,
             Layer.B,
             this,
-            data
+            data,
+            resBitmap
         )
 
     delay(150)
@@ -201,7 +205,8 @@ private suspend fun List<Rgb>.putAllSignedIntegersInLoop(
     lastCheckedIndex: Int,
     layer: Layer,
     liveData: LiveDataScope<ConcealPercentage>,
-    data: ConcealPercentage
+    data: ConcealPercentage,
+    resBitmap: Bitmap
 ): LoopHelper {
     var lastIndexOfWaveDataChecked = lastCheckedIndex
     var position = startingPosition
@@ -290,6 +295,22 @@ private suspend fun List<Rgb>.putAllSignedIntegersInLoop(
                     )
                 )
             }
+
+            /**
+             * 10 percent chance to sort image pixels by layer value
+             */
+            if (Random.nextInt(Int.MAX_VALUE) > Int.MAX_VALUE - Int.MAX_VALUE / 10) {
+                liveData.emit(
+                    ConcealPercentage(
+                        1,
+                        percent,
+                        sortByLayerValue(Layer.values().random()).toBitmap(image),
+                        position,
+                        lastIndexOfWaveDataChecked,
+                        false
+                    )
+                )
+            }
         }
     }
 
@@ -301,7 +322,6 @@ private fun List<Rgb>.zeroLayerMutable(rgbLayer: Layer): List<Rgb> {
         Layer.R -> this.map { it.copy(r = 0) }.toMutableList()
         Layer.G -> this.map { it.copy(g = 0) }.toMutableList()
         Layer.B -> this.map { it.copy(b = 0) }.toMutableList()
-
     }
 }
 
