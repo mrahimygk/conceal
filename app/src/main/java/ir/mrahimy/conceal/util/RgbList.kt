@@ -320,6 +320,15 @@ private fun List<Rgb>.zeroRandomMutable(i: Int): List<Rgb> {
     }.toMutableList()
 }
 
+private fun List<Rgb>.sortByLayerValue(layer: Layer?): List<Rgb> {
+    return when (layer) {
+        null -> this.map { it }.sortedBy { it.r }
+        Layer.R -> this.map { it }.sortedBy { it.r }
+        Layer.G -> this.map { it }.sortedBy { it.g }
+        Layer.B -> this.map { it }.sortedBy { it.b }
+    }.toMutableList()
+}
+
 private fun IntArray.findPercent(
     lastIndexOfWaveDataChecked: Int
 ) = (lastIndexOfWaveDataChecked.toFloat() / size.toFloat()) * 100.0f
