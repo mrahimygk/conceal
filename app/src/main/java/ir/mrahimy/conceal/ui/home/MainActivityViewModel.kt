@@ -3,7 +3,6 @@ package ir.mrahimy.conceal.ui.home
 import android.app.Application
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -304,7 +303,7 @@ class MainActivityViewModel(
                 delay(20)
                 val file = it.getPathJava(getApplication().applicationContext)
                 delay(20)
-                _inputImage.postValue(BitmapFactory.decodeFile(file))
+                _inputImage.postValue(rescaleImage(file, 400, 400))
                 _isInputImageLoading.postValue(false)
             }
 
