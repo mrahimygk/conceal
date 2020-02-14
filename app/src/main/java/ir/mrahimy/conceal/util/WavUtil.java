@@ -32,4 +32,27 @@ public class WavUtil {
                 file.getNumFrames(),
                 file.getValidBits());
     }
+
+    public static void writeAllFrames(Wave.WavFile file, Waver waver){
+
+        final int BUF_SIZE = 5001;
+
+        int framesWritten = 0;
+
+        do {
+            try {
+                framesWritten = file.writeFrames(waver.getData(), BUF_SIZE);
+            } catch (Wave.WavFileException | IOException e) {
+                e.printStackTrace();
+            }
+        } while (framesWritten != 0);
+
+        try {
+            file.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
 }
