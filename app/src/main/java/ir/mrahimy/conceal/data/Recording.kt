@@ -1,11 +1,26 @@
 package ir.mrahimy.conceal.data
 
-import android.net.Uri
-import java.util.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
+@Entity
 data class Recording(
-    val id: Int,
-    val file: String,
-    val uri: Uri?,
-    val date: Date
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
+    val id: Long,
+    @ColumnInfo(name = "inputImagePath")
+    val inputImagePath: String,
+    @ColumnInfo(name = "outputImagePath")
+    val outputImagePath: String,
+    @ColumnInfo(name = "inputWavePath")
+    val inputWavePath: String,
+    /**
+     * After recording is done, we parse data on the run
+     * But if they have received an image, there would be not parsedWavePath
+     */
+    @ColumnInfo(name = "parsedWavePath")
+    val parsedWavePath: String?,
+    @ColumnInfo(name = "date")
+    val date: Long
 )
