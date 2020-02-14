@@ -35,6 +35,7 @@
                     android:layout_marginStart="8dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    android:text="@{item.id+``}"
                     tools:text="#1" />
 
                 <TextView
@@ -42,7 +43,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
-                    android:text="@{item.file}"
+                    android:text="@{item.inputImagePath}"
                     app:layout_constraintLeft_toRightOf="@id/index"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="fjksjhfksjdfh" />
@@ -88,7 +89,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@{``+item.date.time}"
+            android:text="@{``+item.date}"
             android:textSize="12sp"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view"
