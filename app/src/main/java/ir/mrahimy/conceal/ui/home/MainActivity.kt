@@ -92,7 +92,7 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() 
         initializeVisualizerEngineWithPermissionCheck()
     }
 
-    @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO)
+    @NeedsPermission(Manifest.permission.RECORD_AUDIO)
     fun initializeVisualizerEngine() {
         audioVisualization = visualizer_view
         val vizualizerHandler = DbmHandler.Factory.newVisualizerHandler(this, 0)
