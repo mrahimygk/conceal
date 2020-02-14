@@ -42,6 +42,11 @@ dependencies {
     implementation "androidx.fragment:fragment-ktx:$fragmentKtxVersion"
     kapt "com.android.databinding:compiler:$gradlePluginVersion"
 
+    // Room
+    implementation "androidx.room:room-runtime:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
+    implementation "androidx.room:room-ktx:$roomVersion"
+
     //UI
     implementation "com.github.ybq:Android-SpinKit:$spinKitVersion"
     implementation "com.github.douglasjunior:android-simple-tooltip:$simpleTooltipVersion"
