@@ -12,11 +12,17 @@ fun File.writeBitmap(bitmap: Bitmap, format: Bitmap.CompressFormat, quality: Int
 }
 
 fun File.writeWave(waver: Waver) {
-    Wave.WavFile.newWavFile(
-        this,
-        waver.channelCount,
-        waver.frameCount,
-        waver.validBits,
-        waver.sampleRate
-    )
+    waver.apply {
+        Wave.WavFile.newWavFile(
+            this@writeWave,
+            channelCount,
+            frameCount,
+            validBits,
+            sampleRate
+        ).writeAllFrames(this)
+    }
+}
+
+fun Wave.WavFile.writeAllFrames(waver: Waver) {
+    WavUtil.writeAllFrames(this, waver)
 }
