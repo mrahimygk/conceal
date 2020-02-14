@@ -271,7 +271,7 @@ class LowLevelOperationsManipulationUnitTest {
             Rgb(17, 90, 51)
         )
         val int = rgbList.getSignedInteger(6, Layer.G)
-        assert(int == 251L)
+        assert(int == 251)
     }
 
     @Test
@@ -291,7 +291,7 @@ class LowLevelOperationsManipulationUnitTest {
         )
 
         val list = rgbList.getAllSignedIntegers(6)
-        assert(list.containsAll(listOf(168L, -118L, 15L, 200L, 229L)))
+        assert(list.containsAll(listOf(168, -118, 15, 200, 229)))
     }
 
     @Test
