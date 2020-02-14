@@ -3,9 +3,7 @@ package ir.mrahimy.conceal.app
 import android.app.Activity
 import android.app.Application
 import com.yariksoffice.lingver.Lingver
-import ir.mrahimy.conceal.di.adapterModule
-import ir.mrahimy.conceal.di.modelModule
-import ir.mrahimy.conceal.di.viewModelModule
+import ir.mrahimy.conceal.di.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -23,7 +21,11 @@ class ConcealApplication : Application() {
             androidContext(this@ConcealApplication)
             androidLogger(Level.DEBUG)
             modules(
-                adapterModule, viewModelModule, modelModule
+                adapterModule,
+                viewModelModule,
+                modelModule,
+                dbModule,
+                repositoryModule
             )
         }
     }
