@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -21,7 +20,7 @@
             android:id="@+id/visualizer_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:av_backgroundColor="@color/av_color_bg"
+            app:av_backgroundColor="@color/colorPrimaryDark"
             app:av_bubblesPerLayer="16"
             app:av_bubblesRandomizeSizes="true"
             app:av_bubblesSize="24dp"
@@ -93,6 +92,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginTop="16dp"
+            android:contentDescription="@string/cd_output_image"
             android:src="@drawable/image"
             app:isGone="@{!vm.isOutputHintVisible}"
             app:layout_constraintBottom_toTopOf="@id/output_label"
@@ -105,6 +105,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="12dp"
+            android:contentDescription="@string/cd_output_image"
             android:onClick="@{()->vm.showSlide(1)}"
             android:scaleType="fitCenter"
             app:bitmap="@{vm.concealPercentage.data}"
@@ -141,6 +142,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginTop="16dp"
+            android:contentDescription="@string/cd_select_input_image"
             android:src="@drawable/image"
             app:isGone="@{!vm.isInputHintVisible}"
             app:layout_constraintBottom_toTopOf="@id/input_label"
@@ -154,6 +156,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="12dp"
+            android:contentDescription="@string/cd_input_image"
             android:onClick="@{()->vm.showSlide(0)}"
             android:scaleType="fitCenter"
             app:bitmap="@{vm.inputImage}"
@@ -188,6 +191,7 @@
             android:layout_height="48dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
+            android:contentDescription="@string/cd_select_input_audio"
             android:onClick="@{()->vm.chooseAudio()}"
             android:src="@drawable/wav"
             app:layout_constraintDimensionRatio="w,1:1"
@@ -198,6 +202,7 @@
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/cd_from_1_to_2"
             android:src="@drawable/arrow"
             app:layout_constraintBottom_toBottomOf="@id/input_img"
             app:layout_constraintEnd_toStartOf="@id/output_img"
@@ -238,6 +243,16 @@
             app:layout_constraintTop_toBottomOf="@id/wav_file_icon"
             tools:listitem="@layout/item_recording" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{vm.recordingsListText+``}"
+            app:layout_constraintBottom_toBottomOf="@id/recordings_list"
+            app:layout_constraintEnd_toEndOf="@id/recordings_list"
+            app:layout_constraintStart_toStartOf="@id/recordings_list"
+            app:layout_constraintTop_toTopOf="@id/recordings_list"
+            tools:text="لیست ازونا" />
+
         <ir.mrahimy.conceal.cv.VisualizerView
             android:id="@+id/recording_visualizer_view"
             android:layout_width="wrap_content"
@@ -253,6 +268,7 @@
             android:layout_width="0dp"
             android:layout_height="64dp"
             android:layout_marginBottom="64dp"
+            android:contentDescription="@string/cd_start_recording"
             android:onClick="@{()->vm.startRecording()}"
             android:padding="8dp"
             android:src="@drawable/mic"
@@ -313,6 +329,7 @@
             android:id="@+id/percentage_done"
             android:layout_width="0dp"
             android:layout_height="24dp"
+            android:contentDescription="@string/cd_green_check"
             android:gravity="center_horizontal"
             android:layoutDirection="ltr"
             android:src="@drawable/ic_checkmark_green"
