@@ -89,6 +89,11 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() 
     override fun configCreationEvents() {
         recordings_list?.adapter = adapter
 
+        initializeVisualizerEngineWithPermissionCheck()
+    }
+
+    @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO)
+    fun initializeVisualizerEngine() {
         audioVisualization = visualizer_view
         val vizualizerHandler = DbmHandler.Factory.newVisualizerHandler(this, 0)
         audioVisualization?.linkTo(vizualizerHandler)
