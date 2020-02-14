@@ -1,5 +1,14 @@
 package ir.mrahimy.conceal.ui.home
 
 import ir.mrahimy.conceal.base.BaseModel
+import ir.mrahimy.conceal.data.Recording
+import ir.mrahimy.conceal.data.repository.RecordingRepository
 
-class MainActivityModel: BaseModel()
+class MainActivityModel(private val repository: RecordingRepository): BaseModel(){
+
+    suspend fun addRecording(recording: Recording){
+        repository.addRecording(recording)
+    }
+
+    fun getAllRecordings() = repository.getAllRecordings()
+}
