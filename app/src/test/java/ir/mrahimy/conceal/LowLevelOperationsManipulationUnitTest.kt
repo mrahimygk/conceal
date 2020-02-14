@@ -171,7 +171,7 @@ class LowLevelOperationsManipulationUnitTest {
         val pos = injected.putSampleRate(sampleRate)
 
         val res = injected.getSampleRate()
-        assert(res.first == sampleRate)
+        assert(res.first.toInt() == sampleRate)
         assert(res.second == 12)
     }
 
@@ -213,8 +213,8 @@ class LowLevelOperationsManipulationUnitTest {
             Rgb(240, 151, 117),
             Rgb(17, 90, 51)
         )
-        val int = rgbList.getSignedInteger(0, Layer.R)
-        assert(int == 5)
+        val parsed = rgbList.getSignedInteger(0, Layer.R)
+        assert(parsed.toInt() == 5)
     }
 
     @Test
@@ -232,8 +232,8 @@ class LowLevelOperationsManipulationUnitTest {
             Rgb(240, 151, 117),
             Rgb(17, 90, 51)
         )
-        val int = rgbList.getSignedInteger(0, Layer.R)
-        assert(int == -5)
+        val parsed = rgbList.getSignedInteger(0, Layer.R)
+        assert(parsed.toInt() == -5)
     }
 
     @Test
@@ -251,8 +251,8 @@ class LowLevelOperationsManipulationUnitTest {
             Rgb(240, 151, 117),
             Rgb(17, 90, 51)
         )
-        val int = rgbList.getSignedInteger(0, Layer.G)
-        assert(int == -118)
+        val parsed = rgbList.getSignedInteger(0, Layer.G)
+        assert(parsed.toInt() == -118)
     }
 
     @Test
@@ -271,7 +271,7 @@ class LowLevelOperationsManipulationUnitTest {
             Rgb(17, 90, 51)
         )
         val int = rgbList.getSignedInteger(6, Layer.G)
-        assert(int == 251)
+        assert(int == 251L)
     }
 
     @Test
@@ -291,7 +291,7 @@ class LowLevelOperationsManipulationUnitTest {
         )
 
         val list = rgbList.getAllSignedIntegers(6)
-        assert(list.containsAll(listOf(168, -118, 15, 200, 229)))
+        assert(list.containsAll(listOf(168L, -118L, 15L, 200L, 229L)))
     }
 
     @Test
@@ -303,12 +303,12 @@ class LowLevelOperationsManipulationUnitTest {
         assert(removedLsb.subList(0, 4).map { it.r }.containsAll(listOf(199, 179, 178, 83)))
 
         var parsed = removedLsb.getSignedInteger(0, Layer.R)
-        assert(parsed == input)
+        assert(parsed.toInt() == input)
 
         parsed = removedLsb.getSignedInteger(4, Layer.R)
-        assert(parsed == -125)
+        assert(parsed.toInt() == -125)
 
         parsed = removedLsb.getSignedInteger(8, Layer.R)
-        assert(parsed == 125)
+        assert(parsed.toInt() == 125)
     }
 }
