@@ -17,4 +17,13 @@
     <string name="choose">انتخاب کنید</string>
     <string name="please_cancel_first">عمل پردازشی در حال انجام است، ابتدا از لغو شدن آن  مطمئن شوید.</string>
     <string name="cancel">لغو</string>
+    <string name="empty_recording_list">لیست نهان‌نگاری‌های قبلی خالی است</string>
+    <string name="empty" />
+    <string name="cd_input_image">تصویر ورودی</string>
+    <string name="cd_output_image">تصویر خروجی</string>
+    <string name="cd_select_input_image">انتخاب تصویر ورودی</string>
+    <string name="cd_select_input_audio">انتخاب صوت ورودی</string>
+    <string name="cd_from_1_to_2">از یک به دو</string>
+    <string name="cd_start_recording">شروع ضبط صدا</string>
+    <string name="cd_green_check">تیک سبز</string>
 </resources>
