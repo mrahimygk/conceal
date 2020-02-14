@@ -13,12 +13,11 @@ import ir.mrahimy.conceal.R
 import ir.mrahimy.conceal.base.BaseAndroidViewModel
 import ir.mrahimy.conceal.data.Recording
 import ir.mrahimy.conceal.data.Waver
-import ir.mrahimy.conceal.data.capsules.ConcealInputData
-import ir.mrahimy.conceal.data.capsules.ConcealPercentage
-import ir.mrahimy.conceal.data.capsules.SaveBitmapInfoCapsule
+import ir.mrahimy.conceal.data.capsules.*
 import ir.mrahimy.conceal.data.mapToRgbValue
 import ir.mrahimy.conceal.data.mapToUniformDouble
 import ir.mrahimy.conceal.util.*
+import ir.mrahimy.conceal.util.ktx.getNameFromPath
 import ir.mrahimy.conceal.util.ktx.getPathJava
 import ir.mrahimy.conceal.util.ktx.getRgbArray
 import kotlinx.coroutines.Job
@@ -29,7 +28,7 @@ import java.util.*
 
 class MainActivityViewModel(
     application: Application,
-    model: MainActivityModel
+    private val model: MainActivityModel
 ) : BaseAndroidViewModel(application, model) {
 
     private lateinit var waveRecorder: WaveRecorder
@@ -44,21 +43,26 @@ class MainActivityViewModel(
     val isRecording: LiveData<Boolean>
         get() = _isRecording
 
-    private val _recordings = MutableLiveData<List<Recording>>()
-    val recordings: LiveData<List<Recording>>
-        get() = _recordings
+    val recordings = model.getAllRecordings()
+    val recordingsListText = recordings.map {
+        if (it.isNullOrEmpty()) R.string.empty_recording_list else R.string.empty
+    }
 
     private val _onStartRecording = MutableLiveData<StatelessEvent>()
     val onStartRecording: LiveData<StatelessEvent>
         get() = _onStartRecording
 
+    private val inputImagePath = MutableLiveData<String>(null)
     private val _inputImage = MutableLiveData<Bitmap>(null)
     val inputImage: LiveData<Bitmap>
         get() = _inputImage
 
     val isInputHintVisible = _inputImage.map { it == null }
 
-    private val _inputWave = MutableLiveData<File>()
+    private val inputWavePath = MutableLiveData<String>(null)
+    private val _inputWave = inputWavePath.map {
+        if (it == null) null else File(it)
+    }
 
     private val _recordTooltip = MutableLiveData<Int>(null)
     val recordTooltip: LiveData<Int>
@@ -173,26 +177,6 @@ class MainActivityViewModel(
             delay(1000)
             _inputImageSelectionTooltip.postValue(R.string.select_image_tooltip)
         }
-
-//        viewModelScope.launch {
-//            repeat(10) {
-//                delay(90)
-//                addRecording(it)
-//            }
-//        }
-    }
-
-    private fun addRecording(it: Int) = viewModelScope.launch {
-        val recList = _recordings.value?.toMutableList() ?: mutableListOf()
-        recList.add(
-            Recording(
-                it,
-                "/storage/",
-                null,
-                Date()
-            )
-        )
-        _recordings.postValue(recList)
     }
 
     /**
@@ -239,25 +223,54 @@ class MainActivityViewModel(
         _concealPercentage.postValue(concealPercentage)
         if (concealPercentage.done) {
             concealPercentage.data?.let { outputBitmap ->
-                getApplication().applicationContext.externalCacheDir?.absolutePath?.let {
-                    val info = SaveBitmapInfoCapsule(
-                        "img",
-                        Date(),
-                        outputBitmap,
-                        Bitmap.CompressFormat.PNG
-                    )
-                    saveBitmap(it, info)
+                viewModelScope.launch {
+                    getApplication().applicationContext.externalCacheDir?.absolutePath?.let {
+
+                        val inputImagePath = inputImagePath.value ?: return@launch
+                        val inputWavePath = inputWavePath.value ?: return@launch
+                        val waver = _waveInfo.value ?: return@launch
+                        val imageName = inputImagePath.getNameFromPath()
+                        val bitmapInfo = SaveBitmapInfoCapsule(
+                            "${imageName}_conceal",
+                            Date(),
+                            outputBitmap,
+                            Bitmap.CompressFormat.PNG
+                        )
+                        val outputImagePath = bitmapInfo.save(it)
+
+                        val list = outputBitmap.getRgbArray()
+                        val parsedSampleRate = list.getSampleRate()
+                        val parsedWaveData =
+                            list.getAllSignedIntegers(parsedSampleRate.second)
+                                .map { n -> n.toLong() }.toLongArray()
+                        val wavInfo = SaveWaveInfoCapsule(
+                            "parsed_from_$imageName",
+                            Date(),
+                            Waver(
+                                parsedWaveData,
+                                parsedSampleRate.first.toLong(),
+                                waver.channelCount,
+                                waver.frameCount,
+                                waver.validBits
+                            )
+                        )
+                        val parsedWavePath = wavInfo.save(it)
+                        viewModelScope.launch {
+                            model.addRecording(
+                                Recording(
+                                    0L,
+                                    inputImagePath,
+                                    outputImagePath,
+                                    inputWavePath,
+                                    parsedWavePath,
+                                    Date().time
+                                )
+                            )
+                        }
+                    }
                 }
             }
         }
-    }
-
-    private fun saveBitmap(path: String, fileInfo: SaveBitmapInfoCapsule) {
-        File(
-            path +
-                    "${fileInfo.name}_${fileInfo.time?.time}." +
-                    fileInfo.format.name.toLowerCase(Locale.ENGLISH)
-        ).writeBitmap(fileInfo.bitmap, fileInfo.format, 100)
     }
 
     fun showSlide(position: Int) {
@@ -303,6 +316,7 @@ class MainActivityViewModel(
                 delay(20)
                 val file = it.getPathJava(getApplication().applicationContext)
                 delay(20)
+                inputImagePath.postValue(file)
                 _inputImage.postValue(rescaleImage(file, 400, 400))
                 _isInputImageLoading.postValue(false)
             }
@@ -332,7 +346,7 @@ class MainActivityViewModel(
                 _isInputWaveLoading.postValue(false)
                 _waveFileLabel.postValue(it)
                 delay(20)
-                _inputWave.postValue(File(it))
+                inputWavePath.postValue(it)
             }
         }
     }
