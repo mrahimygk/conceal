@@ -6,14 +6,18 @@ data class Waver(
     val channelCount: Int,
     val frameCount: Long,
     val validBits: Int
-)
+) {
+    var maxValue: Long = 1
+}
 
 fun LongArray.mapToUniformDouble(): DoubleArray {
-    val max = absolute().max()?.toDouble() ?: return DoubleArray(1)
+    val max = absolute().max()?.toDouble() ?: 1.0
     return map {
         (it.toDouble() / max)
     }.toDoubleArray()
 }
+
+fun LongArray.maxValue() = absolute().max() ?: 1.0
 
 fun DoubleArray.mapToRgbValue(): IntArray {
     return map {
