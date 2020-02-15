@@ -26,4 +26,5 @@
     <string name="cd_from_1_to_2">از یک به دو</string>
     <string name="cd_start_recording">شروع ضبط صدا</string>
     <string name="cd_green_check">تیک سبز</string>
+    <string name="saving">در حال ذخیره صدا</string>
 </resources>
