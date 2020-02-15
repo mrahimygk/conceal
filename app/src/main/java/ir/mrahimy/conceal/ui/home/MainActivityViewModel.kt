@@ -11,18 +11,14 @@ import androidx.lifecycle.viewModelScope
 import com.github.squti.androidwaverecorder.WaveRecorder
 import ir.mrahimy.conceal.R
 import ir.mrahimy.conceal.base.BaseAndroidViewModel
-import ir.mrahimy.conceal.data.Recording
-import ir.mrahimy.conceal.data.Waver
+import ir.mrahimy.conceal.data.*
 import ir.mrahimy.conceal.data.capsules.*
-import ir.mrahimy.conceal.data.mapToRgbValue
-import ir.mrahimy.conceal.data.mapToUniformDouble
 import ir.mrahimy.conceal.util.*
 import ir.mrahimy.conceal.util.ktx.getNameFromPath
 import ir.mrahimy.conceal.util.ktx.getPathJava
 import ir.mrahimy.conceal.util.ktx.getRgbArray
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import ir.mrahimy.conceal.util.ktx.parseWaver
+import kotlinx.coroutines.*
 import java.io.File
 import java.util.*
 
@@ -42,6 +38,8 @@ class MainActivityViewModel(
     private val _isRecording = MutableLiveData<Boolean>(false)
     val isRecording: LiveData<Boolean>
         get() = _isRecording
+
+    private val waveFileSavingState = MutableLiveData<FileSavingState>(FileSavingState.IDLE)
 
     val recordings = model.getAllRecordings()
     val recordingsListText = recordings.map {
@@ -108,7 +106,7 @@ class MainActivityViewModel(
         if (it == null) return@map null
         WavUtil.fromWaveData(
             Wave.WavFile.openWavFile(it)
-        )
+        ).apply { maxValue = data.maxValue() }
     }
 
     val handle = combine(_inputImage, _waveInfo) { _image, _waveFile ->
@@ -133,13 +131,30 @@ class MainActivityViewModel(
     val percentInt = _concealPercentage.map { it.percent.toInt() }
 
     val isPercentageVisible =
-        combine(isOutputHintVisible, _concealPercentage) { outputHint, percentageData ->
-            return@combine outputHint == false && percentageData?.done == false
+        combine(
+            isOutputHintVisible,
+            _concealPercentage,
+            waveFileSavingState
+        ) { outputHint, percentageData, waveFileSavingState ->
+            (outputHint == false && percentageData?.done == false) || waveFileSavingState == FileSavingState.SAVING
         } as MutableLiveData
 
     val isDoneMarkVisible =
-        combine(isOutputHintVisible, _concealPercentage) { outputHint, percentageData ->
-            return@combine outputHint == false && percentageData?.done == true
+        combine(
+            isOutputHintVisible,
+            _concealPercentage,
+            waveFileSavingState
+        ) { outputHint, percentageData, waveFileSavingState ->
+            outputHint == false && percentageData?.done == true && waveFileSavingState == FileSavingState.DONE
+        }
+
+    val isSavingFileTextVisible =
+        combine(
+            isOutputHintVisible,
+            _concealPercentage,
+            waveFileSavingState
+        ) { outputHint, percentageData, waveFileSavingState ->
+            outputHint == false && percentageData?.done == true && waveFileSavingState == FileSavingState.SAVING
         }
 
     private val _onStartRgbListPutAll = MutableLiveData<Event<ConcealInputData>>()
@@ -147,29 +162,51 @@ class MainActivityViewModel(
         get() = _onStartRgbListPutAll
 
     private lateinit var concealJob: Job
+    private lateinit var saveFileJob: Job
+
     fun cancelConcealJob() {
-        concealJob.cancel()
+        if (::concealJob.isInitialized)
+            concealJob.cancel()
+        if (::saveFileJob.isInitialized)
+            saveFileJob.cancel()
         _concealPercentage.postValue(
             _concealPercentage.value?.copy(percent = 0f, data = null, done = false)
         )
+
         viewModelScope.launch {
-            delay(50)
+            delay(20)
+            waveFileSavingState.postValue(FileSavingState.IDLE)
+            delay(20)
             isPercentageVisible.postValue(false)
         }
     }
 
+    private val _onDataExceeds = MutableLiveData<StatelessEvent>()
+    val onDataExceeds: LiveData<StatelessEvent>
+        get() = _onDataExceeds
+
     private fun putWaveFileIntoImage(
         image: Bitmap,
         waveFile: Waver
-    ) {
+    ) = viewModelScope.launch {
         val rgbList = image.getRgbArray().remove3Lsb()
         val audioDataAsRgbList = waveFile.data.mapToUniformDouble().mapToRgbValue()
-        val position = rgbList.putSampleRate(waveFile.sampleRate.toInt())
+        try {
+            var position = rgbList.putSampleRate(waveFile.sampleRate.toInt())
+            position = rgbList.putChannelCount(position, waveFile.channelCount)
+            position = rgbList.putFrameCount(position, waveFile.frameCount.toInt())
+            position = rgbList.putValidBits(position, waveFile.validBits)
+            position = rgbList.putMaxValue(position, waveFile.maxValue.toInt())
 
-        concealJob = Job()
-        _onStartRgbListPutAll.postValue(
-            Event(ConcealInputData(rgbList, position, audioDataAsRgbList, image, concealJob))
-        )
+            concealJob = Job()
+            _onStartRgbListPutAll.postValue(
+                Event(ConcealInputData(rgbList, position, audioDataAsRgbList, image, concealJob))
+            )
+        } catch (e: ArrayIndexOutOfBoundsException) {
+            cancelConcealJob()
+            _onDataExceeds.postValue(StatelessEvent())
+        }
+
     }
 
     init {
@@ -223,12 +260,13 @@ class MainActivityViewModel(
         _concealPercentage.postValue(concealPercentage)
         if (concealPercentage.done) {
             concealPercentage.data?.let { outputBitmap ->
-                viewModelScope.launch {
+                saveFileJob = Job()
+                viewModelScope.launch(saveFileJob + Dispatchers.Default) {
+                    waveFileSavingState.postValue(FileSavingState.SAVING)
                     getApplication().applicationContext.externalCacheDir?.absolutePath?.let {
 
                         val inputImagePath = inputImagePath.value ?: return@launch
                         val inputWavePath = inputWavePath.value ?: return@launch
-                        val waver = _waveInfo.value ?: return@launch
                         val imageName = inputImagePath.getNameFromPath()
                         val bitmapInfo = SaveBitmapInfoCapsule(
                             "${imageName}_conceal",
@@ -236,25 +274,19 @@ class MainActivityViewModel(
                             outputBitmap,
                             Bitmap.CompressFormat.PNG
                         )
-                        val outputImagePath = bitmapInfo.save(it)
+                        val outputImagePath = withContext(saveFileJob + Dispatchers.IO) {
+                            bitmapInfo.save(it)
+                        }
 
-                        val list = outputBitmap.getRgbArray()
-                        val parsedSampleRate = list.getSampleRate()
-                        val parsedWaveData =
-                            list.getAllSignedIntegers(parsedSampleRate.second)
-                                .map { n -> n.toLong() }.toLongArray()
-                        val wavInfo = SaveWaveInfoCapsule(
-                            "parsed_from_$imageName",
-                            Date(),
-                            Waver(
-                                parsedWaveData,
-                                parsedSampleRate.first.toLong(),
-                                waver.channelCount,
-                                waver.frameCount,
-                                waver.validBits
-                            )
-                        )
-                        val parsedWavePath = wavInfo.save(it)
+                        val waver = withContext(saveFileJob + Dispatchers.IO) {
+                            outputBitmap.parseWaver()
+                        }
+
+                        val wavInfo = SaveWaveInfoCapsule("parsed_from_$imageName", Date(), waver)
+                        val parsedWavePath = withContext(saveFileJob + Dispatchers.IO) {
+                            wavInfo.save(it)
+                        }
+
                         viewModelScope.launch {
                             model.addRecording(
                                 Recording(
@@ -268,6 +300,7 @@ class MainActivityViewModel(
                             )
                         }
                     }
+                    waveFileSavingState.postValue(FileSavingState.DONE)
                 }
             }
         }
@@ -350,4 +383,8 @@ class MainActivityViewModel(
             }
         }
     }
+}
+
+enum class FileSavingState {
+    SAVING, IDLE, DONE
 }
