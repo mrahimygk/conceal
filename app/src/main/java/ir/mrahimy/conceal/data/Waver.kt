@@ -17,7 +17,7 @@ fun LongArray.mapToUniformDouble(): DoubleArray {
     }.toDoubleArray()
 }
 
-fun LongArray.maxValue() = absolute().max() ?: 1.0
+fun LongArray.maxValue() = absolute().max() ?: 1
 
 fun DoubleArray.mapToRgbValue(): IntArray {
     return map {
