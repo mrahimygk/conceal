@@ -33,7 +33,7 @@ public class WavUtil {
                 file.getValidBits());
     }
 
-    public static void writeAllFrames(Wave.WavFile file, Waver waver){
+    public static void writeAllFrames(Wave.WavFile file, Waver waver) {
 
         final int BUF_SIZE = 5001;
 
