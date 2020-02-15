@@ -29,27 +29,28 @@ fun List<Rgb>.remove3Lsb(): List<Rgb> = map {
  * @returns the position of last injected bit. maybe used to start inserting audio data
  * (starting with that position itself)
  */
-fun List<Rgb>.putSampleRate(sampleRate: Int): Int {
-    val audioSampleRate = sampleRate.toString().toSeparatedDigits()
-    val sampleRateElementCount = audioSampleRate.elementCount.toBinString(format = "%4s")
+fun List<Rgb>.putSampleRate(sampleRate: Int) = putNumber(0, sampleRate)
 
-    var position = 0
+private fun List<Rgb>.putNumber(startingPosition: Int, number: Int): Int {
 
-    var binaryString2BitsChunkStr = sampleRateElementCount.substring(0, 2)
+    var position = startingPosition
+    val separatedDigits = number.toString().toSeparatedDigits()
+    val elementCount = separatedDigits.elementCount.toBinString(format = "%4s")
+    var binaryString2BitsChunkStr = elementCount.substring(0, 2)
     var binaryString2BitsChunk = binaryString2BitsChunkStr.toInt(2)
 
     var data = this[position].r.bitwiseOr(binaryString2BitsChunk)
     this[position].r = data
     position += 1
 
-    binaryString2BitsChunkStr = sampleRateElementCount.substring(2, 4)
+    binaryString2BitsChunkStr = elementCount.substring(2, 4)
     binaryString2BitsChunk = binaryString2BitsChunkStr.toInt(2)
 
     data = this[position].r.bitwiseOr(binaryString2BitsChunk)
     this[position].r = data
     position += 1
 
-    audioSampleRate.digits.forEach {
+    separatedDigits.digits.forEach {
         val element = it.toBinString(format = "%4s")
         binaryString2BitsChunk = element.substring(0, 2).toInt(2)
         this[position].r = this[position].r.bitwiseOr(binaryString2BitsChunk)
@@ -64,12 +65,62 @@ fun List<Rgb>.putSampleRate(sampleRate: Int): Int {
 }
 
 /**
+ * @param channelCount the channel count of audio to put inside lsb of the r layer
+ * @returns the position of last injected bit. maybe used to start inserting audio data
+ * (starting with that position itself)
+ */
+fun List<Rgb>.putChannelCount(startingPosition: Int, channelCount: Int) =
+    putNumber(startingPosition, channelCount)
+
+
+/**
+ * @param frameCount the frame count of audio to put inside lsb of the r layer
+ * @returns the position of last injected bit. maybe used to start inserting audio data
+ * (starting with that position itself)
+ */
+fun List<Rgb>.putFrameCount(startingPosition: Int, frameCount: Int) =
+    putNumber(startingPosition, frameCount)
+
+
+/**
+ * @param validBits the frame count of audio to put inside lsb of the r layer
+ * @returns the position of last injected bit. maybe used to start inserting audio data
+ * (starting with that position itself)
+ */
+fun List<Rgb>.putValidBits(startingPosition: Int, validBits: Int) =
+    putNumber(startingPosition, validBits)
+
+
+/**
+ * @param validBits the frame count of audio to put inside lsb of the r layer
+ * @returns the position of last injected bit. maybe used to start inserting audio data
+ * (starting with that position itself)
+ */
+fun List<Rgb>.putMaxValue(startingPosition: Int, validBits: Int) =
+    putNumber(startingPosition, validBits)
+
+
+fun List<Rgb>.getSampleRate(): TwoParts<Int, Int> = getSeparatedNumber(0)
+fun List<Rgb>.getChannelCount(startingPosition: Int): TwoParts<Int, Int> =
+    getSeparatedNumber(startingPosition)
+
+fun List<Rgb>.getFrameCount(startingPosition: Int): TwoParts<Int, Int> =
+    getSeparatedNumber(startingPosition)
+
+fun List<Rgb>.getValidBits(startingPosition: Int): TwoParts<Int, Int> =
+    getSeparatedNumber(startingPosition)
+
+fun List<Rgb>.getMaxValue(startingPosition: Int): TwoParts<Int, Int> =
+    getSeparatedNumber(startingPosition)
+
+
+/**
  * @return a pair of integers:
  *      first : the number which has been retrieved
  *      second : the position of ongoing index in the array
  */
-fun List<Rgb>.getSampleRate(): Pair<Int, Int> {
-    var position = 0
+fun List<Rgb>.getSeparatedNumber(startingPosition: Int): TwoParts<Int, Int> {
+    var position = startingPosition
     val digitCountFirst = get(position++).r.getLsBits(2)
     val digitCountSecond = get(position++).r.getLsBits(2)
 
@@ -82,7 +133,7 @@ fun List<Rgb>.getSampleRate(): Pair<Int, Int> {
         digitList.add(digit)
     }
 
-    return Pair(digitList.joinToString("").toInt(), position)
+    return TwoParts(digitList.joinToString("").toInt(), position)
 }
 
 /**
