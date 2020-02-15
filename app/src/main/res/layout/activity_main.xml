@@ -341,6 +341,20 @@
             tools:text="100 %" />
 
         <TextView
+            android:id="@+id/saving_percentage_done"
+            android:layout_width="0dp"
+            android:layout_height="24dp"
+            android:background="#7111"
+            android:gravity="center_horizontal"
+            android:text="@string/saving"
+            android:textColor="@color/text_color"
+            android:textSize="12sp"
+            app:isVisible="@{vm.isSavingFileTextVisible}"
+            app:layout_constraintEnd_toEndOf="@id/output_img"
+            app:layout_constraintStart_toStartOf="@id/output_img"
+            app:layout_constraintTop_toTopOf="@id/output_img" />
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{``+vm.handle}"
@@ -348,14 +362,5 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <!--        <ProgressBar-->
-        <!--            android:id="@+id/determinateBar"-->
-        <!--            style="@android:style/Widget.ProgressBar.Horizontal"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:progress="@{vm.percentInt}"-->
-        <!--            app:layout_constraintBottom_toBottomOf="@id/output_img"-->
-        <!--            app:layout_constraintEnd_toEndOf="@id/output_img"-->
-        <!--            app:layout_constraintStart_toStartOf="@id/output_img" />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
