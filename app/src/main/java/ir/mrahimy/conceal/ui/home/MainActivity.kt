@@ -69,6 +69,10 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() 
         viewModel.onAddingMaxAmplitude.observe(this, EventObsrver {
             recording_visualizer_view?.addAmplitude(it)
         })
+
+        viewModel.onDataExceeds.observe(this, EventObsrver {
+            Snackbar.make(recordings_list, R.string.data_exceeds, Snackbar.LENGTH_LONG).show()
+        })
     }
 
     override fun initBinding() {
