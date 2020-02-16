@@ -175,7 +175,7 @@ fun List<Rgb>.putSignedInteger(startingPosition: Int, value: Int, layer: Layer):
 /**
  * @param startingPosition maybe the position of the last inserted index for or previous insertion
  * @param array the integer array to be put inside 3lsb of this list
- * @param imageH and imageW are the boundaries of our image: we cannot exceed them
+ * @param image the boundaries of our image: we cannot exceed them
  * @returns the position of last injected bit. used to start inserting another audio data
  * (starting with that position itself)
  */
@@ -195,7 +195,7 @@ fun List<Rgb>.putAllSignedIntegers(
         0,
         false
     )
-    delay(150)
+    delay(50)
     emit(data)
     var res = putAllSignedIntegersInLoop(
         array,
@@ -232,7 +232,7 @@ fun List<Rgb>.putAllSignedIntegers(
             resBitmap
         )
 
-    delay(150)
+    delay(50)
     emit(
         ConcealPercentage(
             1,
@@ -271,7 +271,8 @@ private suspend fun List<Rgb>.putAllSignedIntegersInLoop(
         ConcealPercentage(
             1,
             percent,
-            this.toBitmap(image),
+//            this.toBitmap(image),
+            resBitmap,
             position,
             lastIndexOfWaveDataChecked,
             false
@@ -291,13 +292,13 @@ private suspend fun List<Rgb>.putAllSignedIntegersInLoop(
         lastIndexOfWaveDataChecked = index
         if (lastIndexOfWaveDataChecked % PERCENT_CHECK_MOD == 0) {
             percent = array.findPercent(lastIndexOfWaveDataChecked)
-            delay(1)
+            delay(2)
             liveData.emit(
                 ConcealPercentage(
                     1,
                     percent,
-                    this.toBitmap(image),
-//                    resBitmap,
+//                    this.toBitmap(image),
+                    resBitmap,
                     position,
                     lastIndexOfWaveDataChecked,
                     false
@@ -312,8 +313,8 @@ private suspend fun List<Rgb>.putAllSignedIntegersInLoop(
                     ConcealPercentage(
                         1,
                         percent,
-                        this.zeroLayerMutable(Layer.values().random()).toBitmap(image),
-//                        resBitmap,
+//                        this.zeroLayerMutable(Layer.values().random()).toBitmap(image),
+                        resBitmap,
                         position,
                         lastIndexOfWaveDataChecked,
                         false
@@ -329,8 +330,8 @@ private suspend fun List<Rgb>.putAllSignedIntegersInLoop(
                     ConcealPercentage(
                         1,
                         percent,
-                        this.zeroRandomMutable(0).toBitmap(image),
-//                        resBitmap,
+//                        this.zeroRandomMutable(0).toBitmap(image),
+                        resBitmap,
                         position,
                         lastIndexOfWaveDataChecked,
                         false
@@ -346,8 +347,8 @@ private suspend fun List<Rgb>.putAllSignedIntegersInLoop(
                     ConcealPercentage(
                         1,
                         percent,
-                        this.zeroRandomMutable(255).toBitmap(image),
-//                        resBitmap,
+//                        this.zeroRandomMutable(255).toBitmap(image),
+                        resBitmap,
                         position,
                         lastIndexOfWaveDataChecked,
                         false
@@ -363,8 +364,8 @@ private suspend fun List<Rgb>.putAllSignedIntegersInLoop(
                     ConcealPercentage(
                         1,
                         percent,
-                        sortByLayerValue(Layer.values().random()).toBitmap(image),
-//                        resBitmap,
+//                        sortByLayerValue(Layer.values().random()).toBitmap(image),
+                        resBitmap,
                         position,
                         lastIndexOfWaveDataChecked,
                         false
