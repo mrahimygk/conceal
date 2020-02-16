@@ -7,14 +7,17 @@ import ir.mrahimy.conceal.data.Waver;
 public class WavUtil {
     public static Waver fromWaveData(Wave.WavFile file) {
 
-        final int BUF_SIZE = 5001;
-        long[] buffer = new long[BUF_SIZE * file.getNumChannels()];
+        final int BUFFER_SIZE = (int) file.getNumFrames();
+        final int CHANNEL_COUNT = file.getNumChannels();
+        long[] buffer = new long[BUFFER_SIZE * CHANNEL_COUNT];
 
         int framesRead = 0;
+        int offset = 0;
 
         do {
             try {
-                framesRead = file.readFrames(buffer, BUF_SIZE);
+                framesRead = file.readFrames(buffer, offset, BUFFER_SIZE);
+                offset += framesRead;
             } catch (Wave.WavFileException | IOException e) {
                 e.printStackTrace();
             }
@@ -35,13 +38,15 @@ public class WavUtil {
 
     public static void writeAllFrames(Wave.WavFile file, Waver waver) {
 
-        final int BUF_SIZE = 5001;
+        final int BUFFER_SIZE = 1024;
 
         int framesWritten = 0;
+        int offset = 0;
 
         do {
             try {
-                framesWritten = file.writeFrames(waver.getData(), BUF_SIZE);
+                framesWritten = file.writeFrames(waver.getData(), offset, BUFFER_SIZE);
+                offset += framesWritten;
             } catch (Wave.WavFileException | IOException e) {
                 e.printStackTrace();
             }
