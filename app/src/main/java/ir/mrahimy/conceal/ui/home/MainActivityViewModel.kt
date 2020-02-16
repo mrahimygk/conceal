@@ -87,8 +87,25 @@ class MainActivityViewModel(
     val snackMessage: LiveData<Event<Int>>
         get() = _snackMessage
 
+    private val _inputWaveError = MutableLiveData<Int>(R.string.empty)
+
+    private val _waveInfo = _inputWave.map {
+        if (it == null) return@map null
+        try {
+            WavUtil.fromWaveData(
+                Wave.WavFile.openWavFile(it)
+            ).apply { maxValue = data.maxValue() }
+        } catch (e: Wave.WavFileException) {
+            e.printStackTrace()
+            val errorStringRes = e.code.mapToErrorStringRes()
+            _inputWaveError.postValue(errorStringRes)
+            null
+        }
+    }
+
     val isOutputHintVisible =
-        combine(_inputImage, _inputWave) { inputImage, inputWave ->
+        combine(_inputImage, _inputWave, _waveInfo, _inputWaveError) {
+                inputImage, inputWave, waveInfo, inputWaveError ->
             if (inputImage == null) {
                 _outputImageLabel.postValue(R.string.choose_input_image)
                 return@combine true
@@ -99,15 +116,13 @@ class MainActivityViewModel(
                 return@combine true
             }
 
+            if (waveInfo == null) {
+                _outputImageLabel.postValue(inputWaveError)
+                return@combine true
+            }
+
             return@combine false
         }
-
-    private val _waveInfo = _inputWave.map {
-        if (it == null) return@map null
-        WavUtil.fromWaveData(
-            Wave.WavFile.openWavFile(it)
-        ).apply { maxValue = data.maxValue() }
-    }
 
     val handle = combine(_inputImage, _waveInfo) { _image, _waveFile ->
         val image = _image ?: return@combine null
