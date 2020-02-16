@@ -41,6 +41,29 @@ public class Wave {
         private int bytesRead;                  // Bytes read after last read into local buffer
         private long frameCounter;              // Current number of frames read or written
 
+        ////exceptions
+        public static final int ILLEGAL_NUMBER_OF_CHANNELS = 1001;
+        public static final int NUMBER_OF_FRAMES_MUST_BE_POSITIVE = 1002;
+        public static final int ILLEGAL_NUMBER_OF_VALID_BITS = 1003;
+        public static final int SAMPLE_RATE_MUST_BE_POSITIVE = 1004;
+        public static final int NOT_ENOUGH_WAV_FILE_BYTES_FOR_HEADER = 1005;
+        public static final int INVALID_WAV_HEADER_DATA_INCORRECT_RIFF_CHUNK_ID = 1006;
+        public static final int INVALID_WAV_HEADER_DATA_INCORRECT_RIFF_TYPE_ID = 1007;
+        public static final int HEADER_CHUNK_SIZE_DOES_NOT_MATCH_FILE_SIZE_ = 1008;
+        public static final int REACHED_END_OF_FILE_WITHOUT_FINDING_FORMAT_CHUNK = 1009;
+        public static final int COULD_NOT_READ_CHUNK_HEADER = 2001;
+        public static final int COMPRESSION_CODE_NOT_SUPPORTED = 2002;
+        public static final int NUMBER_OF_CHANNELS_SPECIFIED_IN_HEADER_IS_EQUAL_TO_ZERO = 2003;
+        public static final int BLOCK_ALIGN_SPECIFIED_IN_HEADER_IS_EQUAL_TO_ZERO = 2004;
+        public static final int VALID_BITS_SPECIFIED_IN_HEADER_IS_LESS_THAN_2 = 2005;
+        public static final int VALID_BITS_SPECIFIED_IN_HEADER_IS_GREATER_THAN_64 = 2006;
+        public static final int BLOCK_ALIGN_DOES_NOT_AGREE_WITH_BYTES_REQUIRED_FOR_VALIDBITS_AND_NUMBER_OF_CHANNELS = 2007;
+        public static final int DATA_CHUNK_FOUND_BEFORE_FORMAT_CHUNK = 2008;
+        public static final int DATA_CHUNK_SIZE_IS_NOT_MULTIPLE_OF_BLOCK_ALIGN = 2009;
+        public static final int DID_NOT_FIND_A_DATA_CHUNK = 3001;
+        public static final int NOT_ENOUGH_DATA_AVAILABLE = 3002;
+        ////
+
         // Cannot instantiate WavFile directly, must either use newWavFile() or openWavFile()
         private WavFile() {
             buffer = new byte[BUFFER_SIZE];
@@ -67,7 +90,7 @@ public class Wave {
         }
 
         public static WavFile newWavFile(File file, int numChannels, long numFrames, int validBits, long sampleRate) throws IOException, WavFileException {
-// Instantiate new Wavfile and initialise
+
             WavFile wavFile = new WavFile();
             wavFile.file = file;
             wavFile.numChannels = numChannels;
@@ -77,18 +100,17 @@ public class Wave {
             wavFile.blockAlign = wavFile.bytesPerSample * numChannels;
             wavFile.validBits = validBits;
 
-// Sanity check arguments
             if (numChannels < 1 || numChannels > 65535)
-                throw new WavFileException("Illegal number of channels, valid range 1 to 65536");
-            if (numFrames < 0) throw new WavFileException("Number of frames must be positive");
+                throw new WavFileException("Illegal number of channels, valid range 1 to 65536", ILLEGAL_NUMBER_OF_CHANNELS);
+            if (numFrames < 0)
+                throw new WavFileException("Number of frames must be positive", NUMBER_OF_FRAMES_MUST_BE_POSITIVE);
             if (validBits < 2 || validBits > 65535)
-                throw new WavFileException("Illegal number of valid bits, valid range 2 to 65536");
-            if (sampleRate < 0) throw new WavFileException("Sample rate must be positive");
+                throw new WavFileException("Illegal number of valid bits, valid range 2 to 65536", ILLEGAL_NUMBER_OF_VALID_BITS);
+            if (sampleRate < 0)
+                throw new WavFileException("Sample rate must be positive", SAMPLE_RATE_MUST_BE_POSITIVE);
 
-// Create output stream for writing data
             wavFile.oStream = new FileOutputStream(file);
 
-// Calculate the chunk sizes
             long dataChunkSize = wavFile.blockAlign * numFrames;
             long mainChunkSize = 4 + // Riff Type
                     8 + // Format ID and size
@@ -96,8 +118,6 @@ public class Wave {
                     8 +     // Data ID and size
                     dataChunkSize;
 
-// Chunks must be word aligned, so if odd number of audio data bytes
-// adjust the main chunk size
             if (dataChunkSize % 2 == 1) {
                 mainChunkSize += 1;
                 wavFile.wordAlignAdjust = true;
@@ -105,15 +125,12 @@ public class Wave {
                 wavFile.wordAlignAdjust = false;
             }
 
-// Set the main chunk size
             putLE(RIFF_CHUNK_ID, wavFile.buffer, 0, 4);
             putLE(mainChunkSize, wavFile.buffer, 4, 4);
             putLE(RIFF_TYPE_ID, wavFile.buffer, 8, 4);
 
-// Write out the header
             wavFile.oStream.write(wavFile.buffer, 0, 12);
 
-// Put format data in buffer
             long averageBytesPerSecond = sampleRate * wavFile.blockAlign;
 
             putLE(FMT_CHUNK_ID, wavFile.buffer, 0, 4);      // Chunk ID
@@ -125,30 +142,21 @@ public class Wave {
             putLE(wavFile.blockAlign, wavFile.buffer, 20, 2);     // Block Align
             putLE(validBits, wavFile.buffer, 22, 2);     // Valid Bits
 
-// Write Format Chunk
             wavFile.oStream.write(wavFile.buffer, 0, 24);
 
-// Start Data Chunk
             putLE(DATA_CHUNK_ID, wavFile.buffer, 0, 4);      // Chunk ID
             putLE(dataChunkSize, wavFile.buffer, 4, 4);      // Chunk Data Size
 
-// Write Format Chunk
             wavFile.oStream.write(wavFile.buffer, 0, 8);
 
-// Calculate the scaling factor for converting to a normalised double
             if (wavFile.validBits > 8) {
-// If more than 8 validBits, data is signed
-// Conversion required multiplying by magnitude of max positive value
                 wavFile.floatOffset = 0;
                 wavFile.floatScale = Long.MAX_VALUE >> (64 - wavFile.validBits);
             } else {
-// Else if 8 or less validBits, data is unsigned
-// Conversion required dividing by max positive value
                 wavFile.floatOffset = 1;
                 wavFile.floatScale = 0.5 * ((1 << wavFile.validBits) - 1);
             }
 
-// Finally, set the IO State
             wavFile.bufferPointer = 0;
             wavFile.bytesRead = 0;
             wavFile.frameCounter = 0;
@@ -158,127 +166,99 @@ public class Wave {
         }
 
         public static WavFile openWavFile(File file) throws IOException, WavFileException {
-// Instantiate new Wavfile and store the file reference
+
             WavFile wavFile = new WavFile();
             wavFile.file = file;
 
-// Create a new file input stream for reading file data
             wavFile.iStream = new FileInputStream(file);
 
-// Read the first 12 bytes of the file
             int bytesRead = wavFile.iStream.read(wavFile.buffer, 0, 12);
-            if (bytesRead != 12) throw new WavFileException("Not enough wav file bytes for header");
+            if (bytesRead != 12)
+                throw new WavFileException("Not enough wav file bytes for header", NOT_ENOUGH_WAV_FILE_BYTES_FOR_HEADER);
 
-// Extract parts from the header
             long riffChunkID = getLE(wavFile.buffer, 0, 4);
             long chunkSize = getLE(wavFile.buffer, 4, 4);
             long riffTypeID = getLE(wavFile.buffer, 8, 4);
 
-// Check the header bytes contains the correct signature
             if (riffChunkID != RIFF_CHUNK_ID)
-                throw new WavFileException("Invalid Wav Header data, incorrect riff chunk ID");
+                throw new WavFileException("Invalid Wav Header data, incorrect riff chunk ID", INVALID_WAV_HEADER_DATA_INCORRECT_RIFF_CHUNK_ID);
             if (riffTypeID != RIFF_TYPE_ID)
-                throw new WavFileException("Invalid Wav Header data, incorrect riff type ID");
+                throw new WavFileException("Invalid Wav Header data, incorrect riff type ID", INVALID_WAV_HEADER_DATA_INCORRECT_RIFF_TYPE_ID);
 
-// Check that the file size matches the number of bytes listed in header
             if (file.length() != chunkSize + 8) {
-                throw new WavFileException("Header chunk size (" + chunkSize + ") does not match file size (" + file.length() + ")");
+                throw new WavFileException("Header chunk size (" + chunkSize + ") does not match file size (" + file.length() + ")", HEADER_CHUNK_SIZE_DOES_NOT_MATCH_FILE_SIZE_);
             }
 
             boolean foundFormat = false;
             boolean foundData = false;
 
-// Search for the Format and Data Chunks
             while (true) {
-// Read the first 8 bytes of the chunk (ID and chunk size)
+
                 bytesRead = wavFile.iStream.read(wavFile.buffer, 0, 8);
                 if (bytesRead == -1)
-                    throw new WavFileException("Reached end of file without finding format chunk");
-                if (bytesRead != 8) throw new WavFileException("Could not read chunk header");
+                    throw new WavFileException("Reached end of file without finding format chunk", REACHED_END_OF_FILE_WITHOUT_FINDING_FORMAT_CHUNK);
+                if (bytesRead != 8)
+                    throw new WavFileException("Could not read chunk header", COULD_NOT_READ_CHUNK_HEADER);
 
-// Extract the chunk ID and Size
+
                 long chunkID = getLE(wavFile.buffer, 0, 4);
                 chunkSize = getLE(wavFile.buffer, 4, 4);
 
-// Word align the chunk size
-// chunkSize specifies the number of bytes holding data. However,
-// the data should be word aligned (2 bytes) so we need to calculate
-// the actual number of bytes in the chunk
                 long numChunkBytes = (chunkSize % 2 == 1) ? chunkSize + 1 : chunkSize;
 
                 if (chunkID == FMT_CHUNK_ID) {
-// Flag that the format chunk has been found
                     foundFormat = true;
 
-// Read in the header info
                     bytesRead = wavFile.iStream.read(wavFile.buffer, 0, 16);
 
-// Check this is uncompressed data
                     int compressionCode = (int) getLE(wavFile.buffer, 0, 2);
                     if (compressionCode != 1)
-                        throw new WavFileException("Compression Code " + compressionCode + " not supported");
+                        throw new WavFileException("Compression Code " + compressionCode + " not supported", COMPRESSION_CODE_NOT_SUPPORTED);
 
-// Extract the format information
                     wavFile.numChannels = (int) getLE(wavFile.buffer, 2, 2);
                     wavFile.sampleRate = getLE(wavFile.buffer, 4, 4);
                     wavFile.blockAlign = (int) getLE(wavFile.buffer, 12, 2);
                     wavFile.validBits = (int) getLE(wavFile.buffer, 14, 2);
 
                     if (wavFile.numChannels == 0)
-                        throw new WavFileException("Number of channels specified in header is equal to zero");
+                        throw new WavFileException("Number of channels specified in header is equal to zero", NUMBER_OF_CHANNELS_SPECIFIED_IN_HEADER_IS_EQUAL_TO_ZERO);
                     if (wavFile.blockAlign == 0)
-                        throw new WavFileException("Block Align specified in header is equal to zero");
+                        throw new WavFileException("Block Align specified in header is equal to zero", BLOCK_ALIGN_SPECIFIED_IN_HEADER_IS_EQUAL_TO_ZERO);
                     if (wavFile.validBits < 2)
-                        throw new WavFileException("Valid Bits specified in header is less than 2");
+                        throw new WavFileException("Valid Bits specified in header is less than 2", VALID_BITS_SPECIFIED_IN_HEADER_IS_LESS_THAN_2);
                     if (wavFile.validBits > 64)
-                        throw new WavFileException("Valid Bits specified in header is greater than 64, this is greater than a long can hold");
+                        throw new WavFileException("Valid Bits specified in header is greater than 64, this is greater than a long can hold", VALID_BITS_SPECIFIED_IN_HEADER_IS_GREATER_THAN_64);
 
-// Calculate the number of bytes required to hold 1 sample
+
                     wavFile.bytesPerSample = (wavFile.validBits + 7) / 8;
                     if (wavFile.bytesPerSample * wavFile.numChannels != wavFile.blockAlign)
-                        throw new WavFileException("Block Align does not agree with bytes required for validBits and number of channels");
+                        throw new WavFileException("Block Align does not agree with bytes required for validBits and number of channels", BLOCK_ALIGN_DOES_NOT_AGREE_WITH_BYTES_REQUIRED_FOR_VALIDBITS_AND_NUMBER_OF_CHANNELS);
 
-// Account for number of format bytes and then skip over
-// any extra format bytes
                     numChunkBytes -= 16;
                     if (numChunkBytes > 0) wavFile.iStream.skip(numChunkBytes);
                 } else if (chunkID == DATA_CHUNK_ID) {
-// Check if we've found the format chunk,
-// If not, throw an exception as we need the format information
-// before we can read the data chunk
                     if (foundFormat == false)
-                        throw new WavFileException("Data chunk found before Format chunk");
-
-// Check that the chunkSize (wav data length) is a multiple of the
-// block align (bytes per frame)
+                        throw new WavFileException("Data chunk found before Format chunk", DATA_CHUNK_FOUND_BEFORE_FORMAT_CHUNK);
                     if (chunkSize % wavFile.blockAlign != 0)
-                        throw new WavFileException("Data Chunk size is not multiple of Block Align");
+                        throw new WavFileException("Data Chunk size is not multiple of Block Align", DATA_CHUNK_SIZE_IS_NOT_MULTIPLE_OF_BLOCK_ALIGN);
 
-// Calculate the number of frames
                     wavFile.numFrames = chunkSize / wavFile.blockAlign;
 
-// Flag that we've found the wave data chunk
                     foundData = true;
 
                     break;
                 } else {
-// If an unknown chunk ID is found, just skip over the chunk data
                     wavFile.iStream.skip(numChunkBytes);
                 }
             }
 
-// Throw an exception if no data chunk has been found
-            if (foundData == false) throw new WavFileException("Did not find a data chunk");
+            if (foundData == false)
+                throw new WavFileException("Did not find a data chunk", DID_NOT_FIND_A_DATA_CHUNK);
 
-// Calculate the scaling factor for converting to a normalised double
             if (wavFile.validBits > 8) {
-// If more than 8 validBits, data is signed
-// Conversion required dividing by magnitude of max negative value
                 wavFile.floatOffset = 0;
                 wavFile.floatScale = 1 << (wavFile.validBits - 1);
             } else {
-// Else if 8 or less validBits, data is unsigned
-// Conversion required dividing by max positive value
                 wavFile.floatOffset = -1;
                 wavFile.floatScale = 0.5 * ((1 << wavFile.validBits) - 1);
             }
@@ -292,7 +272,7 @@ public class Wave {
         }
 
         // Get and Put little endian data from local buffer
-// ------------------------------------------------
+
         private static long getLE(byte[] buffer, int pos, int numBytes) {
             numBytes--;
             pos += numBytes;
@@ -312,7 +292,7 @@ public class Wave {
         }
 
         // Sample Writing and Reading
-// --------------------------
+
         private void writeSample(long val) throws IOException {
             for (int b = 0; b < bytesPerSample; b++) {
                 if (bufferPointer == BUFFER_SIZE) {
@@ -332,7 +312,8 @@ public class Wave {
             for (int b = 0; b < bytesPerSample; b++) {
                 if (bufferPointer == bytesRead) {
                     int read = iStream.read(buffer, 0, BUFFER_SIZE);
-                    if (read == -1) throw new WavFileException("Not enough data available");
+                    if (read == -1)
+                        throw new WavFileException("Not enough data available", NOT_ENOUGH_DATA_AVAILABLE);
                     bytesRead = read;
                     bufferPointer = 0;
                 }
@@ -349,7 +330,7 @@ public class Wave {
 
 
         // Short
-// ----mono:
+
         public int readFramesChanel(short[] sampleBuffer, int numFramesToRead, int channel) throws IOException, WavFileException {
             return readFramesChanel(sampleBuffer, 0, numFramesToRead, channel);
         }
@@ -462,7 +443,7 @@ public class Wave {
         }
 
         // Integer
-// -------
+
         public int readFrames(int[] sampleBuffer, int numFramesToRead) throws IOException, WavFileException {
             return readFrames(sampleBuffer, 0, numFramesToRead);
         }
@@ -548,7 +529,7 @@ public class Wave {
         }
 
         // Long
-// ----
+
         public int readFrames(long[] sampleBuffer, int numFramesToRead) throws IOException, WavFileException {
             return readFrames(sampleBuffer, 0, numFramesToRead);
         }
@@ -634,7 +615,7 @@ public class Wave {
         }
 
         // Double
-// ------
+
         public int readFrames(double[] sampleBuffer, int numFramesToRead) throws IOException, WavFileException {
             return readFrames(sampleBuffer, 0, numFramesToRead);
         }
@@ -723,25 +704,25 @@ public class Wave {
 
 
         public void close() throws IOException {
-// Close the input stream and set to null
+
             if (iStream != null) {
                 iStream.close();
                 iStream = null;
             }
 
             if (oStream != null) {
-// Write out anything still in the local buffer
+
                 if (bufferPointer > 0) oStream.write(buffer, 0, bufferPointer);
 
-// If an extra byte is required for word alignment, add it to the end
+
                 if (wordAlignAdjust) oStream.write(0);
 
-// Close the stream and set to null
+
                 oStream.close();
                 oStream = null;
             }
 
-// Flag that the stream is closed
+
             ioState = IOState.CLOSED;
         }
 
@@ -777,8 +758,8 @@ public class Wave {
 
                     final int BUF_SIZE = 5001;
 
-//                  int[] buffer = new int[BUF_SIZE * numChannels];
-//                  long[] buffer = new long[BUF_SIZE * numChannels];
+
+
                     double[] buffer = new double[BUF_SIZE * numChannels];
 
                     int framesRead = 0;
@@ -811,13 +792,15 @@ public class Wave {
          *
          */
         private static final long serialVersionUID = 8236151366330602556L;
+        public int code;
 
         public WavFileException() {
             super();
         }
 
-        public WavFileException(String message) {
+        public WavFileException(String message, int code) {
             super(message);
+            this.code = code;
         }
 
         public WavFileException(String message, Throwable cause) {
