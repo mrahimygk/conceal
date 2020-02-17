@@ -311,4 +311,24 @@ class LowLevelOperationsManipulationUnitTest {
         parsed = removedLsb.getSignedInteger(8, Layer.R)
         assert(parsed == 125)
     }
+
+    @Test
+    fun `test getting back all signed integers inside rgbList 3 layers`() {
+        val rgbList = listOf(
+            Rgb(196, 117, 115),
+            Rgb(180, 215, 216),
+            Rgb(181, 25, 26),
+            Rgb(81, 250, 16),
+            Rgb(50, 200, 19),
+            Rgb(150, 200, 190),
+            Rgb(90, 51, 17),
+            Rgb(190, 251, 217),
+            Rgb(170, 190, 151),
+            Rgb(240, 151, 117),
+            Rgb(17, 90, 51)
+        )
+
+        val list = rgbList.getAllSignedIntegers(1)
+        assert(list.containsAll(listOf(-22, -170, 15, 200, 229)))
+    }
 }
