@@ -171,8 +171,8 @@ class LowLevelOperationsManipulationUnitTest {
         val pos = injected.putSampleRate(sampleRate)
 
         val res = injected.getSampleRate()
-        assert(res.first.toInt() == sampleRate)
-        assert(res.second == 12)
+        assert(res.number == sampleRate)
+        assert(res.position == 12)
     }
 
     @Test
@@ -303,12 +303,12 @@ class LowLevelOperationsManipulationUnitTest {
         assert(removedLsb.subList(0, 4).map { it.r }.containsAll(listOf(199, 179, 178, 83)))
 
         var parsed = removedLsb.getSignedInteger(0, Layer.R)
-        assert(parsed.toInt() == input)
+        assert(parsed == input)
 
         parsed = removedLsb.getSignedInteger(4, Layer.R)
-        assert(parsed.toInt() == -125)
+        assert(parsed == -125)
 
         parsed = removedLsb.getSignedInteger(8, Layer.R)
-        assert(parsed.toInt() == 125)
+        assert(parsed == 125)
     }
 }
