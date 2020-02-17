@@ -236,13 +236,18 @@ class MainActivityViewModel(
             _onStartRgbListPutAll.postValue(
                 Event(ConcealInputData(rgbList, position, audioDataAsRgbList, image, concealJob))
             )
-        } catch (e: ArrayIndexOutOfBoundsException) {
-            _inputError.postValue(R.string.data_exceeds)
-            _isDataExceeding.postValue(true)
-            viewModelScope.launch {
-                delay(20)
-                cancelConcealJob()
-            }
+        } catch (e: IndexOutOfBoundsException) {
+            e.printStackTrace()
+            tellDataExceeds()
+        }
+    }
+
+    fun tellDataExceeds(){
+        _inputError.postValue(R.string.data_exceeds)
+        _isDataExceeding.postValue(true)
+        viewModelScope.launch {
+            delay(20)
+            cancelConcealJob()
         }
     }
 
@@ -388,7 +393,7 @@ class MainActivityViewModel(
                 val file = it.getPathJava(getApplication().applicationContext)
                 delay(10)
                 inputImagePath.postValue(file)
-                _inputImage.postValue(rescaleImage(file, 400, 400))
+                _inputImage.postValue(rescaleImage(file, 100, 100))
                 _isInputImageLoading.postValue(false)
                 _concealPercentage.postValue(empty())
             }
