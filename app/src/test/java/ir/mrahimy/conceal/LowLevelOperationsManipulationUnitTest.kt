@@ -331,4 +331,18 @@ class LowLevelOperationsManipulationUnitTest {
         val list = rgbList.getAllSignedIntegers(1)
         assert(list.containsAll(listOf(-22, -170, 15, 200, 229)))
     }
+//
+//    @Test
+//    fun `test putting all signed in and getting them back`() {
+//        val input = arrayOf(210, -230, 90, -60, -80, -30, 240).toIntArray()
+//        val put = removedLsb.putAllSignedIntegersNormal(0, input, image_width, image_height)
+//        var get = removedLsb.parWa(0)
+//        assert(parsed == input)
+//
+//        parsed = removedLsb.getSignedInteger(4, Layer.R)
+//        assert(parsed == -125)
+//
+//        parsed = removedLsb.getSignedInteger(8, Layer.R)
+//        assert(parsed == 125)
+//    }
 }
