@@ -3,6 +3,7 @@ package ir.mrahimy.conceal.ui.home
 import android.app.Application
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -242,7 +243,7 @@ class MainActivityViewModel(
         }
     }
 
-    fun tellDataExceeds(){
+    fun tellDataExceeds() {
         _inputError.postValue(R.string.data_exceeds)
         _isDataExceeding.postValue(true)
         viewModelScope.launch {
@@ -326,7 +327,13 @@ class MainActivityViewModel(
 
                         val wavInfo = SaveWaveInfoCapsule("parsed_from_$imageName", Date(), waver)
                         val parsedWavePath = withContext(saveFileJob + Dispatchers.IO) {
-                            wavInfo.save(it)
+                            try {
+                                wavInfo.save(it)
+                            } catch (e: ArrayIndexOutOfBoundsException) {
+                                e.printStackTrace()
+                                tellDataExceeds()
+                                null
+                            }
                         }
 
                         viewModelScope.launch {
@@ -393,7 +400,7 @@ class MainActivityViewModel(
                 val file = it.getPathJava(getApplication().applicationContext)
                 delay(10)
                 inputImagePath.postValue(file)
-                _inputImage.postValue(rescaleImage(file, 100, 100))
+                _inputImage.postValue(BitmapFactory.decodeFile(file))
                 _isInputImageLoading.postValue(false)
                 _concealPercentage.postValue(empty())
             }
@@ -407,6 +414,7 @@ class MainActivityViewModel(
     }
 
     fun selectAudioFile(data: Intent?) {
+        _isDataExceeding.postValue(false)
         viewModelScope.launch {
             _isInputWaveLoading.postValue(true)
             delay(20)
