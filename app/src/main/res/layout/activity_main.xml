@@ -80,7 +80,7 @@
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:text="@{vm.outputImageLabel}"
-            android:textColor="@color/text_color"
+            android:textColor="@{vm.outputHintTextColor}"
             app:isGone="@{!vm.isOutputHintVisible}"
             app:layout_constraintBottom_toBottomOf="@id/output_img"
             app:layout_constraintEnd_toEndOf="@id/output_img"
@@ -109,12 +109,12 @@
             android:onClick="@{()->vm.showSlide(1)}"
             android:scaleType="fitCenter"
             app:bitmap="@{vm.concealPercentage.data}"
+            app:isVisible="@{vm.isOutputImageVisible}"
             app:layout_constraintDimensionRatio="w,1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/input_img"
             app:layout_constraintTop_toBottomOf="@id/txt_title"
-            tools:src="@mipmap/ic_launcher"
-            tools:visibility="invisible" />
+            tools:src="@mipmap/ic_launcher" />
 
         <ir.mrahimy.conceal.cv.CameraCorner
             android:layout_width="0dp"
