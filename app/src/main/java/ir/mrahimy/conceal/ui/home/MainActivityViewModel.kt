@@ -87,7 +87,14 @@ class MainActivityViewModel(
     val snackMessage: LiveData<Event<Int>>
         get() = _snackMessage
 
-    private val _inputWaveError = MutableLiveData<Int>(R.string.empty)
+    private val _inputError = MutableLiveData<Int>(R.string.empty)
+    val outputHintTextColor = _inputError.map {
+        /**
+         * could not find the best color for error
+         */
+        if (it == R.string.empty) getColor(R.color.text_color)
+        else getColor(R.color.text_color)
+    }
 
     private val _waveInfo = _inputWave.map {
         if (it == null) return@map null
@@ -98,14 +105,19 @@ class MainActivityViewModel(
         } catch (e: Wave.WavFileException) {
             e.printStackTrace()
             val errorStringRes = e.code.mapToErrorStringRes()
-            _inputWaveError.postValue(errorStringRes)
+            _inputError.postValue(errorStringRes)
+            viewModelScope.launch {
+                delay(20)
+                cancelConcealJob()
+            }
             null
         }
     }
 
+    private val _isDataExceeding = MutableLiveData<Boolean>(false)
     val isOutputHintVisible =
-        combine(_inputImage, _inputWave, _waveInfo, _inputWaveError) {
-                inputImage, inputWave, waveInfo, inputWaveError ->
+        combine(_inputImage, _inputWave, _waveInfo, _inputError, _isDataExceeding)
+        { inputImage, inputWave, waveInfo, inputError, isDataExceeding ->
             if (inputImage == null) {
                 _outputImageLabel.postValue(R.string.choose_input_image)
                 return@combine true
@@ -117,12 +129,17 @@ class MainActivityViewModel(
             }
 
             if (waveInfo == null) {
-                _outputImageLabel.postValue(inputWaveError)
+                _outputImageLabel.postValue(inputError)
+                return@combine true
+            }
+
+            if (isDataExceeding == true) {
+                _outputImageLabel.postValue(inputError)
                 return@combine true
             }
 
             return@combine false
-        }
+        } as MutableLiveData
 
     val handle = combine(_inputImage, _waveInfo) { _image, _waveFile ->
         val image = _image ?: return@combine null
@@ -139,11 +156,14 @@ class MainActivityViewModel(
     val isInputWaveLoading: LiveData<Boolean>
         get() = _isInputWaveLoading
 
-    private val _concealPercentage = MutableLiveData<ConcealPercentage>()
+    private val _concealPercentage = MutableLiveData<ConcealPercentage>(empty())
     val concealPercentage: LiveData<ConcealPercentage>
         get() = _concealPercentage
 
     val percentInt = _concealPercentage.map { it.percent.toInt() }
+    val isOutputImageVisible = combine(_concealPercentage, isOutputHintVisible) { per, hint ->
+        per?.data != null || hint == false
+    }
 
     val isPercentageVisible =
         combine(
@@ -184,11 +204,10 @@ class MainActivityViewModel(
             concealJob.cancel()
         if (::saveFileJob.isInitialized)
             saveFileJob.cancel()
-        _concealPercentage.postValue(
-            _concealPercentage.value?.copy(percent = 0f, data = null, done = false)
-        )
 
         viewModelScope.launch {
+            delay(20)
+            _concealPercentage.postValue(empty())
             delay(20)
             waveFileSavingState.postValue(FileSavingState.IDLE)
             delay(20)
@@ -218,10 +237,13 @@ class MainActivityViewModel(
                 Event(ConcealInputData(rgbList, position, audioDataAsRgbList, image, concealJob))
             )
         } catch (e: ArrayIndexOutOfBoundsException) {
-            cancelConcealJob()
-            _onDataExceeds.postValue(StatelessEvent())
+            _inputError.postValue(R.string.data_exceeds)
+            _isDataExceeding.postValue(true)
+            viewModelScope.launch {
+                delay(20)
+                cancelConcealJob()
+            }
         }
-
     }
 
     init {
@@ -357,18 +379,19 @@ class MainActivityViewModel(
     }
 
     fun selectImageFile(data: Intent?) {
+        _isDataExceeding.postValue(false)
         viewModelScope.launch {
             _isInputImageLoading.postValue(true)
-            delay(20)
+            delay(10)
             data?.data?.let {
-                delay(20)
+                delay(10)
                 val file = it.getPathJava(getApplication().applicationContext)
-                delay(20)
+                delay(10)
                 inputImagePath.postValue(file)
                 _inputImage.postValue(rescaleImage(file, 400, 400))
                 _isInputImageLoading.postValue(false)
+                _concealPercentage.postValue(empty())
             }
-
             if (_inputWave.value == null) {
                 _inputWaveSelectionTooltip.postValue(R.string.select_audio_file_tooltip)
                 if (_isRecording.value == false) {
