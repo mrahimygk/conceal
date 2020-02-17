@@ -5,6 +5,8 @@ import android.graphics.Color
 import androidx.core.graphics.set
 import androidx.lifecycle.LiveDataScope
 import androidx.lifecycle.liveData
+import ir.mrahimy.conceal.R
+import ir.mrahimy.conceal.data.LocalResult
 import ir.mrahimy.conceal.data.Rgb
 import ir.mrahimy.conceal.data.capsules.ConcealPercentage
 import ir.mrahimy.conceal.data.toSeparatedDigits
@@ -187,7 +189,7 @@ fun List<Rgb>.putAllSignedIntegers(
 ) = liveData(job + Dispatchers.IO) {
 
     val resBitmap = toBitmap(image)
-    val data = ConcealPercentage(
+    var data = ConcealPercentage(
         1,
         0f,
         resBitmap,
@@ -196,53 +198,67 @@ fun List<Rgb>.putAllSignedIntegers(
         false
     )
     delay(50)
-    emit(data)
-    var res = putAllSignedIntegersInLoop(
-        array,
-        image,
-        startingPosition,
-        0,
-        Layer.R,
-        this,
-        data,
-        resBitmap
-    )
-
-    if (res.shouldChangeTheLayer)
-        res = putAllSignedIntegersInLoop(
+    emit(LocalResult.Success(data))
+    var res = try {
+        putAllSignedIntegersInLoop(
             array,
             image,
+            startingPosition,
             0,
-            res.lastIndexOfIntArray,
-            Layer.G,
+            Layer.R,
             this,
             data,
             resBitmap
         )
+    } catch (e: IndexOutOfBoundsException) {
+        emit(LocalResult.Error(R.string.data_exceeds, 1, e))
+        null
+    }
 
-    if (res.shouldChangeTheLayer)
-        res = putAllSignedIntegersInLoop(
-            array,
-            image,
-            0,
-            res.lastIndexOfIntArray,
-            Layer.B,
-            this,
-            data,
-            resBitmap
-        )
+    if (res?.shouldChangeTheLayer == true)
+        res = try {
+            putAllSignedIntegersInLoop(
+                array,
+                image,
+                0,
+                res.lastIndexOfIntArray,
+                Layer.G,
+                this,
+                data,
+                resBitmap
+            )
+        } catch (e: IndexOutOfBoundsException) {
+            emit(LocalResult.Error(R.string.data_exceeds, 1, e))
+            null
+        }
+
+    if (res?.shouldChangeTheLayer == true)
+        res = try {
+            putAllSignedIntegersInLoop(
+                array,
+                image,
+                0,
+                res.lastIndexOfIntArray,
+                Layer.B,
+                this,
+                data,
+                resBitmap
+            )
+        } catch (e: IndexOutOfBoundsException) {
+            emit(LocalResult.Error(R.string.data_exceeds, 1, e))
+            null
+        }
 
     delay(50)
-    emit(
-        ConcealPercentage(
-            1,
-            100.0f,
-            this@putAllSignedIntegers.toBitmap(image),
-            res.lastPositionOfRgbList,
-            res.lastIndexOfIntArray,
-            true
-        )
+    data = ConcealPercentage(
+        1,
+        100.0f,
+        this@putAllSignedIntegers.toBitmap(image),
+        res?.lastPositionOfRgbList ?: 0,
+        res?.lastIndexOfIntArray ?: 0,
+        true
     )
+    emit(LocalResult.Success(data))
 }
 
 /**
@@ -259,7 +275,7 @@ private suspend fun List<Rgb>.putAllSignedIntegersInLoop(
     startingPosition: Int,
     lastCheckedIndex: Int,
     layer: Layer,
-    liveData: LiveDataScope<ConcealPercentage>,
+    liveData: LiveDataScope<LocalResult<ConcealPercentage>>,
     data: ConcealPercentage,
     resBitmap: Bitmap
 ): LoopHelper {
@@ -267,17 +283,16 @@ private suspend fun List<Rgb>.putAllSignedIntegersInLoop(
     var position = startingPosition
     var percent = array.findPercent(lastIndexOfWaveDataChecked)
     delay(50)
-    liveData.emit(
-        ConcealPercentage(
-            1,
-            percent,
+    var emittingData = ConcealPercentage(
+        1,
+        percent,
 //            this.toBitmap(image),
-            resBitmap,
-            position,
-            lastIndexOfWaveDataChecked,
-            false
-        )
+        resBitmap,
+        position,
+        lastIndexOfWaveDataChecked,
+        false
     )
+    liveData.emit(LocalResult.Success(emittingData))
     array.forEachIndexed { index, it ->
         if (index < lastIndexOfWaveDataChecked) {
             /** continues this forEach to the next element */
@@ -293,31 +308,32 @@ private suspend fun List<Rgb>.putAllSignedIntegersInLoop(
         if (lastIndexOfWaveDataChecked % PERCENT_CHECK_MOD == 0) {
             percent = array.findPercent(lastIndexOfWaveDataChecked)
             delay(2)
-            liveData.emit(
-                ConcealPercentage(
-                    1,
-                    percent,
+            emittingData = ConcealPercentage(
+                1,
+                percent,
 //                    this.toBitmap(image),
-                    resBitmap,
-                    position,
-                    lastIndexOfWaveDataChecked,
-                    false
-                )
+                resBitmap,
+                position,
+                lastIndexOfWaveDataChecked,
+                false
             )
+            liveData.emit(LocalResult.Success(emittingData))
 
             /**
              * 10 percent chance to reset a RGB layer to zero
              */
             if (Random.nextInt(Int.MAX_VALUE) > Int.MAX_VALUE - Int.MAX_VALUE / 10) {
                 liveData.emit(
-                    ConcealPercentage(
-                        1,
-                        percent,
+                    LocalResult.Success(
+                        ConcealPercentage(
+                            1,
+                            percent,
 //                        this.zeroLayerMutable(Layer.values().random()).toBitmap(image),
-                        resBitmap,
-                        position,
-                        lastIndexOfWaveDataChecked,
-                        false
+                            resBitmap,
+                            position,
+                            lastIndexOfWaveDataChecked,
+                            false
+                        )
                     )
                 )
             }
@@ -327,14 +343,16 @@ private suspend fun List<Rgb>.putAllSignedIntegersInLoop(
              */
             if (Random.nextInt(Int.MAX_VALUE) > Int.MAX_VALUE - Int.MAX_VALUE / 10) {
                 liveData.emit(
-                    ConcealPercentage(
-                        1,
-                        percent,
+                    LocalResult.Success(
+                        ConcealPercentage(
+                            1,
+                            percent,
 //                        this.zeroRandomMutable(0).toBitmap(image),
-                        resBitmap,
-                        position,
-                        lastIndexOfWaveDataChecked,
-                        false
+                            resBitmap,
+                            position,
+                            lastIndexOfWaveDataChecked,
+                            false
+                        )
                     )
                 )
             }
@@ -344,14 +362,16 @@ private suspend fun List<Rgb>.putAllSignedIntegersInLoop(
              */
             if (Random.nextInt(Int.MAX_VALUE) > Int.MAX_VALUE - Int.MAX_VALUE / 10) {
                 liveData.emit(
-                    ConcealPercentage(
-                        1,
-                        percent,
+                    LocalResult.Success(
+                        ConcealPercentage(
+                            1,
+                            percent,
 //                        this.zeroRandomMutable(255).toBitmap(image),
-                        resBitmap,
-                        position,
-                        lastIndexOfWaveDataChecked,
-                        false
+                            resBitmap,
+                            position,
+                            lastIndexOfWaveDataChecked,
+                            false
+                        )
                     )
                 )
             }
@@ -361,14 +381,16 @@ private suspend fun List<Rgb>.putAllSignedIntegersInLoop(
              */
             if (Random.nextInt(Int.MAX_VALUE) > Int.MAX_VALUE - Int.MAX_VALUE / 10) {
                 liveData.emit(
-                    ConcealPercentage(
-                        1,
-                        percent,
+                    LocalResult.Success(
+                        ConcealPercentage(
+                            1,
+                            percent,
 //                        sortByLayerValue(Layer.values().random()).toBitmap(image),
-                        resBitmap,
-                        position,
-                        lastIndexOfWaveDataChecked,
-                        false
+                            resBitmap,
+                            position,
+                            lastIndexOfWaveDataChecked,
+                            false
+                        )
                     )
                 )
             }
