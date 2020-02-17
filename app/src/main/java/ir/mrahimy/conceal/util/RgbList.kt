@@ -33,10 +33,8 @@ fun List<Rgb>.remove3Lsb(): List<Rgb> = map {
  */
 fun List<Rgb>.putSampleRate(sampleRate: Int) = putNumber(0, sampleRate)
 
-const val EXCEEDING_SIZE = -1
 private fun List<Rgb>.putNumber(startingPosition: Int, number: Int): Int {
 
-    if (startingPosition >= this.size) return EXCEEDING_SIZE
     var position = startingPosition
     val separatedDigits = number.toString().toSeparatedDigits()
     val elementCount = separatedDigits.elementCount.toBinString(format = "%4s")
@@ -56,7 +54,6 @@ private fun List<Rgb>.putNumber(startingPosition: Int, number: Int): Int {
     separatedDigits.digits.forEach {
         val element = it.toBinString(format = "%4s")
         binaryString2BitsChunk = element.substring(0, 2).toInt(2)
-        if (position >= this.size) return EXCEEDING_SIZE
         this[position].r = this[position].r.bitwiseOr(binaryString2BitsChunk)
         position += 1
 
@@ -124,7 +121,6 @@ fun List<Rgb>.getMaxValue(startingPosition: Int): TwoParts<Int, Int> =
  *      second : the position of ongoing index in the array
  */
 fun List<Rgb>.getSeparatedNumber(startingPosition: Int): TwoParts<Int, Int> {
-    if (startingPosition >= this.size) return TwoParts(EXCEEDING_SIZE, EXCEEDING_SIZE)
     var position = startingPosition
     val digitCountFirst = get(position++).r.getLsBits(2)
     val digitCountSecond = get(position++).r.getLsBits(2)
@@ -132,7 +128,6 @@ fun List<Rgb>.getSeparatedNumber(startingPosition: Int): TwoParts<Int, Int> {
     val digitCount = digitCountFirst.combineBits(digitCountSecond)
     val digitList = mutableListOf<Int>()
     repeat(digitCount) {
-        if (position >= this.size) return TwoParts(EXCEEDING_SIZE, EXCEEDING_SIZE)
         val leftNibble = get(position++).r.getLsBits(2)
         val rightNibble = get(position++).r.getLsBits(2)
         val digit = leftNibble.combineBits(rightNibble)
