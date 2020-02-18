@@ -19,7 +19,7 @@ class CameraCorner(context: Context, attrs: AttributeSet) : View(context, attrs)
 
     private var borderWidth = 4.0f
     private var lineLength = 50f
-    private var mLineColor = Color.GRAY
+    private var mLineColor = Color.WHITE
 
     private val linesPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
@@ -36,7 +36,7 @@ class CameraCorner(context: Context, attrs: AttributeSet) : View(context, attrs)
             context.obtainStyledAttributes(attrs, R.styleable.CameraCorner, 0, 0)
 
         typedArray?.apply {
-            mLineColor = getColor(R.styleable.CameraCorner_lineColor, Color.BLACK)
+            mLineColor = getColor(R.styleable.CameraCorner_lineColor, mLineColor)
         }
         linesPaint.color = mLineColor
         typedArray?.recycle()
