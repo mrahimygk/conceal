@@ -303,12 +303,12 @@ private suspend fun List<Rgb>.putAllSignedIntegersInLoop(
     )
     liveData.emit(LocalResult.Success(emittingData))
     array.forEachIndexed { index, it ->
-        if (index < lastIndexOfWaveDataChecked) {
+        if (index <= lastIndexOfWaveDataChecked) {
             /** continues this forEach to the next element */
             return@forEachIndexed
         }
 
-        if (position + 3 > (image.width) * (image.height)) {
+        if (position + 3 > size) {
             /** breaks this for each */
             if (layer == Layer.B) {
                 throw HugeFileException(array.findPercent(index).toInt())
