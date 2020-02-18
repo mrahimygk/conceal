@@ -65,7 +65,6 @@
         <ir.mrahimy.conceal.cv.CameraCorner
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:isGone="@{!vm.isOutputHintVisible}"
             app:layout_constraintBottom_toBottomOf="@id/output_img"
             app:layout_constraintEnd_toEndOf="@id/output_img"
             app:layout_constraintStart_toStartOf="@id/output_img"
@@ -119,7 +118,6 @@
         <ir.mrahimy.conceal.cv.CameraCorner
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:isGone="@{!vm.isInputHintVisible}"
             app:layout_constraintBottom_toBottomOf="@id/input_img"
             app:layout_constraintEnd_toEndOf="@id/input_img"
             app:layout_constraintStart_toStartOf="@id/input_img"
