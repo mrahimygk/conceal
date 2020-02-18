@@ -173,8 +173,8 @@ fun List<Rgb>.putSignedInteger(startingPosition: Int, value: Int, layer: Layer):
         val binaryString2BitsChunk = element.substring(it * 2, it * 2 + 2).toInt(2)
         when (layer) {
             Layer.R -> this[position].r = this[position].r.bitwiseOr(binaryString2BitsChunk)
-            Layer.G -> this[position].g = this[position].r.bitwiseOr(binaryString2BitsChunk)
-            Layer.B -> this[position].b = this[position].r.bitwiseOr(binaryString2BitsChunk)
+            Layer.G -> this[position].g = this[position].g.bitwiseOr(binaryString2BitsChunk)
+            Layer.B -> this[position].b = this[position].b.bitwiseOr(binaryString2BitsChunk)
 
         }
         position += 1
