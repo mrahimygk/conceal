@@ -75,8 +75,8 @@ class MainActivityViewModel(
     val inputWaveSelectionTooltip: LiveData<Int>
         get() = _inputWaveSelectionTooltip
 
-    private val _outputImageLabel = MutableLiveData<Int>(R.string.choose_input_image)
-    val outputImageLabel: LiveData<Int>
+    private val _outputImageLabel = MutableLiveData<String>(getString(R.string.choose_input_image))
+    val outputImageLabel: LiveData<String>
         get() = _outputImageLabel
 
     private val _waveFileLabel =
@@ -88,12 +88,12 @@ class MainActivityViewModel(
     val snackMessage: LiveData<Event<Int>>
         get() = _snackMessage
 
-    private val _inputError = MutableLiveData<Int>(R.string.empty)
+    private val _inputError = MutableLiveData<String>(getString(R.string.empty))
     val outputHintTextColor = _inputError.map {
         /**
          * could not find the best color for error
          */
-        if (it == R.string.empty) getColor(R.color.text_color)
+        if (it.isNullOrBlank()) getColor(R.color.text_color)
         else getColor(R.color.text_color)
     }
 
@@ -106,7 +106,7 @@ class MainActivityViewModel(
         } catch (e: Wave.WavFileException) {
             e.printStackTrace()
             val errorStringRes = e.code.mapToErrorStringRes()
-            _inputError.postValue(errorStringRes)
+            _inputError.postValue(getString(errorStringRes))
             viewModelScope.launch {
                 delay(20)
                 cancelConcealJob()
@@ -120,21 +120,16 @@ class MainActivityViewModel(
         combine(_inputImage, _inputWave, _waveInfo, _inputError, _isDataExceeding)
         { inputImage, inputWave, waveInfo, inputError, isDataExceeding ->
             if (inputImage == null) {
-                _outputImageLabel.postValue(R.string.choose_input_image)
+                _outputImageLabel.postValue(getString(R.string.choose_input_image))
                 return@combine true
             }
 
             if (inputWave == null) {
-                _outputImageLabel.postValue(R.string.choose_wave_file_label)
+                _outputImageLabel.postValue(getString(R.string.choose_wave_file_label))
                 return@combine true
             }
 
-            if (waveInfo == null) {
-                _outputImageLabel.postValue(inputError)
-                return@combine true
-            }
-
-            if (isDataExceeding == true) {
+            if (waveInfo == null || isDataExceeding == true) {
                 _outputImageLabel.postValue(inputError)
                 return@combine true
             }
@@ -227,24 +222,30 @@ class MainActivityViewModel(
         val rgbList = image.getRgbArray().remove3Lsb()
         val audioDataAsRgbList = waveFile.data.mapToUniformDouble().mapToRgbValue()
         try {
-            var position = rgbList.putSampleRate(waveFile.sampleRate.toInt())
-            position = rgbList.putChannelCount(position, waveFile.channelCount)
-            position = rgbList.putFrameCount(position, waveFile.frameCount.toInt())
-            position = rgbList.putValidBits(position, waveFile.validBits)
-            position = rgbList.putMaxValue(position, waveFile.maxValue.toInt())
-
             concealJob = Job()
             _onStartRgbListPutAll.postValue(
-                Event(ConcealInputData(rgbList, position, audioDataAsRgbList, image, concealJob))
+                Event(
+                    ConcealInputData(
+                        rgbList,
+                        rgbList.putWaverHeaderInfo(waveFile),
+                        audioDataAsRgbList,
+                        image,
+                        concealJob
+                    )
+                )
             )
         } catch (e: IndexOutOfBoundsException) {
             e.printStackTrace()
-            tellDataExceeds()
+            tellDataExceeds(e)
         }
     }
 
-    fun tellDataExceeds() {
-        _inputError.postValue(R.string.data_exceeds)
+    private fun tellDataExceeds(e: Exception) {
+        val stringRes =
+            if (e is HugeFileException) getString(R.string.data_exceeds_on_index, e.index)
+            else getString(R.string.data_exceeds)
+
+        _inputError.postValue(stringRes)
         _isDataExceeding.postValue(true)
         viewModelScope.launch {
             delay(20)
@@ -331,7 +332,7 @@ class MainActivityViewModel(
                                 wavInfo.save(it)
                             } catch (e: ArrayIndexOutOfBoundsException) {
                                 e.printStackTrace()
-                                tellDataExceeds()
+                                tellDataExceeds(e)
                                 null
                             }
                         }
@@ -432,6 +433,13 @@ class MainActivityViewModel(
                 delay(20)
                 inputWavePath.postValue(it)
             }
+        }
+    }
+
+    fun onUpdateInserting(result: LocalResult<ConcealPercentage>) {
+        when (result) {
+            is LocalResult.Success -> updatePercentage(result.data)
+            is LocalResult.Error -> tellDataExceeds(result.e)
         }
     }
 }
