@@ -8,6 +8,7 @@ import androidx.lifecycle.liveData
 import ir.mrahimy.conceal.R
 import ir.mrahimy.conceal.data.LocalResult
 import ir.mrahimy.conceal.data.Rgb
+import ir.mrahimy.conceal.data.Waver
 import ir.mrahimy.conceal.data.capsules.ConcealPercentage
 import ir.mrahimy.conceal.data.toSeparatedDigits
 import ir.mrahimy.conceal.util.ktx.*
@@ -25,6 +26,19 @@ fun List<Rgb>.remove3Lsb(): List<Rgb> = map {
     val b = it.b.removeLsBits(3)
     Rgb(r, g, b)
 }.toMutableList()
+
+/**
+ * @param waveFile the audio to put it's HEADER info inside lsb of the r layer
+ * @returns the position of last injected bit. Used to start inserting audio data
+ * (starting with that position itself)
+ */
+fun List<Rgb>.putWaverHeaderInfo(waveFile: Waver): Int {
+    var position = putSampleRate(waveFile.sampleRate.toInt())
+    position = putChannelCount(position, waveFile.channelCount)
+    position = putFrameCount(position, waveFile.frameCount.toInt())
+    position = putValidBits(position, waveFile.validBits)
+    return putMaxValue(position, waveFile.maxValue.toInt())
+}
 
 /**
  * @param sampleRate the sample rate of audio to put inside lsb of the r layer
@@ -296,6 +310,9 @@ private suspend fun List<Rgb>.putAllSignedIntegersInLoop(
 
         if (position + 3 > (image.width) * (image.height)) {
             /** breaks this for each */
+            if (layer == Layer.B) {
+                throw HugeFileException(array.findPercent(index).toInt())
+            }
             return LoopHelper(lastIndexOfWaveDataChecked, position, true)
         }
         position = putSignedInteger(position, it, layer)
@@ -529,3 +546,5 @@ data class LoopHelper(
     val lastPositionOfRgbList: Int,
     val shouldChangeTheLayer: Boolean
 )
+
+class HugeFileException(val index: Int) : IndexOutOfBoundsException()
