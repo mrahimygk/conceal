@@ -27,12 +27,12 @@
     <string name="cd_start_recording">شروع ضبط صدا</string>
     <string name="cd_green_check">تیک سبز</string>
     <string name="saving">در حال ذخیره صدا</string>
-    <string name="data_exceeds">این حجم از صوت داخل تصویر جا نمی‌شود</string>
-    <string name="illegal_number_of_channels">تعداد کانال‌ها بین ۱ تا ۶۵۵۳۶ نیست</string>
-    <string name="number_of_frames_must_be_positive">تعداد فریم‌ها باید یک عدد مثبت باشد</string>
+    <string name="data_exceeds">این حجم از صوت داخل تصویر جا نمی‌شود.</string>
+    <string name="data_exceeds_on_index">داده‌های فایل صوتی از %1$d درصد به بعد در تصویر جا نشد.</string>
+    <string name="illegal_number_of_channels">تعداد کانال‌ها بین ۱ تا ۶۵۵۳۶ نیست.</string>
+    <string name="number_of_frames_must_be_positive">تعداد فریم‌ها باید یک عدد مثبت باشد.</string>
 
-
-    <string name="illegal_number_of_valid_bits">تعداد بیت‌های بااعتبار باید بین ۲ تا ۶۵۵۳۶ باشد</string>
+    <string name="illegal_number_of_valid_bits">تعداد بیت‌های بااعتبار باید بین ۲ تا ۶۵۵۳۶ باشد.</string>
     <string name="sample_rate_must_be_positive"></string>
     <string name="not_enough_wav_file_bytes_for_header"></string>
     <string name="invalid_wav_header_data_incorrect_riff_chunk_id"></string>
@@ -40,7 +40,7 @@
     <string name="header_chunk_size_does_not_match_file_size_"></string>
     <string name="reached_end_of_file_without_finding_format_chunk"></string>
     <string name="could_not_read_chunk_header"></string>
-    <string name="compression_code_not_supported">نوع فشرده‌سازی فایل صوتی ورودی در حال حاضر پشتیبانی نمی‌شود </string>
+    <string name="compression_code_not_supported">نوع فشرده‌سازی فایل صوتی ورودی در حال حاضر پشتیبانی نمی‌شود.</string>
     <string name="number_of_channels_specified_in_header_is_equal_to_zero"></string>
     <string name="block_align_specified_in_header_is_equal_to_zero"></string>
     <string name="valid_bits_specified_in_header_is_less_than_2"></string>
@@ -49,5 +49,5 @@
     <string name="data_chunk_found_before_format_chunk"></string>
     <string name="data_chunk_size_is_not_multiple_of_block_align"></string>
     <string name="did_not_find_a_data_chunk"></string>
-    <string name="not_enough_data_available">تعداد داده‌های داخل فایل صوتی با اندازهٔ فایل برابر نیست</string>
+    <string name="not_enough_data_available">تعداد داده‌های داخل فایل صوتی با اندازهٔ فایل برابر نیست.</string>
 </resources>
