@@ -9,7 +9,6 @@ import com.cleveroad.audiovisualization.DbmHandler
 import com.google.android.material.snackbar.Snackbar
 import ir.mrahimy.conceal.R
 import ir.mrahimy.conceal.base.BaseActivity
-import ir.mrahimy.conceal.data.LocalResult
 import ir.mrahimy.conceal.databinding.ActivityMainBinding
 import ir.mrahimy.conceal.enums.ChooserType
 import ir.mrahimy.conceal.util.EventObsrver
@@ -58,10 +57,7 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() 
             input.apply {
                 rgbList.putAllSignedIntegers(position, audioDataAsRgbList, refImage, job)
                     .observe(this@MainActivity, Observer {
-                        when (it) {
-                            is LocalResult.Success -> viewModel.updatePercentage(it.data)
-                            else -> viewModel.tellDataExceeds()
-                        }
+                        viewModel.onUpdateInserting(it)
                     })
             }
         })
