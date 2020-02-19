@@ -17,66 +17,78 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/view"
+            style="@style/recording_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:padding="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginRight="4dp"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="16dp">
+                android:padding="8dp">
 
                 <TextView
                     android:id="@+id/index"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:text="@{item.id+``}"
+                    android:textColor="@color/text_color"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:text="@{item.id+``}"
                     tools:text="#1" />
 
                 <TextView
                     android:id="@+id/file_name"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
+                    android:ellipsize="end"
+                    android:singleLine="true"
                     android:text="@{item.inputImagePath}"
+                    android:textColor="@color/text_color"
                     app:layout_constraintLeft_toRightOf="@id/index"
+                    app:layout_constraintRight_toLeftOf="@id/play"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="fjksjhfksjdfh" />
 
                 <ImageView
                     android:id="@+id/play"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginRight="8dp"
                     android:gravity="center"
-                    android:src="@android:drawable/presence_audio_busy"
+                    android:src="@drawable/ic_play_stroke"
+                    android:tint="@color/text_color"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintRight_toLeftOf="@id/stop"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/stop"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginRight="8dp"
                     android:gravity="center"
-                    android:src="@android:drawable/presence_audio_busy"
+                    android:src="@drawable/ic_stop_stroke"
+                    android:tint="@color/text_color"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintRight_toLeftOf="@id/delete"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/delete"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="24dp"
+                    android:layout_height="18dp"
+                    android:layout_marginRight="12dp"
                     android:gravity="center"
-                    android:src="@android:drawable/presence_audio_busy"
+                    android:src="@drawable/ic_trash_stroke"
+                    android:tint="@color/text_color"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -90,6 +102,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@{``+item.date}"
+            android:textColor="@color/text_color"
             android:textSize="12sp"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view"
