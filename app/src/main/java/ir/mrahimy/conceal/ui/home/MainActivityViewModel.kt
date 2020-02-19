@@ -42,7 +42,7 @@ class MainActivityViewModel(
 
     private val waveFileSavingState = MutableLiveData<FileSavingState>(FileSavingState.IDLE)
 
-    val recordings = model.getAllRecordings()
+    val recordings = model.getAllRecordings().map { list -> list.map { it.fill() } }
     val recordingsListText = recordings.map {
         if (it.isNullOrEmpty()) R.string.empty_recording_list else R.string.empty
     }
