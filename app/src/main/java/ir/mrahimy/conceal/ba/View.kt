@@ -1,11 +1,16 @@
 package ir.mrahimy.conceal.ba
 
-import android.view.View
-import androidx.databinding.BindingAdapter
 import android.view.Gravity
+import android.view.View
+import android.view.ViewGroup.MarginLayoutParams
 import androidx.annotation.StringRes
+import androidx.databinding.BindingAdapter
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip
 import ir.mrahimy.conceal.R
+import android.view.animation.TranslateAnimation
+import android.view.animation.Animation
+import android.view.animation.RotateAnimation
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 
 
 @BindingAdapter("app:isVisible")
@@ -38,4 +43,14 @@ fun View.setTooltip(@StringRes tooltip: Int?) {
     if (tooltip != null) tooltipView.show()
     else tooltipView.dismiss()
 
+}
+
+@BindingAdapter("android:layout_marginBottom")
+fun View.setBottomMargin(bottomMargin: Float) {
+    val mLayoutParams = layoutParams as MarginLayoutParams
+    mLayoutParams.setMargins(
+        mLayoutParams.leftMargin, mLayoutParams.topMargin,
+        mLayoutParams.rightMargin, Math.round(bottomMargin)
+    )
+    layoutParams = mLayoutParams
 }
