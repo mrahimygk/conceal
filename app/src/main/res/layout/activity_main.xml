@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/grey"
+        android:animateLayoutChanges="true"
         tools:context=".ui.home.MainActivity">
 
         <com.cleveroad.audiovisualization.GLAudioVisualizationView
@@ -239,19 +240,19 @@
             android:layout_marginTop="8dp"
             app:data="@{vm.recordings}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/btn_record"
             app:layout_constraintTop_toBottomOf="@id/wav_file_icon"
             tools:listitem="@layout/item_recording" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{vm.recordingsListText+``}"
+            android:text="@string/empty_recording_list"
+            app:isVisible="@{vm.isRecordingListEmpty}"
             app:layout_constraintBottom_toBottomOf="@id/recordings_list"
             app:layout_constraintEnd_toEndOf="@id/recordings_list"
             app:layout_constraintStart_toStartOf="@id/recordings_list"
-            app:layout_constraintTop_toTopOf="@id/recordings_list"
-            tools:text="لیست ازونا" />
+            app:layout_constraintTop_toTopOf="@id/recordings_list" />
 
         <ir.mrahimy.conceal.cv.VisualizerView
             android:id="@+id/recording_visualizer_view"
@@ -267,7 +268,7 @@
             android:id="@+id/btn_record"
             android:layout_width="0dp"
             android:layout_height="64dp"
-            android:layout_marginBottom="64dp"
+            android:layout_marginBottom="@{vm.recordBottomMargin}"
             android:contentDescription="@string/cd_start_recording"
             android:onClick="@{()->vm.startRecording()}"
             android:padding="8dp"
