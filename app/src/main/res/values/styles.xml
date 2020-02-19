@@ -9,4 +9,9 @@
         <item name="android:fontFamily">@font/sans</item>
     </style>
 
+    <style name="recording_card" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">#00000000</item>
+        <item name="android:strokeColor">#ffffff</item>
+    </style>
+
 </resources>
