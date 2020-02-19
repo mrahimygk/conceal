@@ -43,9 +43,7 @@ class MainActivityViewModel(
     private val waveFileSavingState = MutableLiveData<FileSavingState>(FileSavingState.IDLE)
 
     val recordings = model.getAllRecordings().map { list -> list.map { it.fill() } }
-    val recordingsListText = recordings.map {
-        if (it.isNullOrEmpty()) R.string.empty_recording_list else R.string.empty
-    }
+    val isRecordingListEmpty = recordings.map { it.isNullOrEmpty() }
 
     private val _onStartRecording = MutableLiveData<StatelessEvent>()
     val onStartRecording: LiveData<StatelessEvent>
@@ -80,7 +78,7 @@ class MainActivityViewModel(
         get() = _outputImageLabel
 
     private val _waveFileLabel =
-        MutableLiveData<String>(getApplication().getString(R.string.click_to_open_file))
+        MutableLiveData<String>(getString(R.string.click_to_open_file))
     val waveFileLabel: LiveData<String>
         get() = _waveFileLabel
 
