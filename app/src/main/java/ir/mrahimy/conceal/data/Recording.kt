@@ -35,6 +35,6 @@ data class Recording(
 
 fun Recording.fill(): Recording {
     inputImagePathNormalized = inputImagePath.replace("/storage/emulated/0/", "")
-    persianDate = date.toPersianFormat()
+    persianDate = date.toPersianFormat("Y/m/d  H:i:s")
     return this
 }
