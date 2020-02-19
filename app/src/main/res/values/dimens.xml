@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="record_bottom_margin_active">64dp</dimen>
+    <dimen name="record_bottom_margin_passive">20dp</dimen>
+</resources>
