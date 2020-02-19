@@ -2,6 +2,7 @@ package ir.mrahimy.conceal.data
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 @Entity
@@ -23,4 +24,12 @@ data class Recording(
     val parsedWavePath: String?,
     @ColumnInfo(name = "date")
     val date: Long
-)
+) {
+    @Ignore
+    var inputImagePathNormalized: String = ""
+}
+
+fun Recording.fill(): Recording {
+    inputImagePathNormalized = inputImagePath.replace("/storage/emulated/0/", "")
+    return this
+}
