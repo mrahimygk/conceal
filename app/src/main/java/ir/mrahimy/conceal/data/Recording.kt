@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import ir.mrahimy.conceal.util.ktx.toPersianFormat
 
 @Entity
 data class Recording(
@@ -27,9 +28,13 @@ data class Recording(
 ) {
     @Ignore
     var inputImagePathNormalized: String = ""
+
+    @Ignore
+    var persianDate: String = ""
 }
 
 fun Recording.fill(): Recording {
     inputImagePathNormalized = inputImagePath.replace("/storage/emulated/0/", "")
+    persianDate = date.toPersianFormat()
     return this
 }
