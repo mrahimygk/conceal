@@ -40,6 +40,11 @@ class MainActivityViewModel(
     val isRecording: LiveData<Boolean>
         get() = _isRecording
 
+    val recordBottomMargin = _isRecording.map {
+        if (it) getDimension(R.dimen.record_bottom_margin_active)
+        else getDimension(R.dimen.record_bottom_margin_passive)
+    }
+
     private val waveFileSavingState = MutableLiveData<FileSavingState>(FileSavingState.IDLE)
 
     val recordings = model.getAllRecordings().map { list -> list.map { it.fill() } }
