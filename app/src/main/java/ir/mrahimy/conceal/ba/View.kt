@@ -7,10 +7,6 @@ import androidx.annotation.StringRes
 import androidx.databinding.BindingAdapter
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip
 import ir.mrahimy.conceal.R
-import android.view.animation.TranslateAnimation
-import android.view.animation.Animation
-import android.view.animation.RotateAnimation
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 
 
 @BindingAdapter("app:isVisible")
