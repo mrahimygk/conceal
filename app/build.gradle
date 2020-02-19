@@ -99,4 +99,7 @@ dependencies {
     //Localization
     implementation "com.github.YarikSOffice:lingver:$lingverVersion"
 
+    //Time
+    implementation "com.github.samanzamani.persiandate:PersianDate:$persianDateVersion"
+
 }
