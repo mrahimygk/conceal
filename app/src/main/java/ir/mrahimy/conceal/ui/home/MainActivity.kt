@@ -18,6 +18,11 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
+import android.media.MediaPlayer
+import android.net.Uri
+import android.view.View
+import androidx.core.net.toUri
+import ir.mrahimy.conceal.data.Recording
 
 const val PICK_IMAGE = 1000
 const val PICK_AUDIO = 2000
@@ -31,6 +36,8 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() 
     private val adapter: RecordingsAdapter by inject()
 
     private var audioVisualization: AudioVisualization? = null
+
+    private var mediaPlayer: MediaPlayer? = null
 
     override fun bindObservables() {
         viewModel.onStartRecording.observe(this, EventObsrver {
@@ -75,6 +82,14 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() 
         })
     }
 
+    private fun stopPlaying() {
+        if (mediaPlayer != null) {
+            mediaPlayer?.stop()
+            mediaPlayer?.release()
+            mediaPlayer = null
+        }
+    }
+
     override fun initBinding() {
         binding.apply {
             lifecycleOwner = this@MainActivity
@@ -93,7 +108,28 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() 
     override fun configCreationEvents() {
         recordings_list?.adapter = adapter
 
+        adapter.onDelete = { rec: Recording, _: View ->
+            viewModel.delete(rec)
+        }
+
+        adapter.onStop = { _: Recording, _: View ->
+            stopPlaying()
+        }
+
+        adapter.onPlay = { recording: Recording, _: View ->
+            play(recording)
+        }
+
         initializeVisualizerEngineWithPermissionCheck()
+    }
+
+    private fun play(rec: Recording) = rec.parsedWavePath?.toUri()?.let { uri -> play(uri) }
+
+
+    private fun play(uri: Uri) {
+        stopPlaying()
+        mediaPlayer = MediaPlayer.create(this, uri)
+        mediaPlayer?.start()
     }
 
     @NeedsPermission(Manifest.permission.RECORD_AUDIO)
