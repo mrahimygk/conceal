@@ -17,5 +17,5 @@ fun SaveBitmapInfoCapsule.save(path: String): String {
     val filePath = path.toValidPath() + "${name}_${time?.time}." +
             format.name.toLowerCase(Locale.ENGLISH)
     File(filePath).writeBitmap(bitmap, format, 100)
-    return path
+    return filePath
 }
