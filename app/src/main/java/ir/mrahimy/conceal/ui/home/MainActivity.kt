@@ -22,6 +22,7 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.view.View
 import androidx.core.net.toUri
+import ir.mrahimy.conceal.data.MediaState
 import ir.mrahimy.conceal.data.Recording
 
 const val PICK_IMAGE = 1000
@@ -80,6 +81,10 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() 
         viewModel.onDataExceeds.observe(this, EventObsrver {
             Snackbar.make(recordings_list, R.string.data_exceeds, Snackbar.LENGTH_LONG).show()
         })
+
+        viewModel.onStopPlaying.observe(this, EventObsrver {
+            stopPlaying()
+        })
     }
 
     private fun stopPlaying() {
@@ -88,6 +93,7 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() 
             mediaPlayer?.release()
             mediaPlayer = null
         }
+        viewModel.onMediaStateChanged(MediaState.STOP)
     }
 
     override fun initBinding() {
@@ -125,10 +131,13 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() 
 
     private fun play(rec: Recording) = rec.parsedWavePath?.toUri()?.let { uri -> play(uri) }
 
-
     private fun play(uri: Uri) {
         stopPlaying()
         mediaPlayer = MediaPlayer.create(this, uri)
+        mediaPlayer?.setOnCompletionListener {
+            viewModel.onMediaStateChanged(MediaState.STOP)
+        }
+        viewModel.onMediaStateChanged(MediaState.PLAY)
         mediaPlayer?.start()
     }
 
