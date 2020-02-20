@@ -263,6 +263,10 @@ class MainActivityViewModel(
         }
     }
 
+    private val _onStopPlaying = MutableLiveData<StatelessEvent>()
+    val onStopPlaying: LiveData<StatelessEvent>
+        get() = _onStopPlaying
+
     /**
      * calls an event to get permission and then the view calls [startRecordingWave]
      */
@@ -273,6 +277,12 @@ class MainActivityViewModel(
             if (!done && percent > 0f) {
                 _snackMessage.postValue(Event(R.string.please_cancel_first))
                 return
+            }
+        }
+
+        _mediaState.value?.let {
+            if (it == MediaState.PLAY) {
+                _onStopPlaying.postValue(StatelessEvent())
             }
         }
 
@@ -448,6 +458,17 @@ class MainActivityViewModel(
 
     fun delete(rec: Recording) = viewModelScope.launch {
         model.deleteRecording(rec)
+    }
+
+    private val _mediaState = MutableLiveData<MediaState>(MediaState.STOP)
+
+    val recordingDrawable = combine(_isRecording, _mediaState) { isRecording, mediaState ->
+        if (isRecording == true || mediaState != MediaState.PLAY) R.drawable.mic
+        else R.drawable.ic_stop_fill
+    }
+
+    fun onMediaStateChanged(mediaState: MediaState) {
+        _mediaState.postValue(mediaState)
     }
 }
 
