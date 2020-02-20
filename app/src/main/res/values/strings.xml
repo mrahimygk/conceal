@@ -29,6 +29,7 @@
     <string name="saving">در حال ذخیره صدا</string>
     <string name="data_exceeds">این حجم از صوت داخل تصویر جا نمی‌شود.</string>
     <string name="data_exceeds_on_index">داده‌های فایل صوتی از %1$d درصد به بعد در تصویر جا نشد.</string>
+    <string name="data_cannot_be_parsed_on_index">داده‌های فایل صوتی از %1$d درصد به بعد خوانده نشد</string>
     <string name="illegal_number_of_channels">تعداد کانال‌ها بین ۱ تا ۶۵۵۳۶ نیست.</string>
     <string name="number_of_frames_must_be_positive">تعداد فریم‌ها باید یک عدد مثبت باشد.</string>
 
@@ -50,4 +51,6 @@
     <string name="data_chunk_size_is_not_multiple_of_block_align"></string>
     <string name="did_not_find_a_data_chunk"></string>
     <string name="not_enough_data_available">تعداد داده‌های داخل فایل صوتی با اندازهٔ فایل برابر نیست.</string>
+    <string name="output_wave_path">مسیر صوت بازیابی شده</string>
+    <string name="select_carrier_image_tooltip">عکسی را انتخاب کنید که در آن داده‌های مخفی وجود دارد .</string>
 </resources>
