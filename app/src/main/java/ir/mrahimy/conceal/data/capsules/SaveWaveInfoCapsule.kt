@@ -15,5 +15,5 @@ data class SaveWaveInfoCapsule(
 fun SaveWaveInfoCapsule.save(path: String): String {
     val filePath = path.toValidPath() + "${name}_${time?.time}.wav"
     File(filePath).writeWave(data)
-    return path
+    return filePath
 }
