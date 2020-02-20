@@ -3,7 +3,6 @@ package ir.mrahimy.conceal.ui.home
 import android.app.Application
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -24,6 +23,8 @@ class MainActivityViewModel(
     application: Application,
     private val model: MainActivityModel
 ) : BaseAndroidViewModel(application, model) {
+
+    private var isConcealActive = true
 
     private lateinit var waveRecorder: WaveRecorder
 
@@ -140,7 +141,8 @@ class MainActivityViewModel(
     val handle = combine(_inputImage, _waveInfo) { _image, _waveFile ->
         val image = _image ?: return@combine null
         val waveFile = _waveFile ?: return@combine null
-        putWaveFileIntoImage(image, waveFile)
+        if (isConcealActive)
+            putWaveFileIntoImage(image, waveFile)
         return@combine 1
     }
 
@@ -161,13 +163,22 @@ class MainActivityViewModel(
         per?.data != null || hint == false
     }
 
+    private val outputBitmapFromRecording = MutableLiveData<Bitmap>()
+
+    val outputBitmap = combine(
+        _concealPercentage,
+        outputBitmapFromRecording
+    ) { concealPercentage, outputBitmapFromRecording ->
+        outputBitmapFromRecording ?: concealPercentage?.data
+    }
+
     val isPercentageVisible =
         combine(
             isOutputHintVisible,
             _concealPercentage,
             waveFileSavingState
         ) { outputHint, percentageData, waveFileSavingState ->
-            (outputHint == false && percentageData?.done == false) || waveFileSavingState == FileSavingState.SAVING
+            isConcealActive && (outputHint == false && percentageData?.done == false) || waveFileSavingState == FileSavingState.SAVING
         } as MutableLiveData
 
     val isDoneMarkVisible =
@@ -202,11 +213,11 @@ class MainActivityViewModel(
             saveFileJob.cancel()
 
         viewModelScope.launch {
-            delay(20)
+            delay(10)
             _concealPercentage.postValue(empty())
-            delay(20)
+            delay(10)
             waveFileSavingState.postValue(FileSavingState.IDLE)
-            delay(20)
+            delay(10)
             isPercentageVisible.postValue(false)
         }
     }
@@ -248,7 +259,7 @@ class MainActivityViewModel(
         _inputError.postValue(stringRes)
         _isDataExceeding.postValue(true)
         viewModelScope.launch {
-            delay(20)
+            delay(10)
             cancelConcealJob()
         }
     }
@@ -280,6 +291,7 @@ class MainActivityViewModel(
         _mediaState.value?.let {
             if (it == MediaState.PLAY) {
                 _onStopPlaying.postValue(StatelessEvent())
+                return
             }
         }
 
@@ -402,19 +414,20 @@ class MainActivityViewModel(
     }
 
     fun selectImageFile(data: Intent?) {
+        data?.data?.let {
+            selectImageFile(it.getPathJava(getApplication().applicationContext))
+        }
+    }
+
+    private fun selectImageFile(file: String) {
         _isDataExceeding.postValue(false)
         viewModelScope.launch {
             _isInputImageLoading.postValue(true)
             delay(10)
-            data?.data?.let {
-                delay(10)
-                val file = it.getPathJava(getApplication().applicationContext)
-                delay(10)
-                inputImagePath.postValue(file)
-                _inputImage.postValue(BitmapFactory.decodeFile(file))
-                _isInputImageLoading.postValue(false)
-                _concealPercentage.postValue(empty())
-            }
+            inputImagePath.postValue(file)
+            _inputImage.postValue(file.loadBitmap())
+            _isInputImageLoading.postValue(false)
+            _concealPercentage.postValue(empty())
             if (_inputWave.value == null) {
                 _inputWaveSelectionTooltip.postValue(R.string.select_audio_file_tooltip)
                 if (_isRecording.value == false) {
@@ -428,7 +441,7 @@ class MainActivityViewModel(
         _isDataExceeding.postValue(false)
         viewModelScope.launch {
             _isInputWaveLoading.postValue(true)
-            delay(20)
+            delay(10)
             selectAudioFile(data?.data?.getPathJava(getApplication().applicationContext))
         }
     }
@@ -436,11 +449,11 @@ class MainActivityViewModel(
     private fun selectAudioFile(path: String?) {
         viewModelScope.launch {
             _isInputWaveLoading.postValue(true)
-            delay(20)
+            delay(10)
             path?.let {
                 _isInputWaveLoading.postValue(false)
                 _waveFileLabel.postValue(it.removeEmulatedPath())
-                delay(20)
+                delay(10)
                 inputWavePath.postValue(it)
             }
         }
@@ -466,6 +479,17 @@ class MainActivityViewModel(
 
     fun onMediaStateChanged(mediaState: MediaState) {
         _mediaState.postValue(mediaState)
+    }
+
+    fun setRecording(recording: Recording) {
+        activateConceal(false)
+        outputBitmapFromRecording.postValue(recording.outputImagePath.loadBitmap())
+        recording.inputImagePath?.let { selectImageFile(it) }
+        selectAudioFile(recording.parsedWavePath)
+    }
+
+    fun activateConceal(isActive: Boolean) {
+        isConcealActive = isActive
     }
 }
 
