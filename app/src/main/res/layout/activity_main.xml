@@ -13,8 +13,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/grey"
         android:animateLayoutChanges="true"
+        android:background="@color/grey"
         tools:context=".ui.home.MainActivity">
 
         <com.cleveroad.audiovisualization.GLAudioVisualizationView
@@ -248,6 +248,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/empty_recording_list"
+            android:textColor="@color/text_color"
             app:isVisible="@{vm.isRecordingListEmpty}"
             app:layout_constraintBottom_toBottomOf="@id/recordings_list"
             app:layout_constraintEnd_toEndOf="@id/recordings_list"
@@ -272,13 +273,14 @@
             android:contentDescription="@string/cd_start_recording"
             android:onClick="@{()->vm.startRecording()}"
             android:padding="8dp"
-            android:src="@drawable/mic"
+            app:drawableCompat="@{vm.recordingDrawable}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="h,1:1"
+            android:tint="@color/text_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:tooltip="@{vm.recordTooltip}"
-            tools:src="@android:drawable/presence_audio_busy" />
+            tools:src="@drawable/mic"
+            app:tooltip="@{vm.recordTooltip}" />
 
         <View
             android:layout_width="0dp"
