@@ -15,10 +15,7 @@ import ir.mrahimy.conceal.base.BaseAndroidViewModel
 import ir.mrahimy.conceal.data.*
 import ir.mrahimy.conceal.data.capsules.*
 import ir.mrahimy.conceal.util.*
-import ir.mrahimy.conceal.util.ktx.getNameFromPath
-import ir.mrahimy.conceal.util.ktx.getPathJava
-import ir.mrahimy.conceal.util.ktx.getRgbArray
-import ir.mrahimy.conceal.util.ktx.parseWaver
+import ir.mrahimy.conceal.util.ktx.*
 import kotlinx.coroutines.*
 import java.io.File
 import java.util.*
@@ -442,7 +439,7 @@ class MainActivityViewModel(
             delay(20)
             path?.let {
                 _isInputWaveLoading.postValue(false)
-                _waveFileLabel.postValue(it)
+                _waveFileLabel.postValue(it.removeEmulatedPath())
                 delay(20)
                 inputWavePath.postValue(it)
             }
