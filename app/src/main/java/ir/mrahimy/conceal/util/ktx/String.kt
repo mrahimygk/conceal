@@ -7,3 +7,5 @@ fun String.toValidPath(): String {
 }
 
 fun String.getNameFromPath() = File(this).name.split('.')[0]
+
+fun String.removeEmulatedPath() = replace("/storage/emulated/0/", "")
