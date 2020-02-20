@@ -48,7 +48,7 @@
                     android:layout_marginLeft="8dp"
                     android:ellipsize="end"
                     android:singleLine="true"
-                    android:text="@{item.inputImagePathNormalized}"
+                    android:text="@{item.shownImagePath}"
                     android:textColor="@color/text_color"
                     app:layout_constraintLeft_toRightOf="@id/index"
                     app:layout_constraintRight_toLeftOf="@id/play"
