@@ -445,6 +445,10 @@ class MainActivityViewModel(
             is LocalResult.Error -> tellDataExceeds(result.e)
         }
     }
+
+    fun delete(rec: Recording) = viewModelScope.launch {
+        model.deleteRecording(rec)
+    }
 }
 
 enum class FileSavingState {
