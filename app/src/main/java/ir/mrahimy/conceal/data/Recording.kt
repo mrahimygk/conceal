@@ -12,7 +12,7 @@ data class Recording(
     @ColumnInfo(name = "id")
     val id: Long,
     @ColumnInfo(name = "inputImagePath")
-    val inputImagePath: String,
+    val inputImagePath: String?,
     @ColumnInfo(name = "outputImagePath")
     val outputImagePath: String,
     @ColumnInfo(name = "inputWavePath")
@@ -34,7 +34,7 @@ data class Recording(
 }
 
 fun Recording.fill(): Recording {
-    inputImagePathNormalized = inputImagePath.replace("/storage/emulated/0/", "")
+    inputImagePathNormalized = inputImagePath?.replace("/storage/emulated/0/", "") ?: ""
     persianDate = date.toPersianFormat("Y/m/d  H:i:s")
     return this
 }
