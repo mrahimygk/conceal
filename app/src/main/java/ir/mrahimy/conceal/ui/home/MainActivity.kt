@@ -144,8 +144,8 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() 
     @NeedsPermission(Manifest.permission.RECORD_AUDIO)
     fun initializeVisualizerEngine() {
         audioVisualization = visualizer_view
-        val vizualizerHandler = DbmHandler.Factory.newVisualizerHandler(this, 0)
-        audioVisualization?.linkTo(vizualizerHandler)
+        val visualizerHandler = DbmHandler.Factory.newVisualizerHandler(this, 0)
+        audioVisualization?.linkTo(visualizerHandler)
     }
 
     public override fun onResume() {
