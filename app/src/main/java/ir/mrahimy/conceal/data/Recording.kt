@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import ir.mrahimy.conceal.util.ktx.removeEmulatedPath
 import ir.mrahimy.conceal.util.ktx.toPersianFormat
 
 @Entity
@@ -27,14 +28,14 @@ data class Recording(
     val date: Long
 ) {
     @Ignore
-    var inputImagePathNormalized: String = ""
+    var shownImagePath: String = ""
 
     @Ignore
     var persianDate: String = ""
 }
 
 fun Recording.fill(): Recording {
-    inputImagePathNormalized = inputImagePath?.replace("/storage/emulated/0/", "") ?: ""
+    shownImagePath = inputImagePath?.removeEmulatedPath() ?: outputImagePath.removeEmulatedPath()
     persianDate = date.toPersianFormat("Y/m/d  H:i:s")
     return this
 }
