@@ -114,6 +114,10 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() 
     override fun configCreationEvents() {
         recordings_list?.adapter = adapter
 
+        adapter.onItemClicked = { recording: Recording, _: View ->
+            viewModel.setRecording(recording)
+        }
+
         adapter.onDelete = { rec: Recording, _: View ->
             viewModel.delete(rec)
         }
@@ -185,11 +189,13 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() 
         when (requestCode) {
             PICK_IMAGE -> {
                 if (resultCode == Activity.RESULT_CANCELED) return
+                viewModel.activateConceal(true)
                 viewModel.selectImageFile(data)
             }
 
             PICK_AUDIO -> {
                 if (resultCode == Activity.RESULT_CANCELED) return
+                viewModel.activateConceal(true)
                 viewModel.selectAudioFile(data)
             }
         }
