@@ -273,14 +273,14 @@
             android:contentDescription="@string/cd_start_recording"
             android:onClick="@{()->vm.startRecording()}"
             android:padding="8dp"
+            android:tint="@color/text_color"
             app:drawableCompat="@{vm.recordingDrawable}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="h,1:1"
-            android:tint="@color/text_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:src="@drawable/mic"
-            app:tooltip="@{vm.recordTooltip}" />
+            app:tooltip="@{vm.recordTooltip}"
+            tools:src="@drawable/mic" />
 
         <View
             android:layout_width="0dp"
