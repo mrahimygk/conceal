@@ -19,7 +19,7 @@ data class Recording(
     val inputWavePath: String,
     /**
      * After recording is done, we parse data on the run
-     * But if they have received an image, there would be not parsedWavePath
+     * But if they have received an image, there would be no parsedWavePath
      */
     @ColumnInfo(name = "parsedWavePath")
     val parsedWavePath: String?,
