@@ -53,4 +53,6 @@
     <string name="not_enough_data_available">تعداد داده‌های داخل فایل صوتی با اندازهٔ فایل برابر نیست.</string>
     <string name="output_wave_path">مسیر صوت بازیابی شده</string>
     <string name="select_carrier_image_tooltip">عکسی را انتخاب کنید که در آن داده‌های مخفی وجود دارد .</string>
+    <string name="cd_output_audio_path">مسیر فایل صوتی بازیابی شده</string>
+    <string name="data_size_does_not_match">حجم تصویر برای بازیابی صوت مناسب نیست</string>
 </resources>
