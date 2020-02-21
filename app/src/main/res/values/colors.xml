@@ -6,4 +6,20 @@
     <color name="grey">#efefef</color>
     <color name="text_color">@color/white</color>
     <color name="white">#fff</color>
+    <color name="navy">#001f3f</color>
+    <color name="blue">#0074d9</color>
+    <color name="aqua">#7fdbff</color>
+    <color name="teal">#39cccc</color>
+    <color name="olive">#3d9970</color>
+    <color name="green">#2ecc40</color>
+    <color name="lime">#01ff70</color>
+    <color name="yellow">#ffdc00</color>
+    <color name="orange">#ff851b</color>
+    <color name="red">#ff4136</color>
+    <color name="maroon">#85144b</color>
+    <color name="fuchsia">#f012be</color>
+    <color name="purple">#b10dc9</color>
+    <color name="black">#111111</color>
+    <color name="gray">#aaaaaa</color>
+    <color name="silver">#dddddd</color>
 </resources>
