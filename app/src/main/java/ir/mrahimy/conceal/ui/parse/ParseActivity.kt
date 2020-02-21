@@ -3,27 +3,24 @@ package ir.mrahimy.conceal.ui.parse
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
-import androidx.lifecycle.Observer
+import android.media.MediaPlayer
+import android.net.Uri
+import androidx.core.net.toUri
 import com.cleveroad.audiovisualization.AudioVisualization
 import com.cleveroad.audiovisualization.DbmHandler
 import com.google.android.material.snackbar.Snackbar
 import ir.mrahimy.conceal.R
 import ir.mrahimy.conceal.base.BaseActivity
-import ir.mrahimy.conceal.enums.ChooserType
-import ir.mrahimy.conceal.util.EventObsrver
-import ir.mrahimy.conceal.util.putAllSignedIntegers
-import kotlinx.android.synthetic.main.activity_main.*
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import permissions.dispatcher.NeedsPermission
-import permissions.dispatcher.RuntimePermissions
-import android.media.MediaPlayer
-import android.net.Uri
-import androidx.core.net.toUri
 import ir.mrahimy.conceal.data.MediaState
 import ir.mrahimy.conceal.data.Recording
 import ir.mrahimy.conceal.databinding.ActivityParseBinding
+import ir.mrahimy.conceal.enums.ChooserType
+import ir.mrahimy.conceal.util.EventObsrver
 import kotlinx.android.synthetic.main.activity_main.visualizer_view
 import kotlinx.android.synthetic.main.activity_parse.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import permissions.dispatcher.NeedsPermission
+import permissions.dispatcher.RuntimePermissions
 
 private const val PICK_IMAGE = 1000
 
