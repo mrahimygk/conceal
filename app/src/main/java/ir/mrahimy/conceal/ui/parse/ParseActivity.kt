@@ -55,6 +55,10 @@ class ParseActivity : BaseActivity<ParseActivityViewModel, ActivityParseBinding>
             if (it == "stop") stopPlaying()
             else play(it.toUri())
         })
+
+        viewModel.onDoneInserting.observe(this, EventObsrver {
+            finish()
+        })
     }
 
     private fun stopPlaying() {
