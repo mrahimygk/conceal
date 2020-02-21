@@ -373,7 +373,7 @@
             android:layout_margin="2dp"
             android:backgroundTint="@color/white"
             android:onClick="@{()->vm.navigateToReveal()}"
-            android:src="@drawable/background_stroke"
+            android:src="@drawable/ic_magnifier"
             app:colorFilter="@{@color/lime}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
