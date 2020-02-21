@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="ir.mrahimy.conceal.ui.parse.ParseActivityViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/root_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        android:background="@color/grey"
+        tools:context=".ui.home.MainActivity">
+
+        <com.cleveroad.audiovisualization.GLAudioVisualizationView
+            android:id="@+id/visualizer_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:av_backgroundColor="@color/colorPrimaryDark"
+            app:av_bubblesPerLayer="16"
+            app:av_bubblesRandomizeSizes="true"
+            app:av_bubblesSize="24dp"
+            app:av_layersCount="2"
+            app:av_wavesCount="7"
+            app:av_wavesFooterHeight="48dp"
+            app:av_wavesHeight="64dp" />
+
+        <TextView
+            android:id="@+id/txt_input_image_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="center_horizontal"
+            android:text="@string/input_image"
+            android:textColor="@color/text_color"
+            app:layout_constraintBottom_toTopOf="@id/input_img"
+            app:layout_constraintEnd_toEndOf="@id/input_img"
+            app:layout_constraintStart_toStartOf="@id/input_img"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ir.mrahimy.conceal.cv.CameraCorner
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@id/input_img"
+            app:layout_constraintEnd_toEndOf="@id/input_img"
+            app:layout_constraintStart_toStartOf="@id/input_img"
+            app:layout_constraintTop_toTopOf="@id/input_img" />
+
+        <TextView
+            android:id="@+id/input_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/choose"
+            android:textColor="@color/text_color"
+            app:isGone="@{!vm.isInputHintVisible}"
+            app:layout_constraintBottom_toBottomOf="@id/input_img"
+            app:layout_constraintEnd_toEndOf="@id/input_img"
+            app:layout_constraintStart_toStartOf="@id/input_img"
+            app:layout_constraintTop_toBottomOf="@id/input_placeholder" />
+
+        <ImageView
+            android:id="@+id/input_placeholder"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:contentDescription="@string/cd_select_input_image"
+            android:src="@drawable/image"
+            app:isGone="@{!vm.isInputHintVisible}"
+            app:layout_constraintBottom_toTopOf="@id/input_label"
+            app:layout_constraintEnd_toEndOf="@id/input_img"
+            app:layout_constraintStart_toStartOf="@id/input_img"
+            app:layout_constraintTop_toTopOf="@id/input_img"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:tooltip="@{vm.inputImageSelectionTooltip}" />
+
+        <ImageView
+            android:id="@+id/input_img"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="12dp"
+            android:contentDescription="@string/cd_input_image"
+            android:padding="1dp"
+            android:scaleType="fitCenter"
+            app:bitmap="@{vm.inputImage}"
+            app:layout_constraintDimensionRatio="w,1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txt_input_image_title"
+            tools:src="@mipmap/ic_launcher"
+            tools:visibility="invisible" />
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:isVisible="@{vm.isInputImageLoading}"
+            app:layout_constraintBottom_toBottomOf="@id/input_img"
+            app:layout_constraintEnd_toEndOf="@id/input_img"
+            app:layout_constraintStart_toStartOf="@id/input_img"
+            app:layout_constraintTop_toTopOf="@id/input_img" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:onClick="@{()->vm.chooseImage()}"
+            app:layout_constraintBottom_toBottomOf="@id/input_img"
+            app:layout_constraintEnd_toEndOf="@id/input_img"
+            app:layout_constraintStart_toStartOf="@id/input_img"
+            app:layout_constraintTop_toTopOf="@id/input_img" />
+
+        <ImageView
+            android:id="@+id/wav_file_icon"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="32dp"
+            android:contentDescription="@string/cd_output_audio_path"
+            android:onClick="@{()->vm.playAudio()}"
+            app:drawableCompat="@{vm.drawable}"
+            tools:src="@drawable/ic_play_stroke"
+            android:tint="@color/white"
+            app:layout_constraintDimensionRatio="w,1:1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/input_img" />
+
+        <TextView
+            android:id="@+id/wav_file_text"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:gravity="center_vertical"
+            android:onClick="@{()->vm.playAudio()}"
+            android:text="@{vm.waveFileLabel}"
+            android:textColor="@color/text_color"
+            app:layout_constraintBottom_toBottomOf="@id/wav_file_icon"
+            app:layout_constraintEnd_toStartOf="@id/wav_file_icon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/wav_file_icon" />
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:isVisible="@{vm.isSavingFileTextVisible}"
+            app:layout_constraintBottom_toBottomOf="@id/wav_file_icon"
+            app:layout_constraintEnd_toStartOf="@id/wav_file_icon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/wav_file_icon" />
+
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_width="42dp"
+            android:layout_height="24dp"
+            android:gravity="center"
+            android:onClick="@{()->vm.cancelRevealJob()}"
+            android:text="@string/cancel"
+            android:textColor="#f00"
+            app:isVisible="@{vm.isProcessing}"
+            app:layout_constraintBottom_toBottomOf="@id/input_img"
+            app:layout_constraintLeft_toLeftOf="@id/input_img" />
+
+        <ProgressBar
+            android:id="@+id/determinateBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:isVisible="@{vm.isInputImageLoading}"
+            app:layout_constraintBottom_toBottomOf="@id/input_img"
+            app:layout_constraintLeft_toLeftOf="@id/input_img"
+            app:layout_constraintRight_toRightOf="@id/input_img"
+            app:layout_constraintTop_toTopOf="@id/input_img" />
+
+        <ImageView
+            android:id="@+id/percentage_done"
+            android:layout_width="0dp"
+            android:layout_height="24dp"
+            android:contentDescription="@string/cd_green_check"
+            android:gravity="center_horizontal"
+            android:layoutDirection="ltr"
+            android:src="@drawable/ic_checkmark_green"
+            app:isVisible="@{vm.isDoneMarkVisible}"
+            app:layout_constraintBottom_toBottomOf="@id/input_img"
+            app:layout_constraintDimensionRatio="h,1:1"
+            app:layout_constraintEnd_toEndOf="@id/input_img"
+            app:layout_constraintStart_toStartOf="@id/input_img"
+            tools:text="100 %" />
+
+        <ProgressBar
+            android:layout_width="0dp"
+            android:layout_height="24dp"
+            app:isVisible="@{vm.isRevealing}"
+            app:layout_constraintBottom_toBottomOf="@id/input_img"
+            app:layout_constraintDimensionRatio="h,1:1"
+            app:layout_constraintEnd_toEndOf="@id/input_img"
+            app:layout_constraintStart_toStartOf="@id/input_img" />
+
+        <TextView
+            android:id="@+id/saving_percentage_done"
+            android:layout_width="0dp"
+            android:layout_height="24dp"
+            android:layout_margin="1dp"
+            android:background="#7111"
+            android:gravity="center_horizontal"
+            android:text="@string/saving"
+            android:textColor="@color/text_color"
+            android:textSize="12sp"
+            app:isVisible="@{vm.isSavingFileTextVisible}"
+            app:layout_constraintEnd_toEndOf="@id/input_img"
+            app:layout_constraintStart_toStartOf="@id/input_img"
+            app:layout_constraintTop_toTopOf="@id/input_img" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{``+vm.handle}"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
