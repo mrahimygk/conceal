@@ -227,9 +227,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:onClick="@{()->vm.insert()}"
-            android:src="@android:drawable/ic_input_add"
+            android:src="@android:drawable/arrow_down_float"
             android:backgroundTint="@color/white"
-            app:colorFilter="@{@color/green}"
+            app:colorFilter="@{@color/maroon}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
