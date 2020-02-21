@@ -55,4 +55,5 @@
     <string name="select_carrier_image_tooltip">عکسی را انتخاب کنید که در آن داده‌های مخفی وجود دارد .</string>
     <string name="cd_output_audio_path">مسیر فایل صوتی بازیابی شده</string>
     <string name="data_size_does_not_match">حجم تصویر برای بازیابی صوت مناسب نیست</string>
+    <string name="no_input_set">عملیات بازیابی صدا انجام نشده است</string>
 </resources>
