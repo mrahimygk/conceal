@@ -122,12 +122,12 @@
             android:layout_marginTop="32dp"
             android:contentDescription="@string/cd_output_audio_path"
             android:onClick="@{()->vm.playAudio()}"
-            app:drawableCompat="@{vm.drawable}"
-            tools:src="@drawable/ic_play_stroke"
             android:tint="@color/white"
+            app:drawableCompat="@{vm.drawable}"
             app:layout_constraintDimensionRatio="w,1:1"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/input_img" />
+            app:layout_constraintTop_toBottomOf="@id/input_img"
+            tools:src="@drawable/ic_play_stroke" />
 
         <TextView
             android:id="@+id/wav_file_text"
@@ -148,7 +148,7 @@
             android:layout_height="wrap_content"
             app:isVisible="@{vm.isSavingFileTextVisible}"
             app:layout_constraintBottom_toBottomOf="@id/wav_file_icon"
-            app:layout_constraintEnd_toStartOf="@id/wav_file_icon"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/wav_file_icon" />
 
@@ -219,6 +219,19 @@
             android:text="@{``+vm.handle}"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:onClick="@{()->vm.insert()}"
+            android:src="@android:drawable/ic_input_add"
+            android:backgroundTint="@color/white"
+            app:colorFilter="@{@color/green}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
