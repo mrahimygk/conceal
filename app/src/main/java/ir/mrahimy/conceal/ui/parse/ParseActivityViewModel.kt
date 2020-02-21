@@ -235,4 +235,19 @@ class ParseActivityViewModel(
             }
         }
     }
+
+    private val _onDoneInserting = MutableLiveData<StatelessEvent>()
+    val onDoneInserting: LiveData<StatelessEvent>
+        get() = _onDoneInserting
+
+    fun insert() = viewModelScope.launch {
+        if (recordingToInsert == null) {
+            _snackMessage.postValue(Event(R.string.no_input_set))
+            _inputImageSelectionTooltip.postValue(R.string.select_image_tooltip)
+            return@launch
+        } else recordingToInsert?.let {
+            model.addRecording(it)
+            _onDoneInserting.postValue(StatelessEvent())
+        }
+    }
 }
