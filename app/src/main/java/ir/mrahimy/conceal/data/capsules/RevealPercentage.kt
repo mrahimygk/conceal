@@ -15,9 +15,9 @@ data class RevealPercentage(
 
 )
 
-fun ViewModel.emptyRevealPercentage() =
+fun Any.emptyRevealPercentage() =
     RevealPercentage(
-        1,
+        2,
         0f,
         null,
         null,
