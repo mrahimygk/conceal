@@ -14,3 +14,11 @@ fun FloatingActionButton.setColorFilter(@ColorRes color: Int?) {
         setImageDrawable(willBeWhite)
     }
 }
+
+@BindingAdapter("backgroundColor")
+fun FloatingActionButton.setBackgroundColorBA(@ColorRes color: Int?){
+    color?.let {
+        setBackgroundColor(resources.getColor(it))
+    }
+}
+
