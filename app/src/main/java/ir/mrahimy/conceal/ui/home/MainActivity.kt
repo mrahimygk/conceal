@@ -24,6 +24,7 @@ import android.view.View
 import androidx.core.net.toUri
 import ir.mrahimy.conceal.data.MediaState
 import ir.mrahimy.conceal.data.Recording
+import ir.mrahimy.conceal.ui.parse.ParseActivity
 
 const val PICK_IMAGE = 1000
 const val PICK_AUDIO = 2000
@@ -84,6 +85,10 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() 
 
         viewModel.onStopPlaying.observe(this, EventObsrver {
             stopPlaying()
+        })
+
+        viewModel.onNavigateToReveal.observe(this, EventObsrver {
+            startActivity(Intent(this, ParseActivity::class.java))
         })
     }
 
