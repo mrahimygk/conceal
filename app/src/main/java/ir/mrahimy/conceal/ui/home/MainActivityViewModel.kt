@@ -13,6 +13,7 @@ import ir.mrahimy.conceal.R
 import ir.mrahimy.conceal.base.BaseAndroidViewModel
 import ir.mrahimy.conceal.data.*
 import ir.mrahimy.conceal.data.capsules.*
+import ir.mrahimy.conceal.enums.FileSavingState
 import ir.mrahimy.conceal.util.*
 import ir.mrahimy.conceal.util.ktx.*
 import kotlinx.coroutines.*
@@ -491,8 +492,12 @@ class MainActivityViewModel(
     fun activateConceal(isActive: Boolean) {
         isConcealActive = isActive
     }
-}
 
-enum class FileSavingState {
-    SAVING, IDLE, DONE
+    private val _onNavigateToReveal = MutableLiveData<StatelessEvent>()
+    val onNavigateToReveal: LiveData<StatelessEvent>
+        get() = _onNavigateToReveal
+
+    fun navigateToReveal() {
+        _onNavigateToReveal.postValue(StatelessEvent())
+    }
 }
