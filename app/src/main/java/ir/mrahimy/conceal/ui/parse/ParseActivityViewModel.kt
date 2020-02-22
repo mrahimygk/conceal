@@ -23,6 +23,8 @@ import ir.mrahimy.conceal.util.ktx.*
 import kotlinx.coroutines.*
 import java.util.*
 
+private const val BACK_PRESS_EXIT_TIME = 2000L
+
 class ParseActivityViewModel(
     application: Application,
     private val model: ParseActivityModel
@@ -248,6 +250,32 @@ class ParseActivityViewModel(
         } else recordingToInsert?.let {
             model.addRecording(it)
             _onDoneInserting.postValue(StatelessEvent())
+        }
+    }
+
+    private val mustExit = MutableLiveData<Boolean>().apply { value = false }
+
+    fun onBackPressed() {
+        if (isProcessing.value == true) {
+            _snackMessage.postValue(Event(R.string.please_cancel_first))
+            return
+        }
+
+        if (recordingToInsert == null) {
+            _onDoneInserting.postValue(StatelessEvent())
+            return
+        }
+
+        if (mustExit.value == true) {
+            _onDoneInserting.postValue(StatelessEvent())
+            return
+        }
+
+        mustExit.postValue(true)
+        _snackMessage.postValue(Event(R.string.please_insert_first))
+        viewModelScope.launch {
+            delay(BACK_PRESS_EXIT_TIME)
+            mustExit.postValue(false)
         }
     }
 }

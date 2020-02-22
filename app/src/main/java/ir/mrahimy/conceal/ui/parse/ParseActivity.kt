@@ -144,4 +144,8 @@ class ParseActivity : BaseActivity<ParseActivityViewModel, ActivityParseBinding>
             }
         }
     }
+
+    override fun onBackPressed() {
+        viewModel.onBackPressed()
+    }
 }
