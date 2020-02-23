@@ -31,7 +31,8 @@ class ConcealApplication : Application() {
                 modelModule,
                 dbModule,
                 repositoryModule,
-                networkModule
+                networkModule,
+                apiModule
             )
         }
 
