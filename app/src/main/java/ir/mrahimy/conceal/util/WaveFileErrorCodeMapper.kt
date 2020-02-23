@@ -2,7 +2,7 @@ package ir.mrahimy.conceal.util
 
 import androidx.annotation.StringRes
 import ir.mrahimy.conceal.R
-import ir.mrahimy.conceal.util.Wave.WavFile.*
+import ir.mrahimy.conceal.util.lowlevel.Wave.WavFile.*
 
 @StringRes
 fun Int.mapToErrorStringRes(): Int {

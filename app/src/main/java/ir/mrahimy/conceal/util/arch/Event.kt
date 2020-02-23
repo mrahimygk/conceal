@@ -1,4 +1,4 @@
-package ir.mrahimy.conceal.util
+package ir.mrahimy.conceal.util.arch
 
 import androidx.lifecycle.Observer
 

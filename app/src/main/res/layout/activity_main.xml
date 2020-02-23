@@ -63,7 +63,7 @@
             app:layout_constraintStart_toStartOf="@id/output_img"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ir.mrahimy.conceal.cv.CameraCorner
+        <ir.mrahimy.conceal.util.cv.CameraCorner
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="@id/output_img"
@@ -117,7 +117,7 @@
             app:layout_constraintTop_toBottomOf="@id/txt_title"
             tools:src="@mipmap/ic_launcher" />
 
-        <ir.mrahimy.conceal.cv.CameraCorner
+        <ir.mrahimy.conceal.util.cv.CameraCorner
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="@id/input_img"
@@ -255,7 +255,7 @@
             app:layout_constraintStart_toStartOf="@id/recordings_list"
             app:layout_constraintTop_toTopOf="@id/recordings_list" />
 
-        <ir.mrahimy.conceal.cv.VisualizerView
+        <ir.mrahimy.conceal.util.cv.VisualizerView
             android:id="@+id/recording_visualizer_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

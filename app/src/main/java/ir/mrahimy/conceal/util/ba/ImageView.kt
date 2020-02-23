@@ -1,4 +1,4 @@
-package ir.mrahimy.conceal.ba
+package ir.mrahimy.conceal.util.ba
 
 import android.graphics.Bitmap
 import android.widget.ImageView

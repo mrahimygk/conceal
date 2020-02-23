@@ -1,9 +1,9 @@
-package ir.mrahimy.conceal.data.db
+package ir.mrahimy.conceal.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import ir.mrahimy.conceal.data.Recording
-import ir.mrahimy.conceal.data.db.dao.RecordingDao
+import ir.mrahimy.conceal.db.dao.RecordingDao
 
 @Database(
     entities = [Recording::class],

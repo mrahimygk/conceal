@@ -16,9 +16,9 @@ import ir.mrahimy.conceal.base.BaseActivity
 import ir.mrahimy.conceal.data.MediaState
 import ir.mrahimy.conceal.data.Recording
 import ir.mrahimy.conceal.databinding.ActivityMainBinding
-import ir.mrahimy.conceal.enums.ChooserType
+import ir.mrahimy.conceal.data.enums.ChooserType
 import ir.mrahimy.conceal.ui.parse.ParseActivity
-import ir.mrahimy.conceal.util.EventObsrver
+import ir.mrahimy.conceal.util.arch.EventObsrver
 import ir.mrahimy.conceal.util.putAllSignedIntegers
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
@@ -62,14 +62,15 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() 
             )
         })
 
-        viewModel.onStartRgbListPutAll.observe(this, EventObsrver { input ->
-            input.apply {
-                rgbList.putAllSignedIntegers(position, audioDataAsRgbList, refImage, job)
-                    .observe(this@MainActivity, Observer {
-                        viewModel.onUpdateInserting(it)
-                    })
-            }
-        })
+        viewModel.onStartRgbListPutAll.observe(this,
+            EventObsrver { input ->
+                input.apply {
+                    rgbList.putAllSignedIntegers(position, audioDataAsRgbList, refImage, job)
+                        .observe(this@MainActivity, Observer {
+                            viewModel.onUpdateInserting(it)
+                        })
+                }
+            })
 
         viewModel.snackMessage.observe(this, EventObsrver {
             Snackbar.make(recordings_list, it, Snackbar.LENGTH_LONG).show()

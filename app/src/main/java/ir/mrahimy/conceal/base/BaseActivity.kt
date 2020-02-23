@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import ir.mrahimy.conceal.app.ConcealApplication
-import ir.mrahimy.conceal.enums.ChooserType
+import ir.mrahimy.conceal.data.enums.ChooserType
 
 abstract class BaseActivity<VM : BaseViewModel, DB : ViewDataBinding> : AppCompatActivity() {
 

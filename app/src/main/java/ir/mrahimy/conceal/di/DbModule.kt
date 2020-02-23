@@ -1,8 +1,8 @@
 package ir.mrahimy.conceal.di
 
 import androidx.room.Room
-import ir.mrahimy.conceal.data.db.ConcealDb
-import ir.mrahimy.conceal.data.db.migrations.migration1to2
+import ir.mrahimy.conceal.db.ConcealDb
+import ir.mrahimy.conceal.db.migrations.migration1to2
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 

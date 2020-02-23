@@ -1,4 +1,4 @@
-package ir.mrahimy.conceal.enums
+package ir.mrahimy.conceal.data.enums
 
 import android.net.Uri
 import android.provider.MediaStore

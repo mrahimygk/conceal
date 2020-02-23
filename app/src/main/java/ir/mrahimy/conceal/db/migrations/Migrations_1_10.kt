@@ -1,4 +1,4 @@
-package ir.mrahimy.conceal.data.db.migrations
+package ir.mrahimy.conceal.db.migrations
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase

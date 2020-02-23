@@ -14,8 +14,8 @@ import ir.mrahimy.conceal.base.BaseActivity
 import ir.mrahimy.conceal.data.MediaState
 import ir.mrahimy.conceal.data.Recording
 import ir.mrahimy.conceal.databinding.ActivityParseBinding
-import ir.mrahimy.conceal.enums.ChooserType
-import ir.mrahimy.conceal.util.EventObsrver
+import ir.mrahimy.conceal.data.enums.ChooserType
+import ir.mrahimy.conceal.util.arch.EventObsrver
 import kotlinx.android.synthetic.main.activity_main.visualizer_view
 import kotlinx.android.synthetic.main.activity_parse.*
 import org.koin.androidx.viewmodel.ext.android.viewModel

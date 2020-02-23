@@ -44,7 +44,7 @@
             app:layout_constraintStart_toStartOf="@id/input_img"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ir.mrahimy.conceal.cv.CameraCorner
+        <ir.mrahimy.conceal.util.cv.CameraCorner
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="@id/input_img"

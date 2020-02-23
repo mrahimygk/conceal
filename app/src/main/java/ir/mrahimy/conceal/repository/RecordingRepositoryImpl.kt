@@ -1,7 +1,7 @@
-package ir.mrahimy.conceal.data.repository
+package ir.mrahimy.conceal.repository
 
 import ir.mrahimy.conceal.data.Recording
-import ir.mrahimy.conceal.data.db.dao.RecordingDao
+import ir.mrahimy.conceal.db.dao.RecordingDao
 
 class RecordingRepositoryImpl(private val recordingDao: RecordingDao) : RecordingRepository {
     override suspend fun addRecording(recording: Recording) {

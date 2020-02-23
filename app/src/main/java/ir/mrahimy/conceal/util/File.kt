@@ -2,6 +2,8 @@ package ir.mrahimy.conceal.util
 
 import android.graphics.Bitmap
 import ir.mrahimy.conceal.data.Waver
+import ir.mrahimy.conceal.util.lowlevel.WavUtil
+import ir.mrahimy.conceal.util.lowlevel.Wave
 import java.io.File
 
 fun File.writeBitmap(bitmap: Bitmap, format: Bitmap.CompressFormat, quality: Int = 100) {

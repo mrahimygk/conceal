@@ -1,4 +1,4 @@
-package ir.mrahimy.conceal.ba
+package ir.mrahimy.conceal.util.ba
 
 
 import androidx.databinding.BindingAdapter

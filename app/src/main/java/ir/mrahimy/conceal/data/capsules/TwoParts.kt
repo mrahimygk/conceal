@@ -1,4 +1,4 @@
-package ir.mrahimy.conceal.util
+package ir.mrahimy.conceal.data.capsules
 
 data class TwoParts<T1, T2>(
     val number: T1,

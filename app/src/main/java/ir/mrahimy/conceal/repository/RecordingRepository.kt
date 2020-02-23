@@ -1,4 +1,4 @@
-package ir.mrahimy.conceal.data.repository
+package ir.mrahimy.conceal.repository
 
 import androidx.lifecycle.LiveData
 import ir.mrahimy.conceal.data.Recording

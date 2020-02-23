@@ -10,6 +10,7 @@ import ir.mrahimy.conceal.data.LocalResult
 import ir.mrahimy.conceal.data.Rgb
 import ir.mrahimy.conceal.data.Waver
 import ir.mrahimy.conceal.data.capsules.ConcealPercentage
+import ir.mrahimy.conceal.data.capsules.TwoParts
 import ir.mrahimy.conceal.data.toSeparatedDigits
 import ir.mrahimy.conceal.util.ktx.*
 import kotlinx.coroutines.Dispatchers

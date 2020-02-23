@@ -1,4 +1,4 @@
-package ir.mrahimy.conceal.data.db.dao
+package ir.mrahimy.conceal.db.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*

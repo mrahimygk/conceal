@@ -1,4 +1,4 @@
-package ir.mrahimy.conceal.cv;
+package ir.mrahimy.conceal.util.cv;
 
 import android.content.Context;
 import android.graphics.Canvas;

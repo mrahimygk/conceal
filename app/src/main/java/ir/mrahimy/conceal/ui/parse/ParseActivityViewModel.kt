@@ -13,12 +13,12 @@ import ir.mrahimy.conceal.data.MediaState
 import ir.mrahimy.conceal.data.Recording
 import ir.mrahimy.conceal.data.capsules.SaveWaveInfoCapsule
 import ir.mrahimy.conceal.data.capsules.save
-import ir.mrahimy.conceal.enums.FileSavingState
-import ir.mrahimy.conceal.enums.RevealState
-import ir.mrahimy.conceal.util.Event
+import ir.mrahimy.conceal.data.enums.FileSavingState
+import ir.mrahimy.conceal.data.enums.RevealState
+import ir.mrahimy.conceal.util.arch.Event
 import ir.mrahimy.conceal.util.HugeFileException
-import ir.mrahimy.conceal.util.StatelessEvent
-import ir.mrahimy.conceal.util.combine
+import ir.mrahimy.conceal.util.arch.StatelessEvent
+import ir.mrahimy.conceal.util.arch.combine
 import ir.mrahimy.conceal.util.ktx.*
 import kotlinx.coroutines.*
 import java.util.*
@@ -35,22 +35,34 @@ class ParseActivityViewModel(
     private val _mediaState = MutableLiveData<MediaState>(MediaState.STOP)
 
     val isDoneMarkVisible =
-        combine(waveFileSavingState, revealState) { waveFileSavingState, revealState ->
+        combine(
+            waveFileSavingState,
+            revealState
+        ) { waveFileSavingState, revealState ->
             waveFileSavingState == FileSavingState.DONE && revealState == RevealState.DONE
         }
 
     val isRevealing =
-        combine(waveFileSavingState, revealState) { waveFileSavingState, revealState ->
+        combine(
+            waveFileSavingState,
+            revealState
+        ) { waveFileSavingState, revealState ->
             waveFileSavingState == FileSavingState.IDLE && revealState == RevealState.REVEALING
         }
 
     val isProcessing =
-        combine(waveFileSavingState, revealState) { waveFileSavingState, revealState ->
+        combine(
+            waveFileSavingState,
+            revealState
+        ) { waveFileSavingState, revealState ->
             waveFileSavingState == FileSavingState.SAVING || revealState == RevealState.REVEALING
         }
 
     val drawable: LiveData<Int> =
-        combine(waveFileSavingState, _mediaState) { waveFileSavingState, mediaState ->
+        combine(
+            waveFileSavingState,
+            _mediaState
+        ) { waveFileSavingState, mediaState ->
             when {
                 mediaState == MediaState.PLAY -> R.drawable.ic_stop_fill
                 waveFileSavingState == FileSavingState.DONE -> R.drawable.ic_play_fill

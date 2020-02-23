@@ -13,9 +13,14 @@ import ir.mrahimy.conceal.R
 import ir.mrahimy.conceal.base.BaseAndroidViewModel
 import ir.mrahimy.conceal.data.*
 import ir.mrahimy.conceal.data.capsules.*
-import ir.mrahimy.conceal.enums.FileSavingState
+import ir.mrahimy.conceal.data.enums.FileSavingState
 import ir.mrahimy.conceal.util.*
+import ir.mrahimy.conceal.util.arch.Event
+import ir.mrahimy.conceal.util.arch.StatelessEvent
+import ir.mrahimy.conceal.util.arch.combine
 import ir.mrahimy.conceal.util.ktx.*
+import ir.mrahimy.conceal.util.lowlevel.WavUtil
+import ir.mrahimy.conceal.util.lowlevel.Wave
 import kotlinx.coroutines.*
 import java.io.File
 import java.util.*
@@ -119,7 +124,13 @@ class MainActivityViewModel(
 
     private val _isDataExceeding = MutableLiveData<Boolean>(false)
     val isOutputHintVisible =
-        combine(_inputImage, _inputWave, _waveInfo, _inputError, _isDataExceeding)
+        combine(
+            _inputImage,
+            _inputWave,
+            _waveInfo,
+            _inputError,
+            _isDataExceeding
+        )
         { inputImage, inputWave, waveInfo, inputError, isDataExceeding ->
             if (inputImage == null) {
                 _outputImageLabel.postValue(getString(R.string.choose_input_image))
@@ -160,9 +171,10 @@ class MainActivityViewModel(
         get() = _concealPercentage
 
     val percentInt = _concealPercentage.map { it.percent.toInt() }
-    val isOutputImageVisible = combine(_concealPercentage, isOutputHintVisible) { per, hint ->
-        per?.data != null || hint == false
-    }
+    val isOutputImageVisible =
+        combine(_concealPercentage, isOutputHintVisible) { per, hint ->
+            per?.data != null || hint == false
+        }
 
     private val outputBitmapFromRecording = MutableLiveData<Bitmap>()
 
@@ -473,10 +485,11 @@ class MainActivityViewModel(
 
     private val _mediaState = MutableLiveData<MediaState>(MediaState.STOP)
 
-    val recordingDrawable = combine(_isRecording, _mediaState) { isRecording, mediaState ->
-        if (isRecording == true || mediaState != MediaState.PLAY) R.drawable.mic
-        else R.drawable.ic_stop_fill
-    }
+    val recordingDrawable =
+        combine(_isRecording, _mediaState) { isRecording, mediaState ->
+            if (isRecording == true || mediaState != MediaState.PLAY) R.drawable.mic
+            else R.drawable.ic_stop_fill
+        }
 
     fun onMediaStateChanged(mediaState: MediaState) {
         _mediaState.postValue(mediaState)
