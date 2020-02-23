@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "113445267419",
+    "firebase_url": "https://conceal-d27dd.firebaseio.com",
+    "project_id": "conceal-d27dd",
+    "storage_bucket": "conceal-d27dd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:113445267419:android:71ae80b7f20f98cff129fe",
+        "android_client_info": {
+          "package_name": "ir.mrahimy.conceal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "113445267419-vsdgqvgejova3qssjhcesuagaq4n6m6h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAeMpPM7XGLe7S63cK7v5CvL6UdT4wdu6M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "113445267419-vsdgqvgejova3qssjhcesuagaq4n6m6h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
