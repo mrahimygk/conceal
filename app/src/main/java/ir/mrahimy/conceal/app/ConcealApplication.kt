@@ -2,18 +2,23 @@ package ir.mrahimy.conceal.app
 
 import android.app.Activity
 import android.app.Application
+import com.crashlytics.android.Crashlytics
 import com.yariksoffice.lingver.Lingver
+import io.fabric.sdk.android.Fabric
+import ir.mrahimy.conceal.BuildConfig
 import ir.mrahimy.conceal.di.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
+import timber.log.Timber
 
 class ConcealApplication : Application() {
     var currentActivity: Activity? = null
 
     override fun onCreate() {
         super.onCreate()
+        if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
 
         Lingver.init(this, "fa")
 
@@ -25,8 +30,11 @@ class ConcealApplication : Application() {
                 viewModelModule,
                 modelModule,
                 dbModule,
-                repositoryModule
+                repositoryModule,
+                networkModule
             )
         }
+
+        Fabric.with(this, Crashlytics())
     }
 }
