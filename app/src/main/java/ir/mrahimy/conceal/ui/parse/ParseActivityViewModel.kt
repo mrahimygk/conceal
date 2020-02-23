@@ -243,11 +243,18 @@ class ParseActivityViewModel(
         get() = _onDoneInserting
 
     fun insert() = viewModelScope.launch {
+        if (isProcessing.value == true) {
+            _snackMessage.postValue(Event(R.string.please_cancel_first))
+            return@launch
+        }
+
         if (recordingToInsert == null) {
             _snackMessage.postValue(Event(R.string.no_input_set))
             _inputImageSelectionTooltip.postValue(R.string.select_image_tooltip)
             return@launch
-        } else recordingToInsert?.let {
+        }
+
+        recordingToInsert?.let {
             model.addRecording(it)
             _onDoneInserting.postValue(StatelessEvent())
         }
