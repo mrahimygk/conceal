@@ -107,9 +107,17 @@ class MainActivityViewModel(
     private val _waveInfo = _inputWave.map {
         if (it == null) return@map null
         try {
-            WavUtil.fromWaveData(
+            val waver = WavUtil.fromWaveData(
                 Wave.WavFile.openWavFile(it)
             ).apply { maxValue = data.maxValue() }
+
+            viewModelScope.launch {
+                /**
+                 * this is not the parsed wave, this is the actual selected file
+                 */
+                model.putInputWaveData(waver, it, false)
+            }
+            waver
         } catch (e: Wave.WavFileException) {
             e.printStackTrace()
             val errorStringRes = e.code.mapToErrorStringRes()
