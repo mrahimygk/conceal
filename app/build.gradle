@@ -54,6 +54,12 @@ dependencies {
     implementation "com.cleveroad:audiovisualization:$audiovisualizationVersion"
     implementation "com.gauravk.audiovisualizer:audiovisualizer:$audiovisualizerVersion"
 
+    // Network
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
+    implementation "com.squareup.okhttp3:okhttp:$okHttpVersion"
+
     //Test
     testImplementation 'junit:junit:4.12'
     testImplementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
