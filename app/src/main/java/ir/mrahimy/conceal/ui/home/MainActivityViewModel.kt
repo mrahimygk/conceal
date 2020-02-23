@@ -114,6 +114,7 @@ class MainActivityViewModel(
             viewModelScope.launch {
                 /**
                  * this is not the parsed wave, this is the actual selected file
+                 * TODO: get the result -> put again
                  */
                 model.putInputWaveData(waver, it, false)
             }
