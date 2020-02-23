@@ -7,6 +7,6 @@ import org.koin.dsl.module
 
 val modelModule = module {
     factory { SampleModel() }
-    factory { MainActivityModel(get()) }
+    factory { MainActivityModel(get(), get()) }
     factory { ParseActivityModel(get()) }
 }
