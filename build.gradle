@@ -16,10 +16,11 @@ buildscript {
         okHttpVersion = '3.12.0'
         persianDateVersion = '0.7'
         recyclerViewVersion = '1.1.0'
+        retrofitVersion = '2.6.0'
         roomVersion = '2.2.2'
-        testRunnerVersion = '1.1.1'
         simpleTooltipVersion = '0.2.3'
         spinKitVersion = '1.4.0'
+        testRunnerVersion = '1.1.1'
     }
 
     repositories {
