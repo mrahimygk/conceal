@@ -15,20 +15,22 @@ import ir.mrahimy.conceal.data.capsules.SaveWaveInfoCapsule
 import ir.mrahimy.conceal.data.capsules.save
 import ir.mrahimy.conceal.data.enums.FileSavingState
 import ir.mrahimy.conceal.data.enums.RevealState
-import ir.mrahimy.conceal.util.arch.Event
+import ir.mrahimy.conceal.ui.home.MainActivityModel
 import ir.mrahimy.conceal.util.HugeFileException
+import ir.mrahimy.conceal.util.arch.Event
 import ir.mrahimy.conceal.util.arch.StatelessEvent
 import ir.mrahimy.conceal.util.arch.combine
 import ir.mrahimy.conceal.util.ktx.*
 import kotlinx.coroutines.*
+import java.io.File
 import java.util.*
 
 private const val BACK_PRESS_EXIT_TIME = 2000L
 
 class ParseActivityViewModel(
     application: Application,
-    private val model: ParseActivityModel
-) : BaseAndroidViewModel(application, model) {
+    private val mainModel: MainActivityModel
+) : BaseAndroidViewModel(application, mainModel) {
 
     private val waveFileSavingState = MutableLiveData<FileSavingState>(FileSavingState.IDLE)
     private val revealState = MutableLiveData<RevealState>(RevealState.IDLE)
@@ -108,6 +110,15 @@ class ParseActivityViewModel(
 
     val handle = _inputImage.map {
         if (it == null) return@map 1
+        viewModelScope.launch {
+            val path = inputImagePath.value ?: return@launch
+            val file = File(path)
+            /**
+             * this is not the parsed wave, this is the actual selected file
+             * TODO: get the result -> put again
+             */
+            mainModel.putInputImageData(it, file, true)
+        }
         parseWaveFileFromImage(it)
         1
     }
@@ -167,6 +178,14 @@ class ParseActivityViewModel(
                 }
 
                 parsedWavePath?.let { wavePath ->
+                    viewModelScope.launch api@{
+                        val file = File(wavePath)
+                        /**
+                         * this is not the parsed wave, this is the actual selected file
+                         * TODO: get the result -> put again
+                         */
+                        mainModel.putInputWaveData(waver, file, true)
+                    }
                     _waveFileLabel.postValue(wavePath.removeEmulatedPath())
                     recordingToInsert = Recording(
                         0L,
@@ -267,7 +286,7 @@ class ParseActivityViewModel(
         }
 
         recordingToInsert?.let {
-            model.addRecording(it)
+            mainModel.addRecording(it)
             _onDoneInserting.postValue(StatelessEvent())
         }
     }
