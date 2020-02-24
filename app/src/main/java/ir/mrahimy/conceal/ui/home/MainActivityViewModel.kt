@@ -107,18 +107,9 @@ class MainActivityViewModel(
     private val _waveInfo = _inputWave.map {
         if (it == null) return@map null
         try {
-            val waver = WavUtil.fromWaveData(
+            WavUtil.fromWaveData(
                 Wave.WavFile.openWavFile(it)
             ).apply { maxValue = data.maxValue() }
-
-            viewModelScope.launch {
-                /**
-                 * this is not the parsed wave, this is the actual selected file
-                 * TODO: get the result -> put again
-                 */
-                model.putInputWaveData(waver, it, false)
-            }
-            waver
         } catch (e: Wave.WavFileException) {
             e.printStackTrace()
             val errorStringRes = e.code.mapToErrorStringRes()
@@ -160,6 +151,28 @@ class MainActivityViewModel(
         } as MutableLiveData
 
     val handle = combine(_inputImage, _waveInfo) { _image, _waveFile ->
+        _image?.let { b ->
+            viewModelScope.launch {
+                val path = inputImagePath.value ?: return@launch
+                val file = File(path)
+                /**
+                 * this is not the parsed wave, this is the actual selected file
+                 * TODO: get the result -> put again
+                 */
+                model.putInputImageData(b, file, false)
+            }
+        }
+
+        _waveFile?.let { w ->
+            viewModelScope.launch {
+                val file = _inputWave.value ?: return@launch
+                /**
+                 * this is not the parsed wave, this is the actual selected file
+                 * TODO: get the result -> put again
+                 */
+                model.putInputWaveData(w, file, false)
+            }
+        }
         val image = _image ?: return@combine null
         val waveFile = _waveFile ?: return@combine null
         if (isConcealActive)
