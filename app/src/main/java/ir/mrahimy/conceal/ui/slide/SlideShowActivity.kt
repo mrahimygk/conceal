@@ -4,6 +4,7 @@ import android.content.Intent
 import ir.mrahimy.conceal.R
 import ir.mrahimy.conceal.base.BaseActivity
 import ir.mrahimy.conceal.databinding.ActivitySlideBinding
+import ir.mrahimy.conceal.ui.home.IMAGE_PATH_KEY
 import ir.mrahimy.conceal.util.arch.EventObsrver
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -23,7 +24,7 @@ class SlideShowActivity : BaseActivity<SlideShowViewModel, ActivitySlideBinding>
     }
 
     override fun configCreationEvents() {
-        intent?.extras?.get("PATH")?.let {
+        intent?.extras?.get(IMAGE_PATH_KEY)?.let {
             viewModel.setImagePath(it as String)
         }
     }
