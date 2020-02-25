@@ -18,6 +18,7 @@ import ir.mrahimy.conceal.data.Recording
 import ir.mrahimy.conceal.databinding.ActivityMainBinding
 import ir.mrahimy.conceal.data.enums.ChooserType
 import ir.mrahimy.conceal.ui.parse.ParseActivity
+import ir.mrahimy.conceal.ui.slide.SlideShowActivity
 import ir.mrahimy.conceal.util.arch.EventObsrver
 import ir.mrahimy.conceal.util.putAllSignedIntegers
 import kotlinx.android.synthetic.main.activity_main.*
@@ -28,6 +29,7 @@ import permissions.dispatcher.RuntimePermissions
 
 const val PICK_IMAGE = 1000
 const val PICK_AUDIO = 2000
+const val IMAGE_PATH_KEY = "path"
 
 @RuntimePermissions
 class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() {
@@ -90,6 +92,12 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>() 
 
         viewModel.onNavigateToReveal.observe(this, EventObsrver {
             startActivity(Intent(this, ParseActivity::class.java))
+        })
+
+        viewModel.onStartResultActivity.observe(this, EventObsrver {
+            startActivity(Intent(this, SlideShowActivity::class.java).apply {
+                putExtra(IMAGE_PATH_KEY, it)
+            })
         })
     }
 
