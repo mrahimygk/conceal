@@ -58,4 +58,6 @@
     <string name="no_input_set">عملیات بازیابی صدا انجام نشده است</string>
     <string name="please_insert_first">یک پردازش انجام شده اما ذخیره نشده‌است. برای حذف دوباره دکمه بازگشت را بزنید.</string>
     <string name="network_error">network error</string>
+    <string name="share">به‌اشتراک‌گذاری</string>
+    <string name="send_to">ارسال به</string>
 </resources>
