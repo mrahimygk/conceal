@@ -14,13 +14,16 @@ import ir.mrahimy.conceal.base.BaseAndroidViewModel
 import ir.mrahimy.conceal.data.*
 import ir.mrahimy.conceal.data.capsules.*
 import ir.mrahimy.conceal.data.enums.FileSavingState
-import ir.mrahimy.conceal.util.*
+import ir.mrahimy.conceal.util.HugeFileException
 import ir.mrahimy.conceal.util.arch.Event
 import ir.mrahimy.conceal.util.arch.StatelessEvent
 import ir.mrahimy.conceal.util.arch.combine
 import ir.mrahimy.conceal.util.ktx.*
 import ir.mrahimy.conceal.util.lowlevel.WavUtil
 import ir.mrahimy.conceal.util.lowlevel.Wave
+import ir.mrahimy.conceal.util.mapToErrorStringRes
+import ir.mrahimy.conceal.util.putWaverHeaderInfo
+import ir.mrahimy.conceal.util.remove3Lsb
 import kotlinx.coroutines.*
 import java.io.File
 import java.util.*
@@ -207,6 +210,8 @@ class MainActivityViewModel(
         outputBitmapFromRecording ?: concealPercentage?.data
     }
 
+    private val _outputBitmapPath = MutableLiveData<String>()
+
     val isPercentageVisible =
         combine(
             isOutputHintVisible,
@@ -379,6 +384,8 @@ class MainActivityViewModel(
                             bitmapInfo.save(it)
                         }
 
+                        _outputBitmapPath.postValue(outputImagePath)
+
                         val waver = withContext(saveFileJob + Dispatchers.IO) {
                             outputBitmap.parseWaver()
                         }
@@ -413,11 +420,13 @@ class MainActivityViewModel(
         }
     }
 
-    fun showSlide(position: Int) {
-        val input = _inputImage.value ?: return
-//        val output = outputBitmap.value ?: return
-//        val bitmapArray = arrayOf(input, output)
-        //TODO: navigate to slide show activity with bitmapArray & index position
+    private val _onStartResultActivity = MutableLiveData<Event<String>>()
+    val onStartResultActivity: LiveData<Event<String>>
+        get() = _onStartResultActivity
+
+    fun showSlide() {
+        val outputPath = _outputBitmapPath.value ?: return
+        _onStartResultActivity.postValue(Event(outputPath))
     }
 
     private val _onChooseImage = MutableLiveData<StatelessEvent>()
