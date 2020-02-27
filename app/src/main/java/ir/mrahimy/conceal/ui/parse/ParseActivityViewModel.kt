@@ -155,21 +155,27 @@ class ParseActivityViewModel(
             revealState.postValue(RevealState.REVEALING)
             delay(10)
             val waver = withContext(revealJob + Dispatchers.IO) {
-                val waver = image.parseWaver()
-                waver
+                try {
+                    image.parseWaver()
+                } catch (e: NumberFormatException) {
+                    cancelRevealJob()
+                    _snackMessage.postValue(Event(R.string.error_in_parsing_image))
+                    return@withContext null
+                }
             }
-            revealState.postValue(RevealState.DONE)
 
+            revealState.postValue(RevealState.DONE)
             saveFileJob = Job()
             waveFileSavingState.postValue(FileSavingState.SAVING)
             getApplication().applicationContext.externalCacheDir?.absolutePath?.let {
-
                 val carrierImagePath = inputImagePath.value ?: return@launch
                 val imageName = carrierImagePath.getNameFromPath()
-                val wavInfo = SaveWaveInfoCapsule("${imageName}_parsed", Date(), waver)
+                val wavInfo = waver?.let {
+                    SaveWaveInfoCapsule("${imageName}_parsed", Date(), waver)
+                }
                 val parsedWavePath = withContext(saveFileJob + Dispatchers.IO) {
                     try {
-                        wavInfo.save(it)
+                        wavInfo?.save(it)
                     } catch (e: ArrayIndexOutOfBoundsException) {
                         e.printStackTrace()
                         tellDataExceeds(e)
@@ -184,7 +190,9 @@ class ParseActivityViewModel(
                          * this is not the parsed wave, this is the actual selected file
                          * TODO: get the result -> put again
                          */
-                        mainModel.putInputWaveData(waver, file, true)
+                        waver?.let {
+                            mainModel.putInputWaveData(waver, file, true)
+                        }
                     }
                     _waveFileLabel.postValue(wavePath.removeEmulatedPath())
                     recordingToInsert = Recording(
