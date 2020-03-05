@@ -320,12 +320,7 @@ class MainActivityViewModel(
     fun startRecording() {
         _recordTooltip.postValue(null)
 
-        _concealPercentage.value?.apply {
-            if (!done && percent > 0f) {
-                _snackMessage.postValue(Event(R.string.please_cancel_first))
-                return
-            }
-        }
+        checkForProgress() ?: return
 
         _mediaState.value?.let {
             if (it == MediaState.PLAY) {
@@ -423,12 +418,7 @@ class MainActivityViewModel(
         get() = _onStartResultActivity
 
     fun showSlide() {
-        _concealPercentage.value?.apply {
-            if (!done && percent > 0f) {
-                _snackMessage.postValue(Event(R.string.please_cancel_first))
-                return
-            }
-        }
+        checkForProgress() ?: return
         val outputPath = _outputBitmapPath.value ?: return
         _onStartResultActivity.postValue(Event(outputPath))
     }
@@ -438,13 +428,18 @@ class MainActivityViewModel(
         get() = _onChooseImage
 
     fun chooseImage() {
+        checkForProgress() ?: return
+        _onChooseImage.postValue(StatelessEvent())
+    }
+
+    private fun checkForProgress(): Boolean? {
         _concealPercentage.value?.apply {
             if (!done && percent > 0f) {
                 _snackMessage.postValue(Event(R.string.please_cancel_first))
-                return
+                return null
             }
         }
-        _onChooseImage.postValue(StatelessEvent())
+        return false
     }
 
     private val _onChooseAudio = MutableLiveData<StatelessEvent>()
@@ -452,12 +447,7 @@ class MainActivityViewModel(
         get() = _onChooseAudio
 
     fun chooseAudio() {
-        _concealPercentage.value?.apply {
-            if (!done && percent > 0f) {
-                _snackMessage.postValue(Event(R.string.please_cancel_first))
-                return
-            }
-        }
+        checkForProgress()?:return
         _onChooseAudio.postValue(StatelessEvent())
     }
 
