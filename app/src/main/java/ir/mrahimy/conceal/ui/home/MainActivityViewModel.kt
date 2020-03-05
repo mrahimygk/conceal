@@ -3,7 +3,6 @@ package ir.mrahimy.conceal.ui.home
 import android.app.Application
 import android.content.Intent
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
@@ -424,6 +423,12 @@ class MainActivityViewModel(
         get() = _onStartResultActivity
 
     fun showSlide() {
+        _concealPercentage.value?.apply {
+            if (!done && percent > 0f) {
+                _snackMessage.postValue(Event(R.string.please_cancel_first))
+                return
+            }
+        }
         val outputPath = _outputBitmapPath.value ?: return
         _onStartResultActivity.postValue(Event(outputPath))
     }
