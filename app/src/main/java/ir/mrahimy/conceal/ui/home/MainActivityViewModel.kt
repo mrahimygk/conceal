@@ -356,7 +356,6 @@ class MainActivityViewModel(
         waveRecorder = WaveRecorder(filePath)
         waveRecorder.startRecording()
         waveRecorder.onAmplitudeListener = {
-            Log.d("onAmplitudeListener", it.toString())
             if (it != 0) _onAddingMaxAmplitude.postValue(Event(it))
         }
         _isRecording.postValue(true)
