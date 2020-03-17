@@ -20,7 +20,7 @@ class ConcealApplication : Application() {
         super.onCreate()
         if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
 
-        Lingver.init(this, "en")
+        Lingver.init(this, "fa")
 
         startKoin {
             androidContext(this@ConcealApplication)
