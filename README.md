@@ -10,9 +10,7 @@ Some social media applications like Telegram and Instagram change the content of
 When no solution is available, you can upload your image to an image hosting website for sharing. Sending them as email attachment is known to keep the original data. Removing any meta-data from the image does not break the concealing process.
 
 ## Screenshots
-![start](http://conceal.ir/shots/01.png "start")
-![chosen input image](http://conceal.ir/shots/02.png "chosen input image")
-![recording list](http://conceal.ir/shots/03.png "recording list")
-![progress](http://conceal.ir/shots/04.png "progress")
-![progress near finished](http://conceal.ir/shots/05.png "progress near finished")
-![reveal](http://conceal.ir/shots/06.png "reveal page")
+l             |  l          |  l
+:-------------------------:|:-------------------------:|:-------------------------:
+![start](http://conceal.ir/shots/01.png "start") | ![chosen input image](http://conceal.ir/shots/02.png "chosen input image") |![recording list](http://conceal.ir/shots/03.png "recording list")
+![progress](http://conceal.ir/shots/04.png "progress") | ![progress near finished](http://conceal.ir/shots/05.png "progress near finished") | ![reveal](http://conceal.ir/shots/06.png "reveal page")
