@@ -61,4 +61,5 @@
     <string name="share">share</string>
     <string name="send_to">send to</string>
     <string name="error_in_parsing_image">error in parsing image</string>
+    <string name="sharing_hint">Please note: Some social media applications like Telegram and Instagram change the content of images and re-compress them before sending. Sharing the resulting image to those applications would probably remove audio data that is concealed inside the image. We suggest sending the resulting image on Telegram as un-compressed file instead of photo.\n\nWhen no solution is available, you can upload your image to an image hosting website for sharing. Sending them as email attachment is known to keep the original data. Removing any meta-data from the image does not break the concealing process.</string>
 </resources>
