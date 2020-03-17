@@ -2,9 +2,7 @@ package ir.mrahimy.conceal.app
 
 import android.app.Activity
 import android.app.Application
-import com.crashlytics.android.Crashlytics
 import com.yariksoffice.lingver.Lingver
-import io.fabric.sdk.android.Fabric
 import ir.mrahimy.conceal.BuildConfig
 import ir.mrahimy.conceal.di.*
 import org.koin.android.ext.koin.androidContext
@@ -35,7 +33,5 @@ class ConcealApplication : Application() {
                 apiModule
             )
         }
-
-        Fabric.with(this, Crashlytics())
     }
 }

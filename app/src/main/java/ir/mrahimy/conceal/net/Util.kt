@@ -1,6 +1,5 @@
 package ir.mrahimy.conceal.net
 
-import com.crashlytics.android.Crashlytics
 import ir.mrahimy.conceal.R
 import ir.mrahimy.conceal.net.error.ApiException
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +18,6 @@ suspend fun <T : Any> safeApiCall(
                 call()
             }
         } catch (e: Exception) {
-            Crashlytics.logException(e)
             val jsonError = R.string.network_error
             val errorCode = if (e is ApiException) e.statusCode else -1
             ApiResult.Error(jsonError, errorCode)
