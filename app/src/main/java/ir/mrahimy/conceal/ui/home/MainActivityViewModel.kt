@@ -201,12 +201,14 @@ class MainActivityViewModel(
         }
 
     private val outputBitmapFromRecording = MutableLiveData<Bitmap>()
+    private val outputImagePathFromRecording = MutableLiveData<String>()
 
     val outputBitmap = combine(
         _concealPercentage,
         outputBitmapFromRecording
     ) { concealPercentage, outputBitmapFromRecording ->
-        outputBitmapFromRecording ?: concealPercentage?.data
+        if (isConcealActive) concealPercentage?.data
+        else outputBitmapFromRecording ?: concealPercentage?.data
     }
 
     private val _outputBitmapPath = MutableLiveData<String>()
@@ -419,7 +421,7 @@ class MainActivityViewModel(
 
     fun showSlide() {
         checkForProgress() ?: return
-        val outputPath = _outputBitmapPath.value ?: return
+        val outputPath = _outputBitmapPath.value ?: outputImagePathFromRecording.value ?: return
         _onStartResultActivity.postValue(Event(outputPath))
     }
 
@@ -523,6 +525,7 @@ class MainActivityViewModel(
     fun setRecording(recording: Recording) {
         activateConceal(false)
         outputBitmapFromRecording.postValue(recording.outputImagePath.loadBitmap())
+        outputImagePathFromRecording.postValue(recording.outputImagePath)
         recording.inputImagePath?.let { selectImageFile(it) }
         selectAudioFile(recording.parsedWavePath)
     }
