@@ -308,7 +308,7 @@
 
         <TextView
             android:id="@+id/cancel"
-            android:layout_width="42dp"
+            android:layout_width="wrap_content"
             android:layout_height="24dp"
             android:gravity="center"
             android:onClick="@{()->vm.cancelConcealJob()}"
