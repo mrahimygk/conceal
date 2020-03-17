@@ -1,11 +1,13 @@
 package ir.mrahimy.conceal.ui.slide
 
 import android.content.Intent
+import android.text.method.ScrollingMovementMethod
 import ir.mrahimy.conceal.R
 import ir.mrahimy.conceal.base.BaseActivity
 import ir.mrahimy.conceal.databinding.ActivitySlideBinding
 import ir.mrahimy.conceal.ui.home.IMAGE_PATH_KEY
 import ir.mrahimy.conceal.util.arch.EventObsrver
+import kotlinx.android.synthetic.main.activity_slide.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SlideShowActivity : BaseActivity<SlideShowViewModel, ActivitySlideBinding>() {
@@ -27,6 +29,8 @@ class SlideShowActivity : BaseActivity<SlideShowViewModel, ActivitySlideBinding>
         intent?.extras?.get(IMAGE_PATH_KEY)?.let {
             viewModel.setImagePath(it as String)
         }
+
+        sharing_hint?.movementMethod = ScrollingMovementMethod()
     }
 
     override fun configResumeEvents() {
