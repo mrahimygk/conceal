@@ -81,17 +81,17 @@
         <ImageView
             android:id="@+id/input_img"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_margin="12dp"
             android:contentDescription="@string/cd_input_image"
             android:padding="1dp"
+            android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             app:bitmap="@{vm.inputImage}"
-            app:layout_constraintDimensionRatio="w,1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/txt_input_image_title"
-            tools:src="@mipmap/ic_launcher"
+            android:src="@drawable/empty"
             tools:visibility="invisible" />
 
         <ProgressBar
@@ -151,7 +151,7 @@
 
         <TextView
             android:id="@+id/cancel"
-            android:layout_width="42dp"
+            android:layout_width="wrap_content"
             android:layout_height="24dp"
             android:gravity="center"
             android:onClick="@{()->vm.cancelRevealJob()}"
