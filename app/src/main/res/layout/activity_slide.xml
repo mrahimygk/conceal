@@ -42,7 +42,6 @@
             android:gravity="center_vertical"
             android:onClick="@{()->vm.share()}"
             android:text="@string/share"
-            android:textColor="@color/text_color"
             app:layout_constraintBottom_toBottomOf="@id/share"
             app:layout_constraintEnd_toStartOf="@id/share"
             app:layout_constraintStart_toStartOf="parent"
@@ -69,7 +68,6 @@
             android:layout_margin="16dp"
             android:scrollbars="vertical"
             android:text="Please note: Some social media applications like Telegram and Instagram change the content of images and re-compress them before sending. Sharing the resulting image to those applications would probably remove audio data that is concealed inside the image. We suggest sending the resulting image on Telegram as un-compressed file instead of photo.\n\nWhen no solution is available, you can upload your image to an image hosting website for sharing. Sending them as email attachment is known to keep the original data. Removing any meta-data from the image does not break the concealing process."
-            android:textColor="@color/text_color"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/share" />
     </androidx.constraintlayout.widget.ConstraintLayout>

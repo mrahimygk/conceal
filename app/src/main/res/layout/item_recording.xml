@@ -32,7 +32,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="@{item.id+``}"
-                android:textColor="@color/text_color"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="#1" />
@@ -45,7 +44,6 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="@{item.shownImagePath}"
-                android:textColor="@color/text_color"
                 app:layout_constraintLeft_toRightOf="@id/index"
                 app:layout_constraintRight_toLeftOf="@id/play"
                 app:layout_constraintTop_toTopOf="parent"
@@ -98,7 +96,6 @@
             android:gravity="center"
             android:layoutDirection="ltr"
             android:text="@{item.persianDate}"
-            android:textColor="@color/text_color"
             android:textDirection="ltr"
             android:textSize="10sp"
             app:layout_constraintRight_toRightOf="parent"
