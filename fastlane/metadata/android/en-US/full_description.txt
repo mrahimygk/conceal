@@ -1,0 +1,1 @@
+Useful for hiding wave audio data inside the least significant bits of an image. The resulting image can be shared in social media and the received images can be parsed by this app.

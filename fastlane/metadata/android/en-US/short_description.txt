@@ -1,0 +1,1 @@
+Concealing WAVE audio files inside images
