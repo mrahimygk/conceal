@@ -10,7 +10,7 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
     viewModel { SampleViewModel(get()) }
-    viewModel { MainActivityViewModel(androidApplication(), get()) }
-    viewModel { ParseActivityViewModel(androidApplication(), get()) }
-    viewModel { SlideShowViewModel(androidApplication(), get()) }
+    viewModel { MainActivityViewModel(androidApplication(), get(), get()) }
+    viewModel { ParseActivityViewModel(androidApplication(), get(), get()) }
+    viewModel { SlideShowViewModel(androidApplication()) }
 }

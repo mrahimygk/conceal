@@ -5,10 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import ir.mrahimy.conceal.base.BaseViewModel
 import ir.mrahimy.conceal.data.Sample
+import ir.mrahimy.conceal.repository.SampleRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class SampleViewModel(private val model: SampleModel) : BaseViewModel(model) {
+class SampleViewModel(private val sampleRepository: SampleRepository) : BaseViewModel() {
 
     val sampleList = MutableLiveData<List<Sample>>()
 
@@ -20,7 +21,7 @@ class SampleViewModel(private val model: SampleModel) : BaseViewModel(model) {
         viewModelScope.launch {
             _isLoading.postValue(true)
             delay(100)
-            sampleList.postValue(model.getSampleInitList())
+            sampleList.postValue(sampleRepository.getSampleInitList())
             _isLoading.postValue(false)
         }
     }
@@ -29,7 +30,7 @@ class SampleViewModel(private val model: SampleModel) : BaseViewModel(model) {
         _isLoading.postValue(true)
         delay(50)
         val samples = sampleList.value?.toMutableList() ?: mutableListOf()
-        sampleList.postValue(samples.apply { add(model.getRandomSample(samples.size)) })
+        sampleList.postValue(samples.apply { add(sampleRepository.getRandomSample(samples.size)) })
         _isLoading.postValue(false)
     }
 

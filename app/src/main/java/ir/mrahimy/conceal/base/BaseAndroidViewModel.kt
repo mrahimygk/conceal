@@ -9,13 +9,9 @@ import ir.mrahimy.conceal.app.ConcealApplication
 import ir.mrahimy.conceal.util.ktx.getColorCompat
 import ir.mrahimy.conceal.util.ktx.getColorCompatFromAttr
 
-abstract class BaseAndroidViewModel(
-    private val application: Application,
-    private val model: BaseModel
-) : BaseViewModel(model) {
+abstract class BaseAndroidViewModel(private val application: Application) : BaseViewModel() {
 
     protected fun getApplication() = application as ConcealApplication
-
 
     protected fun getString(@StringRes resId: Int, vararg formatArgs: Any?): String {
         return getApplication().resources.getString(resId, *formatArgs)

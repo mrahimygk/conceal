@@ -10,27 +10,53 @@ import androidx.lifecycle.viewModelScope
 import com.github.squti.androidwaverecorder.WaveRecorder
 import ir.mrahimy.conceal.R
 import ir.mrahimy.conceal.base.BaseAndroidViewModel
-import ir.mrahimy.conceal.data.*
-import ir.mrahimy.conceal.data.capsules.*
+import ir.mrahimy.conceal.data.LocalResult
+import ir.mrahimy.conceal.data.MediaState
+import ir.mrahimy.conceal.data.Recording
+import ir.mrahimy.conceal.data.Waver
+import ir.mrahimy.conceal.data.capsules.ConcealInputData
+import ir.mrahimy.conceal.data.capsules.ConcealPercentage
+import ir.mrahimy.conceal.data.capsules.SaveBitmapInfoCapsule
+import ir.mrahimy.conceal.data.capsules.SaveWaveInfoCapsule
+import ir.mrahimy.conceal.data.capsules.empty
+import ir.mrahimy.conceal.data.capsules.save
 import ir.mrahimy.conceal.data.enums.FileSavingState
+import ir.mrahimy.conceal.data.fill
+import ir.mrahimy.conceal.data.mapToRgbValue
+import ir.mrahimy.conceal.data.mapToUniformDouble
+import ir.mrahimy.conceal.data.maxValue
+import ir.mrahimy.conceal.net.req.makeAudioInfoMap
+import ir.mrahimy.conceal.net.req.makeImageInfoMap
+import ir.mrahimy.conceal.repository.InfoRepository
+import ir.mrahimy.conceal.repository.RecordingRepository
 import ir.mrahimy.conceal.util.HugeFileException
 import ir.mrahimy.conceal.util.arch.Event
 import ir.mrahimy.conceal.util.arch.StatelessEvent
 import ir.mrahimy.conceal.util.arch.combine
-import ir.mrahimy.conceal.util.ktx.*
+import ir.mrahimy.conceal.util.ktx.getNameFromPath
+import ir.mrahimy.conceal.util.ktx.getPathJava
+import ir.mrahimy.conceal.util.ktx.getRgbArray
+import ir.mrahimy.conceal.util.ktx.loadBitmap
+import ir.mrahimy.conceal.util.ktx.parseWaver
+import ir.mrahimy.conceal.util.ktx.removeEmulatedPath
 import ir.mrahimy.conceal.util.lowlevel.WavUtil
 import ir.mrahimy.conceal.util.lowlevel.Wave
 import ir.mrahimy.conceal.util.mapToErrorStringRes
 import ir.mrahimy.conceal.util.putWaverHeaderInfo
 import ir.mrahimy.conceal.util.remove3Lsb
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
-import java.util.*
+import java.util.Date
 
 class MainActivityViewModel(
     application: Application,
-    private val model: MainActivityModel
-) : BaseAndroidViewModel(application, model) {
+    private val recordingRepository: RecordingRepository,
+    private val infoRepository: InfoRepository
+) : BaseAndroidViewModel(application) {
 
     private var isConcealActive = true
 
@@ -53,7 +79,7 @@ class MainActivityViewModel(
 
     private val waveFileSavingState = MutableLiveData<FileSavingState>(FileSavingState.IDLE)
 
-    val recordings = model.getAllRecordings().map { list -> list.map { it.fill() } }
+    val recordings = recordingRepository.getAllRecordings().map { list -> list.map { it.fill() } }
     val isRecordingListEmpty = recordings.map { it.isNullOrEmpty() }
 
     private val _onStartRecording = MutableLiveData<StatelessEvent>()
@@ -161,7 +187,7 @@ class MainActivityViewModel(
                  * this is not the parsed wave, this is the actual selected file
                  * TODO: get the result -> put again
                  */
-                model.putInputImageData(b, file, false)
+                infoRepository.putImageInfo(b.makeImageInfoMap(false, file))
             }
         }
 
@@ -172,7 +198,7 @@ class MainActivityViewModel(
                  * this is not the parsed wave, this is the actual selected file
                  * TODO: get the result -> put again
                  */
-                model.putInputWaveData(w, file, false)
+                infoRepository.putAudioInfo(w.makeAudioInfoMap(false, file))
             }
         }
         val image = _image ?: return@combine null
@@ -397,7 +423,7 @@ class MainActivityViewModel(
                         }
 
                         viewModelScope.launch {
-                            model.addRecording(
+                            recordingRepository.addRecording(
                                 Recording(
                                     0L,
                                     inputImagePath,
@@ -449,7 +475,7 @@ class MainActivityViewModel(
         get() = _onChooseAudio
 
     fun chooseAudio() {
-        checkForProgress()?:return
+        checkForProgress() ?: return
         _onChooseAudio.postValue(StatelessEvent())
     }
 
@@ -507,7 +533,7 @@ class MainActivityViewModel(
     }
 
     fun delete(rec: Recording) = viewModelScope.launch {
-        model.deleteRecording(rec)
+        recordingRepository.deleteRecording(rec)
     }
 
     private val _mediaState = MutableLiveData<MediaState>(MediaState.STOP)
