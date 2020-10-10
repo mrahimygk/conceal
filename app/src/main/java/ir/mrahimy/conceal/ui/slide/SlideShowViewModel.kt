@@ -11,9 +11,7 @@ import ir.mrahimy.conceal.util.arch.Event
 import ir.mrahimy.conceal.util.ktx.loadBitmap
 import java.io.File
 
-
-class SlideShowViewModel(application: Application, private val model: SlideShowModel) :
-    BaseAndroidViewModel(application, model) {
+class SlideShowViewModel(application: Application) : BaseAndroidViewModel(application) {
 
     private val _imagePath = MutableLiveData<String>()
 
@@ -38,5 +36,4 @@ class SlideShowViewModel(application: Application, private val model: SlideShowM
         ) ?: return
         _onShare.postValue(Event(content))
     }
-
 }

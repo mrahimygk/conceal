@@ -15,22 +15,34 @@ import ir.mrahimy.conceal.data.capsules.SaveWaveInfoCapsule
 import ir.mrahimy.conceal.data.capsules.save
 import ir.mrahimy.conceal.data.enums.FileSavingState
 import ir.mrahimy.conceal.data.enums.RevealState
-import ir.mrahimy.conceal.ui.home.MainActivityModel
+import ir.mrahimy.conceal.net.req.makeAudioInfoMap
+import ir.mrahimy.conceal.net.req.makeImageInfoMap
+import ir.mrahimy.conceal.repository.InfoRepository
+import ir.mrahimy.conceal.repository.RecordingRepository
 import ir.mrahimy.conceal.util.HugeFileException
 import ir.mrahimy.conceal.util.arch.Event
 import ir.mrahimy.conceal.util.arch.StatelessEvent
 import ir.mrahimy.conceal.util.arch.combine
-import ir.mrahimy.conceal.util.ktx.*
-import kotlinx.coroutines.*
+import ir.mrahimy.conceal.util.ktx.getNameFromPath
+import ir.mrahimy.conceal.util.ktx.getPathJava
+import ir.mrahimy.conceal.util.ktx.loadBitmap
+import ir.mrahimy.conceal.util.ktx.parseWaver
+import ir.mrahimy.conceal.util.ktx.removeEmulatedPath
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
-import java.util.*
+import java.util.Date
 
 private const val BACK_PRESS_EXIT_TIME = 2000L
 
 class ParseActivityViewModel(
     application: Application,
-    private val mainModel: MainActivityModel
-) : BaseAndroidViewModel(application, mainModel) {
+    private val recordingRepository: RecordingRepository,
+    private val infoRepository: InfoRepository
+) : BaseAndroidViewModel(application) {
 
     private val waveFileSavingState = MutableLiveData<FileSavingState>(FileSavingState.IDLE)
     private val revealState = MutableLiveData<RevealState>(RevealState.IDLE)
@@ -117,7 +129,7 @@ class ParseActivityViewModel(
              * this is not the parsed wave, this is the actual selected file
              * TODO: get the result -> put again
              */
-            mainModel.putInputImageData(it, file, true)
+            infoRepository.putImageInfo(it.makeImageInfoMap(true, file))
         }
         parseWaveFileFromImage(it)
         1
@@ -191,7 +203,7 @@ class ParseActivityViewModel(
                          * TODO: get the result -> put again
                          */
                         waver?.let {
-                            mainModel.putInputWaveData(waver, file, true)
+                            infoRepository.putAudioInfo(waver.makeAudioInfoMap(true, file))
                         }
                     }
                     _waveFileLabel.postValue(wavePath.removeEmulatedPath())
@@ -294,7 +306,7 @@ class ParseActivityViewModel(
         }
 
         recordingToInsert?.let {
-            mainModel.addRecording(it)
+            recordingRepository.addRecording(it)
             _onDoneInserting.postValue(StatelessEvent())
         }
     }

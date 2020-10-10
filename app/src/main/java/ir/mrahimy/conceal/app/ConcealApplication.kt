@@ -26,7 +26,6 @@ class ConcealApplication : Application() {
             modules(
                 adapterModule,
                 viewModelModule,
-                modelModule,
                 dbModule,
                 repositoryModule,
                 networkModule,
