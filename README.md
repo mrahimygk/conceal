@@ -15,3 +15,6 @@ l             |  l          |  l
 :-------------------------:|:-------------------------:|:-------------------------:
 ![start](http://conceal.ir/shots/01.png "start") | ![chosen input image](http://conceal.ir/shots/02.png "chosen input image") |![recording list](http://conceal.ir/shots/03.png "recording list")
 ![progress](http://conceal.ir/shots/04.png "progress") | ![progress near finished](http://conceal.ir/shots/05.png "progress near finished") | ![reveal](http://conceal.ir/shots/06.png "reveal page")
+
+## Release
+Available in fdroid: https://f-droid.org/en/packages/ir.mrahimy.conceal/
