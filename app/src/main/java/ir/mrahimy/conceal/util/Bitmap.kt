@@ -1,5 +1,6 @@
 package ir.mrahimy.conceal.util
 
+/*
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 
@@ -17,3 +18,4 @@ fun rescaleImage(path: String, width: Int, height: Int): Bitmap {
     outOptions.inSampleSize = scale
     return BitmapFactory.decodeFile(path, outOptions)
 }
+*/

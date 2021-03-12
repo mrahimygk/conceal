@@ -112,14 +112,6 @@ class ParseActivityViewModel(
      *      none or invalid other essential info at first
      */
     private val _inputError = MutableLiveData<String>(getString(R.string.empty))
-    val outputHintTextColor = _inputError.map {
-        /**
-         * could not find the best color for error
-         */
-        if (it.isNullOrBlank()) getColor(R.color.text_color)
-        else getColor(R.color.text_color)
-    }
-
     val handle = _inputImage.map {
         if (it == null) return@map 1
         viewModelScope.launch {

@@ -35,11 +35,11 @@ class CameraCorner(context: Context, attrs: AttributeSet) : View(context, attrs)
         val typedArray =
             context.obtainStyledAttributes(attrs, R.styleable.CameraCorner, 0, 0)
 
-        typedArray?.apply {
+        typedArray.apply {
             mLineColor = getColor(R.styleable.CameraCorner_lineColor, mLineColor)
         }
         linesPaint.color = mLineColor
-        typedArray?.recycle()
+        typedArray.recycle()
     }
 
     override fun draw(canvas: Canvas?) {

@@ -212,12 +212,10 @@ fun List<Rgb>.putAllSignedIntegers(
     var res = try {
         putAllSignedIntegersInLoop(
             array,
-            image,
             startingPosition,
             0,
             Layer.R,
             this,
-            data,
             resBitmap
         )
     } catch (e: IndexOutOfBoundsException) {
@@ -229,12 +227,10 @@ fun List<Rgb>.putAllSignedIntegers(
         res = try {
             putAllSignedIntegersInLoop(
                 array,
-                image,
                 0,
                 res.lastIndexOfIntArray,
                 Layer.G,
                 this,
-                data,
                 resBitmap
             )
         } catch (e: IndexOutOfBoundsException) {
@@ -246,12 +242,10 @@ fun List<Rgb>.putAllSignedIntegers(
         res = try {
             putAllSignedIntegersInLoop(
                 array,
-                image,
                 0,
                 res.lastIndexOfIntArray,
                 Layer.B,
                 this,
-                data,
                 resBitmap
             )
         } catch (e: IndexOutOfBoundsException) {
@@ -274,20 +268,17 @@ fun List<Rgb>.putAllSignedIntegers(
 /**
  * @param startingPosition maybe the position of the last inserted index for or previous insertion
  * @param array the integer array to be put inside 3lsb of this list
- * @param image holds the reference of boundaries of our image: we cannot exceed them
  * @param layer
  * @returns the position of last injected bit. used to start inserting another audio data
  * (starting with that position itself)
  */
 private suspend fun List<Rgb>.putAllSignedIntegersInLoop(
     array: IntArray,
-    image: Bitmap,
     startingPosition: Int,
     lastCheckedIndex: Int,
     layer: Layer,
     liveData: LiveDataScope<LocalResult<ConcealPercentage>>,
-    data: ConcealPercentage,
-    resBitmap: Bitmap
+      resBitmap: Bitmap
 ): LoopHelper {
     var lastIndexOfWaveDataChecked = lastCheckedIndex
     var position = startingPosition
@@ -412,7 +403,7 @@ private suspend fun List<Rgb>.putAllSignedIntegersInLoop(
 
     return LoopHelper(lastIndexOfWaveDataChecked, position, false)
 }
-
+/*
 private fun List<Rgb>.zeroLayerMutable(rgbLayer: Layer): List<Rgb> {
     return when (rgbLayer) {
         Layer.R -> this.map { it.copy(r = 0) }.toMutableList()
@@ -444,6 +435,7 @@ private fun List<Rgb>.sortByLayerValue(layer: Layer?): List<Rgb> {
         Layer.B -> this.map { it }.sortedBy { it.b }
     }.toMutableList()
 }
+*/
 
 private fun IntArray.findPercent(
     lastIndexOfWaveDataChecked: Int

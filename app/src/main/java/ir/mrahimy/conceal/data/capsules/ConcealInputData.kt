@@ -10,4 +10,19 @@ data class ConcealInputData(
     val audioDataAsRgbList: IntArray,
     val refImage: Bitmap,
     val job: Job
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ConcealInputData
+
+        if (!audioDataAsRgbList.contentEquals(other.audioDataAsRgbList)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return audioDataAsRgbList.contentHashCode()
+    }
+}

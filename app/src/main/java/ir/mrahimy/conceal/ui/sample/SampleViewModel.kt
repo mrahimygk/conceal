@@ -49,8 +49,10 @@ class SampleViewModel(private val sampleRepository: SampleRepository) : BaseView
         val list = sampleList.value?.toMutableList() ?: return@launch
         val iter = list.iterator()
         while (iter.hasNext()) {
-            val element = iter.next()
-            iter.remove()
+            iter.apply {
+                next()
+                remove()
+            }
             sampleList.postValue(list)
             delay(50)
         }
