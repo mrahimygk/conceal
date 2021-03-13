@@ -1,8 +1,6 @@
 package ir.mrahimy.conceal.util.ktx
 
 import android.content.Context
-import android.content.res.ColorStateList
-import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.util.TypedValue
 import androidx.annotation.AttrRes
@@ -10,8 +8,6 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.drawable.DrawableCompat
 
 fun Context.getColorCompat(@ColorRes color: Int): Int {
     return ContextCompat.getColor(this, color)
@@ -28,6 +24,7 @@ fun Context.getDrawableCompat(@DrawableRes drawableId: Int): Drawable? {
     return AppCompatResources.getDrawable(this, drawableId)
 }
 
+/*
 fun Context.getDrawableCompatFromAttr(@AttrRes drawable: Int): Drawable? {
     val typedValue = TypedValue()
     theme.resolveAttribute(drawable, typedValue, true)
@@ -49,3 +46,4 @@ fun Drawable.setTintDrawable(colors: ColorStateList) {
         DrawableCompat.setTintList(it, colors)
     }
 }
+*/

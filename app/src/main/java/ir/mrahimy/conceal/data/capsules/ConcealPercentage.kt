@@ -1,7 +1,6 @@
 package ir.mrahimy.conceal.data.capsules
 
 import android.graphics.Bitmap
-import androidx.lifecycle.ViewModel
 
 data class ConcealPercentage(
     val id: Int,
@@ -13,4 +12,4 @@ data class ConcealPercentage(
 
 )
 
-fun ViewModel.empty() = ConcealPercentage(1, 0f, null, 0, 0, false)
+fun empty() = ConcealPercentage(1, 0f, null, 0, 0, false)

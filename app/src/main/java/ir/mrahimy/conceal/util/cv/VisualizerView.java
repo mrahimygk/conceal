@@ -10,15 +10,15 @@ import android.view.View;
 import java.util.Random;
 
 public class VisualizerView extends View {
-    private static final int MAX_AMPLITUDE = 32767;
+   // private static final int MAX_AMPLITUDE = 32767;
 
-    private int mPoints = 66;
+    private final int mPoints = 66;
     private int mRadius;
     private int mPointRadius;
-    protected Paint mPaint;
-    private Paint mGPaint;
+    protected final Paint mPaint;
+    private final Paint mGPaint;
     private float[] mSrcY;
-    private Random random = new Random();
+    private final Random random = new Random();
     int[] thresholds = new int[mPoints];
 
     public VisualizerView(Context context, AttributeSet attrs) {
@@ -68,15 +68,16 @@ public class VisualizerView extends View {
             if (value == 0) continue;
             if (value > 222) value = 222;
             canvas.save();
-            canvas.rotate(-90, getWidth() / 2, getHeight() / 2);
-            canvas.rotate(-i, getWidth() / 2, getHeight() / 2);
-            float cx = (float) (getWidth() / 2 + mRadius);
-            float cy = (float) (getHeight() / 2);
+            float width = getWidth() / (float) 2;
+            float height = getHeight()/ (float) 2;
+            canvas.rotate(-90, width, height);
+            canvas.rotate(-i, width, height);
+            float cx = (float) (width + mRadius);
             if (value > 100) mGPaint.setColor(Color.RED);
             else mGPaint.setColor(Color.GREEN);
-            canvas.drawCircle(cx + value, cy, mPointRadius, mGPaint);
-            canvas.drawRect(cx, cy - mPointRadius, cx + value,
-                    cy + mPointRadius, mPaint);
+            canvas.drawCircle(cx + value, width, mPointRadius, mGPaint);
+            canvas.drawRect(cx, width - mPointRadius, cx + value,
+                    width + mPointRadius, mPaint);
             canvas.restore();
         }
     }

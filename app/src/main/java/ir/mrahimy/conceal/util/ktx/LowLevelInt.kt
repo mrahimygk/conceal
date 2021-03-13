@@ -4,7 +4,7 @@ import ir.mrahimy.conceal.data.Rgb
 import ir.mrahimy.conceal.util.lowlevel.LowLevelIntOperations
 import ir.mrahimy.conceal.util.lowlevel.LowLevelRgbOperations
 
-fun Int.toRgb() = LowLevelRgbOperations.getRgb(this)
+fun Int.toRgb():Rgb = LowLevelRgbOperations.getRgb(this)
 fun Rgb.parse() = LowLevelRgbOperations.parseRgb(this)
 
 //TODO: decide by howMany here
@@ -31,7 +31,7 @@ fun Int.combineBits(vararg others: Int): Int {
     return builder.toString().toInt(2)
 }
 
-fun Int.bitwiseAnd(other: Int) = LowLevelIntOperations.and(this, other)
+//fun Int.bitwiseAnd(other: Int) = LowLevelIntOperations.and(this, other)
 
 fun Int.bitwiseOr(other: Int) = LowLevelIntOperations.or(this, other)
 

@@ -7,6 +7,7 @@ import androidx.annotation.StringRes
 import androidx.databinding.BindingAdapter
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip
 import ir.mrahimy.conceal.R
+import kotlin.math.roundToInt
 
 
 @BindingAdapter("app:isVisible")
@@ -46,7 +47,7 @@ fun View.setBottomMargin(bottomMargin: Float) {
     val mLayoutParams = layoutParams as MarginLayoutParams
     mLayoutParams.setMargins(
         mLayoutParams.leftMargin, mLayoutParams.topMargin,
-        mLayoutParams.rightMargin, Math.round(bottomMargin)
+        mLayoutParams.rightMargin, bottomMargin.roundToInt()
     )
     layoutParams = mLayoutParams
 }

@@ -5,12 +5,10 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 
-import androidx.loader.content.CursorLoader;
 
 import java.io.File;
 
@@ -18,22 +16,27 @@ public class FileUtils {
 
     public static String getRealPath(Context context, Uri fileUri) {
         String realPath;
+        /*
         // SDK < API11
         if (Build.VERSION.SDK_INT < 11) {
             realPath = FileUtils.getRealPathFromURI_BelowAPI11(context, fileUri);
         }
         // SDK >= 11 && SDK < 19
-        else if (Build.VERSION.SDK_INT < 19) {
+        else if (Build.VERSION.SDK_INT>=11 && Build.VERSION.SDK_INT < 19) {
             realPath = FileUtils.getRealPathFromURI_API11to18(context, fileUri);
         }
         // SDK > 19 (Android 4.4) and up
         else {
             realPath = FileUtils.getRealPathFromURI_API19(context, fileUri);
         }
+         */
+        // Currently the MIN SDK is 21 in gradle file
+        realPath = FileUtils.getRealPathFromURI_API19(context, fileUri);
+
         return realPath;
     }
 
-
+   /*
     @SuppressLint("NewApi")
     public static String getRealPathFromURI_API11to18(Context context, Uri contentUri) {
         String[] proj = {MediaStore.Images.Media.DATA};
@@ -65,14 +68,15 @@ public class FileUtils {
         }
         return result;
     }
+    */
 
     @SuppressLint("NewApi")
     public static String getRealPathFromURI_API19(final Context context, final Uri uri) {
-
-        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+        //Currntly the minSdk is 21
+        //final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
         // DocumentProvider
-        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+        if (DocumentsContract.isDocumentUri(context, uri)) {
             // ExternalStorageProvider
             if (isExternalStorageDocument(uri)) {
                 final String docId = DocumentsContract.getDocumentId(uri);
@@ -107,7 +111,7 @@ public class FileUtils {
                         return id;
                 }
 
-                final Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+                final Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.parseLong(id));
                 return getDataColumn(context, contentUri, null, null);
             }
             // MediaProvider
@@ -176,21 +180,16 @@ public class FileUtils {
 
     public static String getFilePath(Context context, Uri uri) {
 
-        Cursor cursor = null;
         final String[] projection = {
                 MediaStore.MediaColumns.DISPLAY_NAME
         };
-
-        try {
-            cursor = context.getContentResolver().query(uri, projection, null, null,
-                    null);
+        //uses try with Resources construct to automatically close resources at the end of the code block, this avoids using finally block
+        try (Cursor cursor = context.getContentResolver().query(uri, projection, null, null,
+                null)) {
             if (cursor != null && cursor.moveToFirst()) {
                 final int index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME);
                 return cursor.getString(index);
             }
-        } finally {
-            if (cursor != null)
-                cursor.close();
         }
         return null;
     }

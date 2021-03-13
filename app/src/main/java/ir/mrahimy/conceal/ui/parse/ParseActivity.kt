@@ -12,7 +12,6 @@ import com.google.android.material.snackbar.Snackbar
 import ir.mrahimy.conceal.R
 import ir.mrahimy.conceal.base.BaseActivity
 import ir.mrahimy.conceal.data.MediaState
-import ir.mrahimy.conceal.data.Recording
 import ir.mrahimy.conceal.databinding.ActivityParseBinding
 import ir.mrahimy.conceal.data.enums.ChooserType
 import ir.mrahimy.conceal.util.arch.EventObsrver
@@ -89,7 +88,9 @@ class ParseActivity : BaseActivity<ParseActivityViewModel, ActivityParseBinding>
         initializeVisualizerEngineWithPermissionCheck()
     }
 
-    private fun play(rec: Recording) = rec.parsedWavePath?.toUri()?.let { uri -> play(uri) }
+
+    //private fun play(rec: Recording) = rec.parsedWavePath?.toUri()?.let { uri -> play(uri) }
+
 
     private fun play(uri: Uri) {
         stopPlaying()

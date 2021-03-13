@@ -5,6 +5,7 @@ import ir.mrahimy.conceal.data.toSeparatedDigits
 import ir.mrahimy.conceal.util.*
 import ir.mrahimy.conceal.util.ktx.bitwiseOr
 import ir.mrahimy.conceal.util.ktx.toBinString
+import junit.framework.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
@@ -85,7 +86,7 @@ class LowLevelOperationsManipulationUnitTest {
         var index = 0
         `test removing 3 lsb of index`(index++, 192, 112, 112) //0
         `test removing 3 lsb of index`(index++, 176, 208, 216) //0
-        `test removing 3 lsb of index`(index++, 176, 24, 24) //0
+        `test removing 3 lsb of index`(index, 176, 24, 24) //0
         `test removing 3 lsb of index`(8, 168, 184, 144) //8
     }
 
@@ -134,8 +135,10 @@ class LowLevelOperationsManipulationUnitTest {
 
     @Test
     fun `test injected sample rate`() {
-        val injected = mutableListOf<Rgb>().apply { addAll(removedLsb.map { it }) }
-        val pos = injected.putSampleRate(sampleRate)
+        val injected = mutableListOf<Rgb>().apply {
+            addAll(removedLsb.map { it })
+            putSampleRate(sampleRate)
+        }
 
         var i = 0
         // 5 = 0101
@@ -167,8 +170,10 @@ class LowLevelOperationsManipulationUnitTest {
 
     @Test
     fun `test retrieving sample rate`() {
-        val injected = mutableListOf<Rgb>().apply { addAll(removedLsb.map { it }) }
-        val pos = injected.putSampleRate(sampleRate)
+        val injected = mutableListOf<Rgb>().apply {
+            addAll(removedLsb.map { it })
+            putSampleRate(sampleRate)
+        }
 
         val res = injected.getSampleRate()
         assert(res.number == sampleRate)

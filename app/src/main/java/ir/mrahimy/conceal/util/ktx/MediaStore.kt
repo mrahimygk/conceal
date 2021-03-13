@@ -1,14 +1,10 @@
 package ir.mrahimy.conceal.util.ktx
 
-import android.content.ContentUris
 import android.content.Context
-import android.database.Cursor
 import android.net.Uri
-import android.provider.DocumentsContract
-import android.provider.MediaStore
 import ir.mrahimy.conceal.util.ktx.FileUtils.getRealPath
 
-
+/*
 fun Uri.getPath(context: Context): String? {
     when {
         DocumentsContract.isDocumentUri(context, this) -> // ExternalStorageProvider
@@ -64,7 +60,8 @@ fun Uri.getPath(context: Context): String? {
     }
     return null
 }
-
+*/
+/*
 fun getDataColumn(
     context: Context,
     inUri: Uri?,
@@ -93,30 +90,30 @@ fun getDataColumn(
 
 fun isExternalStorageDocument(uri: Uri): Boolean {
     return "com.android.externalstorage.documents" == uri.authority
-}
+} */
 
 /**
  * @param uri The Uri to check.
  * @return Whether the Uri authority is DownloadsProvider.
- */
+
 fun isDownloadsDocument(uri: Uri): Boolean {
     return "com.android.providers.downloads.documents" == uri.authority
-}
+} */
 
 /**
  * @param uri The Uri to check.
  * @return Whether the Uri authority is MediaProvider.
- */
+
 fun isMediaDocument(uri: Uri): Boolean {
     return "com.android.providers.media.documents" == uri.authority
-}
+} */
 
 /**
  * @param uri The Uri to check.
  * @return Whether the Uri authority is Google Photos.
- */
+
 fun isGooglePhotosUri(uri: Uri): Boolean {
     return "com.google.android.apps.photos.content" == uri.authority
-}
+} */
 
 fun Uri.getPathJava(context: Context): String = getRealPath(context, this)
